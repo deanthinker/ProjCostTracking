@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.input.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane id="AnchorPane" prefHeight="586.0000999999975" prefWidth="865.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="ProjCostTracking.MainMenuController">
+  <children>
+    <MenuBar fx:id="menu" focusTraversable="true" minWidth="-Infinity" prefWidth="865.0" useSystemMenuBar="false" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <menus>
+        <Menu mnemonicParsing="false" text="Main">
+          <items>
+            <MenuItem mnemonicParsing="false" onAction="#mnuLogout_onClick" text="Logout" fx:id="mnuLogout">
+              <accelerator>
+                <KeyCodeCombination alt="UP" code="L" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+              </accelerator>
+            </MenuItem>
+            <MenuItem mnemonicParsing="false" onAction="#mnuExit_onClick" text="Exit" fx:id="mnuExit">
+              <accelerator>
+                <KeyCodeCombination alt="UP" code="E" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+              </accelerator>
+            </MenuItem>
+          </items>
+        </Menu>
+        <Menu mnemonicParsing="false" text="Project">
+          <items>
+            <MenuItem mnemonicParsing="false" onAction="#mnuNewProject_onClick" text="New Project" fx:id="mnuNewProject">
+              <accelerator>
+                <KeyCodeCombination alt="UP" code="N" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+              </accelerator>
+            </MenuItem>
+            <MenuItem mnemonicParsing="false" onAction="#mnuManagement_onClick" text="Management" fx:id="mnuManagement">
+              <accelerator>
+                <KeyCodeCombination alt="UP" code="M" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+              </accelerator>
+            </MenuItem>
+          </items>
+        </Menu>
+        <Menu mnemonicParsing="false" text="Maintain">
+          <items>
+            <MenuItem mnemonicParsing="false" onAction="#mnuCost_onClick" text="Cost" fx:id="mnuCost" />
+            <MenuItem mnemonicParsing="false" onAction="#mnuCostType_onClick" text="CostType" fx:id="mnuCostType" />
+            <MenuItem mnemonicParsing="false" onAction="#mnuStage_onClick" text="Task" fx:id="mnuStage" />
+            <MenuItem mnemonicParsing="false" onAction="#mnuProjectType_onClick" text="ProjectType" fx:id="mnuProjectType" />
+            <MenuItem mnemonicParsing="false" onAction="#mnuEmployee_onClick" text="Employee" fx:id="mnuEmployee" />
+            <MenuItem mnemonicParsing="false" onAction="#mnuUser_onClick" text="User" fx:id="mnuUser" />
+            <MenuItem mnemonicParsing="false" onAction="#mnuUserLevel_onClick" text="User Level" fx:id="mnuUserLevel" />
+          </items>
+        </Menu>
+        <Menu mnemonicParsing="false" text="Setting">
+          <items>
+            <MenuItem mnemonicParsing="false" onAction="#mnuPreferences_onClick" text="Preferences" fx:id="mnuPreferences" />
+            <MenuItem mnemonicParsing="false" onAction="#mnuDBconn_onClick" text="DB Connection" fx:id="mnuDBconn" />
+          </items>
+        </Menu>
+        <Menu mnemonicParsing="false" text="Help">
+          <items>
+            <MenuItem mnemonicParsing="false" onAction="#mnuAbout_onClick" text="About" fx:id="mnuAbout" />
+          </items>
+        </Menu>
+      </menus>
+    </MenuBar>
+    <Label fx:id="lblMessage" maxWidth="-1.0" minWidth="-Infinity" prefHeight="24.0" prefWidth="865.0" text="Welcome ..." AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+      <font>
+        <Font size="14.0" />
+      </font>
+    </Label>
+    <AnchorPane fx:id="mainContent" prefHeight="538.0000999999975" prefWidth="865.0" rotate="0.0" AnchorPane.bottomAnchor="24.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="24.0" />
+  </children>
+</AnchorPane>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane id="AnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="242.0" prefWidth="452.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2">
+  <children>
+    <Button fx:id="btnYes_onClick" layoutX="138.0" layoutY="192.0" mnemonicParsing="false" text="Yes">
+      <font>
+        <Font size="16.0" fx:id="x1" />
+      </font>
+    </Button>
+    <Button fx:id="btnNo_onClick" font="$x1" layoutX="268.0" layoutY="192.0" mnemonicParsing="false" text="No" />
+    <VBox id="VBox" alignment="CENTER" layoutX="14.0" layoutY="23.0" spacing="5.0">
+      <children>
+        <Label fx:id="lbltitle" prefWidth="424.0" text="lblWarning" textFill="RED">
+          <font>
+            <Font name="System Bold" size="16.0" />
+          </font>
+        </Label>
+        <Label fx:id="lbldetail" prefHeight="124.0" prefWidth="424.0" text="lblDetail">
+          <font>
+            <Font size="14.0" />
+          </font>
+        </Label>
+      </children>
+    </VBox>
+  </children>
+</AnchorPane>
