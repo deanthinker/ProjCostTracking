@@ -36,10 +36,10 @@ public class KYdb {
     }    
         
     public boolean setLoginUser(String username, String password){
-        List<EntityUser> ul = em.createQuery("select u from EntityUser u where u.username = '" + username + "' and  u.password = '" + password +"' ").getResultList();
+        List<EntityUser> ul = em.createQuery("select u from EntityUser u where u.fdrusername = '" + username + "' and  u.fdrpassword = '" + password +"' ").getResultList();
         if (ul != null){
             for (EntityUser user : ul){
-                System.out.println("username: " + user.getUsername());
+                System.out.println("username: " + user.getFdrusername());
                 Main.currentUser.copyEntity(user); //copy the vlalue; not the Instance
                 return true;
             }

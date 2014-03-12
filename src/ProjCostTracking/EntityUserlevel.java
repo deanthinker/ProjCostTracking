@@ -10,7 +10,6 @@ import java.io.Serializable;
 import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -33,24 +32,20 @@ import javax.xml.bind.annotation.XmlTransient;
 @NamedQueries({
     @NamedQuery(name = "EntityUserlevel.findAll", query = "SELECT e FROM EntityUserlevel e"),
     @NamedQuery(name = "EntityUserlevel.findByUserlevelid", query = "SELECT e FROM EntityUserlevel e WHERE e.userlevelid = :userlevelid"),
-    @NamedQuery(name = "EntityUserlevel.findByLevel", query = "SELECT e FROM EntityUserlevel e WHERE e.level = :level"),
-    @NamedQuery(name = "EntityUserlevel.findByLevelname", query = "SELECT e FROM EntityUserlevel e WHERE e.levelname = :levelname")})
+    @NamedQuery(name = "EntityUserlevel.findByFdrlevel", query = "SELECT e FROM EntityUserlevel e WHERE e.fdrlevel = :fdrlevel"),
+    @NamedQuery(name = "EntityUserlevel.findByFdrlevelname", query = "SELECT e FROM EntityUserlevel e WHERE e.fdrlevelname = :fdrlevelname")})
 public class EntityUserlevel implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
-    @Column(name = "userlevelid")
     private Integer userlevelid;
     @Basic(optional = false)
-    @Column(name = "level")
-    private int level;
+    private int fdrlevel;
     @Basic(optional = false)
-    @Column(name = "levelname")
-    private String levelname;
+    private String fdrlevelname;
     @Lob
-    @Column(name = "note")
-    private String note;
+    private String fdnote;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "userlevelid")
     private List<EntityUser> entityUserList;
 
@@ -61,10 +56,10 @@ public class EntityUserlevel implements Serializable {
         this.userlevelid = userlevelid;
     }
 
-    public EntityUserlevel(Integer userlevelid, int level, String levelname) {
+    public EntityUserlevel(Integer userlevelid, int fdrlevel, String fdrlevelname) {
         this.userlevelid = userlevelid;
-        this.level = level;
-        this.levelname = levelname;
+        this.fdrlevel = fdrlevel;
+        this.fdrlevelname = fdrlevelname;
     }
 
     public Integer getUserlevelid() {
@@ -75,28 +70,28 @@ public class EntityUserlevel implements Serializable {
         this.userlevelid = userlevelid;
     }
 
-    public int getLevel() {
-        return level;
+    public int getFdrlevel() {
+        return fdrlevel;
     }
 
-    public void setLevel(int level) {
-        this.level = level;
+    public void setFdrlevel(int fdrlevel) {
+        this.fdrlevel = fdrlevel;
     }
 
-    public String getLevelname() {
-        return levelname;
+    public String getFdrlevelname() {
+        return fdrlevelname;
     }
 
-    public void setLevelname(String levelname) {
-        this.levelname = levelname;
+    public void setFdrlevelname(String fdrlevelname) {
+        this.fdrlevelname = fdrlevelname;
     }
 
-    public String getNote() {
-        return note;
+    public String getFdnote() {
+        return fdnote;
     }
 
-    public void setNote(String note) {
-        this.note = note;
+    public void setFdnote(String fdnote) {
+        this.fdnote = fdnote;
     }
 
     @XmlTransient

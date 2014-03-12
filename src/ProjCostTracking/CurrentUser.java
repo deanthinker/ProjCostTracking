@@ -45,8 +45,8 @@ public class CurrentUser {
     
     public void copyEntity(EntityUser in){
         setUser(in.getUserid(),
-                in.getUsername(),
-                in.getPassword(),
+                in.getFdrusername(),
+                in.getFdrpassword(),
                 in.getEmpid(),
                 in.getUserlevelid().getUserlevelid(),
                 in.getLog());

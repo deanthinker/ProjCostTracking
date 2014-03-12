@@ -7,14 +7,8 @@
 package ProjCostTracking;
 
 import java.util.HashMap;
-import java.util.List;
 import javafx.application.Application;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.stage.Stage;
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
 
 public class Main extends Application {
     public static final String PACKAGE_NAME = "ProjCostTracking";
@@ -38,64 +32,7 @@ public class Main extends Application {
     public static HashMap<String, Window> winCollection = new HashMap<>();
     
     public static void test(){
-        System.out.println("hello!");
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("ProjCostTrackingPU");
-        EntityManager em = emf.createEntityManager();
-        //EntityManager em2 = emf.createEntityManager();
-        
-        em.getTransaction().begin();
-        //em2.getTransaction().begin();
-        
 
-        
-        EntityUserlevel ul = new EntityUserlevel((Integer) 4);
-        ul.setLevelname("ttttttl4");
-        /*
-        em.persist(ul);
-        System.out.println("before commit");
-        try{
-        em.getTransaction().commit();
-        }
-        catch (javax.persistence.PersistenceException e){
-            System.out.printf("error commit~~");
-        }System.out.println("after commit");
-        */
-        
-        /*
-        System.out.println("ul name:"+ul.getLevelname());
-        
-        EntityUser u = new EntityUser();
-        u.setUsername("happy6");
-        u.setPassword("55556");
-        u.setUserlevelid(ul);
-        u.setCreation(Calendar.getInstance().getTime());
-        em.persist(u);
-        
-        System.out.println("before commit2");
-        try{
-            em.getTransaction().commit();
-        }
-        catch (javax.persistence.PersistenceException e){
-            System.out.printf("error commit~~2");
-        }
-        System.out.println("after commit2");  
-        */
-        
-        EntityUser u2 = em.find(EntityUser.class, 77);
-        
-        if (u2 != null)
-            System.out.println("Userlevel:" + u2.getUserlevelid().getLevelname());
-        else
-            System.out.println("Userlevel:not found");
-        
-        List<EntityUser> ulist = em.createQuery("SELECT u from EntityUser u").getResultList();
-        ObservableList<EntityUser> uolist = FXCollections.observableList(ulist);
-        for (EntityUser e : uolist){
-            System.out.println(e.toString());
-        }
-                
-        em.close();
-        emf.close();
     }
     
     private void debug(String msg){
@@ -112,10 +49,13 @@ public class Main extends Application {
     
     @Override
     public void start(Stage stage) throws Exception {
+                
+        //System.exit(0);
+        
         loadWindows();
         winCollection.get(SCREEN_MAINMENU).show();
        
-        //winCollection.get(SCREEN_LOGIN).showAndWait();
+       
         
 
     }

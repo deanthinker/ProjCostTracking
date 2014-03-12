@@ -9,7 +9,6 @@ package ProjCostTracking;
 import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.Basic;
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -34,8 +33,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 @NamedQueries({
     @NamedQuery(name = "EntityUser.findAll", query = "SELECT e FROM EntityUser e"),
     @NamedQuery(name = "EntityUser.findByUserid", query = "SELECT e FROM EntityUser e WHERE e.userid = :userid"),
-    @NamedQuery(name = "EntityUser.findByUsername", query = "SELECT e FROM EntityUser e WHERE e.username = :username"),
-    @NamedQuery(name = "EntityUser.findByPassword", query = "SELECT e FROM EntityUser e WHERE e.password = :password"),
+    @NamedQuery(name = "EntityUser.findByFdrusername", query = "SELECT e FROM EntityUser e WHERE e.fdrusername = :fdrusername"),
+    @NamedQuery(name = "EntityUser.findByFdrpassword", query = "SELECT e FROM EntityUser e WHERE e.fdrpassword = :fdrpassword"),
     @NamedQuery(name = "EntityUser.findByEntrydate", query = "SELECT e FROM EntityUser e WHERE e.entrydate = :entrydate"),
     @NamedQuery(name = "EntityUser.findByEmpid", query = "SELECT e FROM EntityUser e WHERE e.empid = :empid"),
     @NamedQuery(name = "EntityUser.findByLog", query = "SELECT e FROM EntityUser e WHERE e.log = :log")})
@@ -44,25 +43,18 @@ public class EntityUser implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
-    @Column(name = "userid")
     private Integer userid;
     @Basic(optional = false)
-    @Column(name = "username")
-    private String username;
+    private String fdrusername;
     @Basic(optional = false)
-    @Column(name = "password")
-    private String password;
-    @Column(name = "entrydate")
+    private String fdrpassword;
     @Temporal(TemporalType.TIMESTAMP)
     private Date entrydate;
     @Basic(optional = false)
-    @Column(name = "empid")
     private int empid;
     @Lob
-    @Column(name = "note")
     private String note;
     @Basic(optional = false)
-    @Column(name = "log")
     private int log;
     @JoinColumn(name = "userlevelid", referencedColumnName = "userlevelid")
     @ManyToOne(optional = false)
@@ -75,10 +67,10 @@ public class EntityUser implements Serializable {
         this.userid = userid;
     }
 
-    public EntityUser(Integer userid, String username, String password, int empid, int log) {
+    public EntityUser(Integer userid, String fdrusername, String fdrpassword, int empid, int log) {
         this.userid = userid;
-        this.username = username;
-        this.password = password;
+        this.fdrusername = fdrusername;
+        this.fdrpassword = fdrpassword;
         this.empid = empid;
         this.log = log;
     }
@@ -91,20 +83,20 @@ public class EntityUser implements Serializable {
         this.userid = userid;
     }
 
-    public String getUsername() {
-        return username;
+    public String getFdrusername() {
+        return fdrusername;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setFdrusername(String fdrusername) {
+        this.fdrusername = fdrusername;
     }
 
-    public String getPassword() {
-        return password;
+    public String getFdrpassword() {
+        return fdrpassword;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public void setFdrpassword(String fdrpassword) {
+        this.fdrpassword = fdrpassword;
     }
 
     public Date getEntrydate() {
