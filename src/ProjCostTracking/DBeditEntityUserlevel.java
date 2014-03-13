@@ -1,19 +1,29 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+* The DB field name must comply with the rule
+* All fields name should start with "fd" (meaning open for edit)
+* All required fields should start with "fdr" (MUST NOT be empty data)
+* All int type must be changed to Integer in the Entity class
+* All float type must be changed to Float in the Entity class
+* Parimary Key is not allowed for update
+* Primary Key field name MUST NOTE begine with "fd"
+* Entity Class name must begin with Entityxxxxx
+
  */
 
 package ProjCostTracking;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.net.URL;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -22,6 +32,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableCell;
@@ -37,19 +48,21 @@ import javafx.scene.layout.Priority;
 import javafx.scene.text.Font;
 import javafx.util.Callback;
 import javafx.util.converter.DefaultStringConverter;
+import javafx.util.converter.FloatStringConverter;
 import javafx.util.converter.IntegerStringConverter;
+import javax.persistence.Query;
 import org.controlsfx.control.ButtonBar;
 import org.controlsfx.control.action.AbstractAction;
 import org.controlsfx.control.action.Action;
 import org.controlsfx.dialog.Dialog;
 import org.controlsfx.dialog.Dialogs;
 
-/**
- * FXML Controller class
- *
- * @author richardc
- */
+
 public class DBeditEntityUserlevel implements Initializable {
+
+    final Field[] actualFieldsArray = EntityUserlevel.class.getDeclaredFields();
+    final List<Field> fList = new ArrayList<>();
+    
     @FXML
     private AnchorPane myanchorpane;
     @FXML
@@ -64,118 +77,160 @@ public class DBeditEntityUserlevel implements Initializable {
     private Button btnDelete;
     @FXML
     private Button btnClose;
-
+    @FXML
+    private TextField txfSearch;
+    @FXML
+    private ComboBox<?> cbxSearch;
+    @FXML
+    private Button btnSearch;
+    
     private AnchorPane parent; //this is to be assigned from MainMenuController 
     private int commit_count=0;
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        loadTableViewData();
+        loadEntityFields();
+        loadViewTable(getAllData());
+        for (Field f : fList){
+            
+        }
     }
     
-    public void loadTableViewData(){
-        //tbvMain = new TableView<EntityUserlevel>();
+    private void loadEntityFields(){
+        for (Field f : actualFieldsArray){ //create a list of "f_" fields
+            f.setAccessible(true); //make "private" member visible
+            //we only handle those that name with "fd...."
+            if (f.getName().substring(0, 2).equals("fd")){
+                fList.add(f);
+            }            
+        } 
+
+        System.out.println("Found "+fList.size() + " DB fields.");
+        if (fList.isEmpty()) {System.out.print("Entity has zero field!"); return;}
+    }
+    
+    private ObservableList<EntityUserlevel> getAllData() {
+        List<EntityUserlevel> thelist = Main.db.em.createQuery("select e from EntityUserlevel e").getResultList();
+        ObservableList<EntityUserlevel> obslist = FXCollections.observableList(thelist);
+        return obslist;
+    }
+    
+    public void loadViewTable(ObservableList ol){
         tbvMain.getColumns().clear();
         btnSave.setDisable(true);
         tbvMain.setEditable(true);
-        
-        List<EntityUserlevel> thelist = Main.db.em.createQuery("select e from EntityUserlevel e").getResultList();
-        ObservableList<EntityUserlevel> obslist = FXCollections.observableList(thelist);
-        
-        TableColumn col1 = new TableColumn("UserLevelID");
-        TableColumn col2 = new TableColumn("Level(0~99)");
-        TableColumn col3 = new TableColumn("LevelName");
-        TableColumn col4 = new TableColumn("Note");
-        col1.setCellValueFactory(new PropertyValueFactory<EntityUserlevel, Integer>("userlevelid"));
-        col2.setCellValueFactory(new PropertyValueFactory<EntityUserlevel, Integer>("fdrlevel"));
-        col3.setCellValueFactory(new PropertyValueFactory<EntityUserlevel, String>("fdrlevelname"));
-        col4.setCellValueFactory(new PropertyValueFactory<EntityUserlevel, String>("fdnote"));
 
-        //PRIMARY KEY IＳ　ＮＯＴ　ＡＬＬＯＷＥＤ　ｔｏ　ｕｐｄａｔｅ
-        col2.setCellFactory(new Callback<TableColumn<EntityUserlevel,Integer>, TableCell<EntityUserlevel,Integer>>() {
-            @Override
-            public TableCell<EntityUserlevel, Integer> call(TableColumn<EntityUserlevel, Integer> arg0) {
-                    return new TextFieldTableCell<>( new IntegerStringConverter()  );
-            }
-        });
-                
-        col2.setOnEditCommit(
-            new EventHandler<CellEditEvent<EntityUserlevel, Integer>>() {
-                @Override
-                public void handle(CellEditEvent<EntityUserlevel, Integer> t) {
-                      EntityUserlevel ul = (EntityUserlevel) t.getTableView().getItems().get(  t.getTablePosition().getRow()   );
-                      System.out.println("old:"+t.getOldValue() + "\t new:"+ t.getNewValue());
-                      ul.setFdrlevel(t.getNewValue());
-                      saveOn();
-                }
-            }
-        );
-       
-        col3.setCellFactory(new Callback<TableColumn<EntityUserlevel,String>, TableCell<EntityUserlevel,String>>() {
-            @Override
-            public TableCell<EntityUserlevel, String> call(TableColumn<EntityUserlevel, String> arg0) {
-                    return new TextFieldTableCell<>( new DefaultStringConverter()  );
-            }
-        });
-                
-        col3.setOnEditCommit(
-            new EventHandler<CellEditEvent<EntityUserlevel, String>>() {
-                @Override
-                public void handle(CellEditEvent<EntityUserlevel, String> t) {
-                      EntityUserlevel ul = (EntityUserlevel) t.getTableView().getItems().get(  t.getTablePosition().getRow()   );
-                      System.out.println("old:"+t.getOldValue() + "\t new:"+ t.getNewValue());
-                      ul.setFdrlevelname(t.getNewValue());
-                      saveOn();
-                }
-            }
-        );
+        for (Field f : fList){
+            TableColumn c = new TableColumn( Main.tr.get(f.getName())  );//set  Column title
+            c.setCellValueFactory(new PropertyValueFactory<>( f.getName() )); //set DB filed name
+            //Handle Integer, int
+            if (f.getType().equals(Integer.class)) {
+                c.setCellFactory(new Callback<TableColumn<EntityUserlevel, Integer>, TableCell<EntityUserlevel, Integer>>() {
+                    @Override
+                    public TableCell<EntityUserlevel, Integer> call(TableColumn<EntityUserlevel, Integer> arg0) {
+                        return new TextFieldTableCell<>(new IntegerStringConverter());
+                    }
+                });
 
-        col4.setCellFactory(new Callback<TableColumn<EntityUserlevel,String>, TableCell<EntityUserlevel,String>>() {
-            @Override
-            public TableCell<EntityUserlevel, String> call(TableColumn<EntityUserlevel, String> arg0) {
-                    return new TextFieldTableCell<>( new DefaultStringConverter()  );
-            }
-        });
-                
-        col4.setOnEditCommit(
-            new EventHandler<CellEditEvent<EntityUserlevel, String>>() {
-                @Override
-                public void handle(CellEditEvent<EntityUserlevel, String> t) {
-                      EntityUserlevel ul = (EntityUserlevel) t.getTableView().getItems().get(  t.getTablePosition().getRow()   );
-                      System.out.println("old:"+t.getOldValue() + "\t new:"+ t.getNewValue());
-                      ul.setFdnote(t.getNewValue());
-                      saveOn();
-                }
-            }
-        );        
-        
-       
-        tbvMain.getColumns().addAll(col1, col2, col3, col4);
+                c.setOnEditCommit(
+                        new EventHandler<CellEditEvent<EntityUserlevel, Integer>>() {
+                            @Override
+                            public void handle(CellEditEvent<EntityUserlevel, Integer> t) {
+                                Method m = null;
+                                EntityUserlevel ul = (EntityUserlevel) t.getTableView().getItems().get(t.getTablePosition().getRow());
+                                System.out.println("old:" + t.getOldValue() + "\t new:" + t.getNewValue());
+                                try {//get the "Method object" by supplying its String name
+                                    m = ul.getClass().getMethod(Main.getEntityMethodName(f.getName()), Integer.class);
+                                } catch (SecurityException | NoSuchMethodException e) {
+                                    System.out.println(Main.getEntityMethodName(f.getName())  );
+                                    e.printStackTrace();
+                                }
 
-        PropertyValueFactory p = new PropertyValueFactory<EntityUserlevel, Integer>("userlevelid");
-        
-        System.out.println("col size:"+ tbvMain.getColumns().size());
-        System.out.println("col1 text:"+ col1.getText());
-        System.out.println("col1 cell bind:" + p.getProperty());
-        
-        
-        tbvMain.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-     
-        tbvMain.setItems(obslist);
-        
-        EntityUserlevel ul = (EntityUserlevel)tbvMain.getSelectionModel().getSelectedItem();
-        if (ul == null)
-            System.out.println("none selected");
-        else
-            System.out.println("selected:"+ul.getFdrlevelname());        
+                                try { if (m!=null) m.invoke(ul, t.getNewValue());} 
+                                catch (IllegalArgumentException | IllegalAccessException | InvocationTargetException e) {
+                                    System.out.println("No such method found for :" + f.getName());
+                                }
+                                saveOn();
+
+                            }
+                        }
+                );
+            } 
+            
+            //Handle String type
+            else if (f.getType().equals(String.class)) {
+                c.setCellFactory(new Callback<TableColumn<EntityUserlevel, String>, TableCell<EntityUserlevel, String>>() {
+                    @Override
+                    public TableCell<EntityUserlevel, String> call(TableColumn<EntityUserlevel, String> arg0) {
+                        return new TextFieldTableCell<>(new DefaultStringConverter());
+                    }
+                });
+
+                c.setOnEditCommit(
+                        new EventHandler<CellEditEvent<EntityUserlevel, String>>() {
+                            @Override
+                            public void handle(CellEditEvent<EntityUserlevel, String> t) {
+                                Method m = null;
+                                EntityUserlevel ul = (EntityUserlevel) t.getTableView().getItems().get(t.getTablePosition().getRow());
+                                System.out.println("old:" + t.getOldValue() + "\t new:" + t.getNewValue());
+                                try {//get the "Method object" by supplying its String name
+                                    m = ul.getClass().getMethod(Main.getEntityMethodName(f.getName()), String.class);
+                                } catch (SecurityException | NoSuchMethodException e) {System.out.println(e.getMessage());}
+
+                                try { if (m!=null) m.invoke(ul, t.getNewValue());} 
+                                catch (IllegalArgumentException | IllegalAccessException | InvocationTargetException e) {
+                                    System.out.println("No such method found for :" + f.getName());
+                                }                                
+                                saveOn();
+                            }
+                        }
+                );
+
+            } 
+            //Handle Float, float
+            else if (f.getType().equals(Float.class) || f.getType().equals(float.class)) {
+                c.setCellFactory(new Callback<TableColumn<EntityUserlevel, Float>, TableCell<EntityUserlevel, Float>>() {
+                    @Override
+                    public TableCell<EntityUserlevel, Float> call(TableColumn<EntityUserlevel, Float> arg0) {
+                        return new TextFieldTableCell<>(new FloatStringConverter());
+                    }
+                });
+
+                c.setOnEditCommit(
+                        new EventHandler<CellEditEvent<EntityUserlevel, Float>>() {
+                            @Override
+                            public void handle(CellEditEvent<EntityUserlevel, Float> t) {
+                                Method m = null;
+                                EntityUserlevel ul = (EntityUserlevel) t.getTableView().getItems().get(t.getTablePosition().getRow());
+                                System.out.println("old:" + t.getOldValue() + "\t new:" + t.getNewValue());
+                                try {//get the "Method object" by supplying its String name
+                                    m = ul.getClass().getMethod(Main.getEntityMethodName(f.getName()), Float.class);
+                                } catch (SecurityException | NoSuchMethodException e) {System.out.println(e.getMessage());}
+                                
+                                try { if (m!=null) m.invoke(ul, t.getNewValue());} //same as call  ul.setFdxxxxxxxx()
+                                catch (IllegalArgumentException | IllegalAccessException | InvocationTargetException e) {
+                                    System.out.println("No such method found for :" + f.getName());
+                                }
+                                saveOn();
+
+                            }
+                        }
+                );
+            } 
+            //Handle Date type
+            else if (f.getType().equals(Date.class)) {
+            }
+            tbvMain.getColumns().add(c); //add column to the TableView
+        }
+         
+        tbvMain.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY); //auto size field width
+        tbvMain.setItems(ol);
 
         //Entity Managed mode
         if(!Main.db.em.getTransaction().isActive())
             Main.db.em.getTransaction().begin();
-
-                
     }
-    
+
     public void saveOn(){
         commit_count++;
         btnSave.setDisable(false);
@@ -193,56 +248,25 @@ public class DBeditEntityUserlevel implements Initializable {
     public void setParent(AnchorPane parent){
         this.parent = parent;
     }
-
     
-    class Person{
-        String fdname;
-        String fdaddress;
-        String fdphone;
-        Integer fdage;
-        Date fdbirthday;
-        String test;
-        Float fdheight;
-        public Person(String name){ this.fdname=name;  }
-        public Person(String name, String address, String phone, Integer age) {
-            this.fdname = name;
-            this.fdaddress = address;
-            this.fdphone = phone;
-            this.fdage = age;
-        }
-    }
     @FXML
     private void btnAdd_onClick(ActionEvent event) {
-        final Field[] farr = EntityUserlevel.class.getDeclaredFields();
-        final List<Field> flist = new ArrayList<>();
-        
-        for (Field f : farr){ //create a list of "f_" fields
-            f.setAccessible(true); //make "private" member visible
-            if (f.getName().substring(0, 2).equals("fd")){
-                flist.add(f);
-            }            
-        } 
-
-        System.out.println("Person has "+flist.size() + " DB fields.");
-        
-        if (flist.isEmpty()) {System.out.print("Entity has zero field!"); return;}
-
-        final List<Object> fieldlist = new ArrayList();
-        final List<Label> lbllist = new ArrayList<>();
+        final List<Object> ctrlList = new ArrayList();
+        final List<Label> lblList = new ArrayList<>();
         
         //insert Controls into a list
-        for (Field f : flist){
-            lbllist.add(new Label(f.getName()));
+        for (Field f : fList){
+            lblList.add(new Label( Main.tr.get(f.getName())  ));
             if (!f.getType().equals(Date.class)){
-                fieldlist.add(new TextField());
+                ctrlList.add(new TextField());
             }
             else{
                 DatePicker dp = new DatePicker( LocalDate.now());
                 dp.setEditable(false);
-                fieldlist.add(dp);
+                ctrlList.add(dp);
                 Instant instant = dp.getValue().atStartOfDay().atZone(ZoneId.systemDefault()).toInstant();
                 Date dt =  Date.from(instant);
-                System.out.println("converted:"+ dt.toString());
+                //System.out.println("converted:"+ dt.toString());
             }
         }
 
@@ -253,16 +277,16 @@ public class DBeditEntityUserlevel implements Initializable {
             }
                         
             private boolean dataFormatIsOK(){
-                for (int idx=0;idx<fieldlist.size();idx++){
-                    Field f = flist.get(idx);
-                    Object ctrl = fieldlist.get(idx);
+                for (int idx=0;idx<ctrlList.size();idx++){
+                    Field f = fList.get(idx);
+                    Object ctrl = ctrlList.get(idx);
                     if (f.getType().equals(String.class)){}
                     else if (f.getType().equals(Integer.class)  ||  f.getType().equals(int.class)  ){ 
                         if (! ((TextField)ctrl).getText().matches("[0-9]*")   ) {
                             Action response = Dialogs.create()
                                     .title("Error")
                                     .masthead("Format Error")
-                                    .message("Field '"+ f.getName() +"' must be Integer.")
+                                    .message("Field '"+  Main.tr.get(f.getName()) +"' must be Integer.")
                                     .showError();
                             return false;
                         }
@@ -272,7 +296,7 @@ public class DBeditEntityUserlevel implements Initializable {
                             Action response = Dialogs.create()
                                     .title("Error")
                                     .masthead("Format Error")
-                                    .message("Field '"+ f.getName() +"' must be Float.")
+                                    .message("Field '"+  Main.tr.get(f.getName()) +"' must be Float.")
                                     .showError();
                             return false;
                         }
@@ -283,17 +307,17 @@ public class DBeditEntityUserlevel implements Initializable {
             }
             
             private boolean requiredDataOk(){
-                for (int idx=0;idx < flist.size(); idx++){
-                    Field f = flist.get(idx);
-                    Object ctrl = fieldlist.get(idx);
+                for (int idx=0;idx < fList.size(); idx++){
+                    Field f = fList.get(idx);
+                    Object ctrl = ctrlList.get(idx);
                     //find required fields
-                    if (flist.get(idx).getName().substring(0, 3).equals("fdr") ){
+                    if (fList.get(idx).getName().substring(0, 3).equals("fdr") ){
                         if (!f.getType().equals(Date.class)){ //String, Integer, Float ... except Date
                             if ( ((TextField)ctrl).getText().isEmpty() ){
                                 Action response = Dialogs.create()
                                        .title("Error")
                                        .masthead("Data Required")
-                                       .message("Please enter data for the field: '"+ f.getName() +"'")
+                                       .message("Please enter data for the field: '"+  Main.tr.get(f.getName()) +"'")
                                        .showError();
                                 return false;
                             }
@@ -313,15 +337,15 @@ public class DBeditEntityUserlevel implements Initializable {
             
             private void saveRecord(){
                 EntityUserlevel ul = new EntityUserlevel();
-                ul.setFdrlevel( getTextFieldInteger(  (TextField)(fieldlist.get(0))  )  );
-                ul.setFdrlevelname( ((TextField)(fieldlist.get(1))).getText()    );
-                ul.setFdnote( ((TextField)(fieldlist.get(2))).getText()    );
+                ul.setFdrlevel( getTextFieldInteger(  (TextField)(ctrlList.get(0))  )  );
+                ul.setFdrlevelname( ((TextField)(ctrlList.get(1))).getText()    );
+                ul.setFdnote( ((TextField)(ctrlList.get(2))).getText()    );
                 if(!Main.db.em.getTransaction().isActive())
                     Main.db.em.getTransaction().begin();
                 
                 Main.db.em.persist(ul);
                 Main.db.em.getTransaction().commit();
-                loadTableViewData();
+                loadViewTable(getAllData());
             }
             
             // This method is called when the login button is clicked...
@@ -336,21 +360,21 @@ public class DBeditEntityUserlevel implements Initializable {
             }
         };    
         
-     Dialog dlg = new Dialog(null, "Login Dialog");
+     Dialog dlg = new Dialog(null, "Add new record");
 
      final GridPane content = new GridPane();
      content.setHgap(10);
      content.setVgap(10);
           
-     for (int idx=0; idx<flist.size(); idx++){
-        content.add(lbllist.get(idx), 0, idx);
-        if (flist.get(idx).getType().equals(Date.class)){
-            content.add((DatePicker)fieldlist.get(idx), 1, idx);
-            GridPane.setHgrow((DatePicker)fieldlist.get(idx), Priority.ALWAYS);
+     for (int idx=0; idx<fList.size(); idx++){
+        content.add(lblList.get(idx), 0, idx);
+        if (fList.get(idx).getType().equals(Date.class)){
+            content.add((DatePicker)ctrlList.get(idx), 1, idx);
+            GridPane.setHgrow((DatePicker)ctrlList.get(idx), Priority.ALWAYS);
         }
         else{
-            content.add((TextField)fieldlist.get(idx), 1, idx);
-            GridPane.setHgrow((TextField)fieldlist.get(idx), Priority.ALWAYS);
+            content.add((TextField)ctrlList.get(idx), 1, idx);
+            GridPane.setHgrow((TextField)ctrlList.get(idx), Priority.ALWAYS);
         }
     }
 
@@ -360,13 +384,28 @@ public class DBeditEntityUserlevel implements Initializable {
      dlg.setContent(content);
      dlg.getActions().addAll(actionLogin, Dialog.Actions.CANCEL);
      dlg.show();
-         
-
     }
 
+    private void search(){
+        ObservableList<EntityUserlevel> obslist = null;
+        
+        if (txfSearch.getText().isEmpty()){
+            obslist = getAllData();
+        }
+        else{
+            List<EntityUserlevel> thelist = Main.db.em.createNamedQuery("EntityUserlevel.findByFdrlevelname")
+                    .setParameter("fdrlevelname", txfSearch.getText())
+                    .getResultList();
+            obslist = FXCollections.observableList(thelist);
+        }
+         
+        loadViewTable(obslist);        
+    }
+    
     @FXML
     private void btnSave_onClick(ActionEvent event) {
         Main.db.em.getTransaction().commit();
+        Main.db.em.getTransaction().begin();
         saveOff();
     }
 
@@ -386,7 +425,7 @@ public class DBeditEntityUserlevel implements Initializable {
         Action response = Dialogs.create()
             .owner( null)
             .title("Confirmation")
-            .masthead("Are you sure to delete UserLevel: '"+ul.getFdrlevelname()+"' ?")
+            .masthead("Are you sure to delete : '"+ ul.getFdrlevelname()+"' ?")
             .message(entry)
             .showConfirm();
 
@@ -411,5 +450,22 @@ public class DBeditEntityUserlevel implements Initializable {
         
         parent.getChildren().clear();
     }
+    
+    @FXML
+    private void txfSearch_onEnter(ActionEvent event) {
+        search();
+    }
+
+    @FXML
+    private void cbxSearch_onChange(ActionEvent event) {
+        
+    }
+
+    @FXML
+    private void btnSearch_onClick(ActionEvent event) {
+        search();
+    }
+    
+    
     
 }

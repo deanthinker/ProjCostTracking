@@ -7,6 +7,7 @@
 package ProjCostTracking;
 
 import java.util.HashMap;
+import java.util.Map;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
@@ -28,9 +29,23 @@ public class Main extends Application {
     
     public static KYdb db = new KYdb(ENTITY_MANAGER_FACTORY_NAME);
 
+        //translate 
+    static final Map<String, String> tr = new HashMap<>();
+    static {
+        tr.put("userlevelid", "ID");
+        tr.put("fdrlevel", "使用者層級值");
+        tr.put("fdrlevelname", "層級名稱(0~99)");
+        tr.put("fdnote", "備註");
+    }
+    
+    
     //create a window class that holds loader, parent and controller
     public static HashMap<String, Window> winCollection = new HashMap<>();
-    
+
+    public static String getEntityMethodName(String s) {
+        return ("set" + s.substring(0, 1).toUpperCase() + s.substring(1));
+    }
+
     public static void test(){
 
     }
@@ -47,11 +62,11 @@ public class Main extends Application {
         
     }
     
+    
     @Override
     public void start(Stage stage) throws Exception {
-                
+
         //System.exit(0);
-        
         loadWindows();
         winCollection.get(SCREEN_MAINMENU).show();
        

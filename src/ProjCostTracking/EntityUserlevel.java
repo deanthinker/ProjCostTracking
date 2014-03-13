@@ -33,7 +33,7 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "EntityUserlevel.findAll", query = "SELECT e FROM EntityUserlevel e"),
     @NamedQuery(name = "EntityUserlevel.findByUserlevelid", query = "SELECT e FROM EntityUserlevel e WHERE e.userlevelid = :userlevelid"),
     @NamedQuery(name = "EntityUserlevel.findByFdrlevel", query = "SELECT e FROM EntityUserlevel e WHERE e.fdrlevel = :fdrlevel"),
-    @NamedQuery(name = "EntityUserlevel.findByFdrlevelname", query = "SELECT e FROM EntityUserlevel e WHERE e.fdrlevelname = :fdrlevelname")})
+    @NamedQuery(name = "EntityUserlevel.findByFdrlevelname", query = "SELECT e FROM EntityUserlevel e WHERE e.fdrlevelname LIKE :fdrlevelname")})
 public class EntityUserlevel implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
@@ -41,7 +41,7 @@ public class EntityUserlevel implements Serializable {
     @Basic(optional = false)
     private Integer userlevelid;
     @Basic(optional = false)
-    private int fdrlevel;
+    private Integer fdrlevel;
     @Basic(optional = false)
     private String fdrlevelname;
     @Lob
@@ -70,11 +70,11 @@ public class EntityUserlevel implements Serializable {
         this.userlevelid = userlevelid;
     }
 
-    public int getFdrlevel() {
+    public Integer getFdrlevel() {
         return fdrlevel;
     }
 
-    public void setFdrlevel(int fdrlevel) {
+    public void setFdrlevel(Integer fdrlevel) {
         this.fdrlevel = fdrlevel;
     }
 
