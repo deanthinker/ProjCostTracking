@@ -147,19 +147,22 @@ public class MainMenuController implements Initializable {
     private void mnuProjectType_onClick(ActionEvent event) {
     }
 
-
-    
     @FXML
     private void mnuUserLevel_onClick(ActionEvent event) {
         mainContent.getChildren().clear();
         FXMLLoader loader = new FXMLLoader(getClass().getResource("DBedit.fxml"));
-        
         DBeditEntityUserlevel controller = new DBeditEntityUserlevel();
+        
+        //dynamic class type NOT WORKING yet
+        //Test_DynamicController<EntityUserlevel> controller = new Test_DynamicController<>();
+        //controller.setEntity(EntityUserlevel.class);
+                
         loader.setController(controller);
         controller.setParent(mainContent);
+
         
-               
         try {
+            //expand the Child pane to the size of the parent
                Node n = (Node)loader.load();
                AnchorPane.setTopAnchor(n, 0.0);
                AnchorPane.setRightAnchor(n, 0.0);

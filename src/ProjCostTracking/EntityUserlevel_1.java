@@ -8,7 +8,6 @@ package ProjCostTracking;
 
 import java.io.Serializable;
 import java.util.List;
-import javafx.scene.control.TextField;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -22,8 +21,6 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
-import org.controlsfx.control.action.Action;
-import org.controlsfx.dialog.Dialogs;
 
 /**
  *
@@ -36,8 +33,7 @@ import org.controlsfx.dialog.Dialogs;
     @NamedQuery(name = "EntityUserlevel.findAll", query = "SELECT e FROM EntityUserlevel e"),
     @NamedQuery(name = "EntityUserlevel.findByUserlevelid", query = "SELECT e FROM EntityUserlevel e WHERE e.userlevelid = :userlevelid"),
     @NamedQuery(name = "EntityUserlevel.findByFdrlevel", query = "SELECT e FROM EntityUserlevel e WHERE e.fdrlevel = :fdrlevel"),
-    @NamedQuery(name = "EntityUserlevel.findByFdrlevelname", query = "SELECT e FROM EntityUserlevel e WHERE e.fdrlevelname LIKE :fdrlevelname"),
-    @NamedQuery(name = "EntityUserlevel.findByFdnote", query = "SELECT e FROM EntityUserlevel e WHERE e.fdnote LIKE :fdnote")})
+    @NamedQuery(name = "EntityUserlevel.findByFdrlevelname", query = "SELECT e FROM EntityUserlevel e WHERE e.fdrlevelname LIKE :fdrlevelname")})
 public class EntityUserlevel implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
@@ -131,54 +127,5 @@ public class EntityUserlevel implements Serializable {
     public String toString() {
         return "ProjCostTracking.EntityUserlevel[ userlevelid=" + userlevelid + " ]";
     }
-    
-    private Integer getTextFieldInteger(TextField txf) {
-        if (txf.getText().length() == 0) {
-            return 0;
-        } else {
-            return Integer.valueOf(txf.getText());
-        }
-    }
-    
-    public void save(List<Object> ctrlList){
-        EntityUserlevel ul = new EntityUserlevel();
-        ul.setFdrlevel( getTextFieldInteger(  (TextField)(ctrlList.get(0))  )  );
-        ul.setFdrlevelname( ((TextField)(ctrlList.get(1))).getText()    );
-        ul.setFdnote( ((TextField)(ctrlList.get(2))).getText()    );
-        if(!Main.db.em.getTransaction().isActive())
-            Main.db.em.getTransaction().begin();
-
-        Main.db.em.persist(ul);
-        Main.db.em.getTransaction().commit();        
-    }
-
-    public String delete(EntityUserlevel ul){
-        String userline = "";
-        
-        if (ul.getEntityUserList().size() > 0 ){
-            for (EntityUser u : ul.getEntityUserList()){
-                userline += ", " + u.getFdrusername();
-            }
-            userline = "This will also delete other " + ul.getEntityUserList().size() + " user account(s): " + userline;
-        }
-        
-        Action response = Dialogs.create()
-            .owner( null)
-            .title("Confirmation")
-            .masthead("Are you sure to delete : '"+ ul.getFdrlevelname()+"' ?")
-            .message(userline)
-            .showConfirm();
-
-        System.out.println("response: " + response);        
-          
-        if (response.toString().equals("YES")){
-            if(!Main.db.em.getTransaction().isActive())
-                Main.db.em.getTransaction().begin();
-            
-            Main.db.em.remove(ul);
-            Main.db.em.getTransaction().commit();
-        }
-        return response.toString();
-    }    
     
 }

@@ -37,17 +37,13 @@ public class Main extends Application {
         tr.put("fdrlevelname", "層級名稱(0~99)");
         tr.put("fdnote", "備註");
     }
-    
-    
+     
     //create a window class that holds loader, parent and controller
     public static HashMap<String, Window> winCollection = new HashMap<>();
 
-    public static String getEntityMethodName(String s) {
-        return ("set" + s.substring(0, 1).toUpperCase() + s.substring(1));
-    }
-
-    public static void test(){
-
+    public static String field2methodName(String fieldName) {
+        //fieldName:  fdrname --> setFdrname
+        return ("set" + fieldName.substring(0, 1).toUpperCase() + fieldName.substring(1));
     }
     
     private void debug(String msg){
@@ -59,20 +55,14 @@ public class Main extends Application {
         winCollection.put(SCREEN_DBEDIT, new Window(SCREEN_DBEDIT, SCREEN_DBEDIT_FXML));
         winCollection.put(SCREEN_LOGIN, new Window(SCREEN_LOGIN, SCREEN_LOGIN_FXML, MODAL, TRANSPARENT));
         winCollection.put(SCREEN_MAINMENU, new Window(SCREEN_MAINMENU, SCREEN_MAINMENU_FXML)); //this goes last
-        
     }
-    
-    
+     
     @Override
     public void start(Stage stage) throws Exception {
-
         //System.exit(0);
         loadWindows();
         winCollection.get(SCREEN_MAINMENU).show();
-       
-       
-        
-
+ 
     }
 
     public static void main(String[] args) {
