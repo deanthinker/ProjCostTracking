@@ -47,9 +47,9 @@ public class CurrentUser {
         setUser(in.getUserid(),
                 in.getFdrusername(),
                 in.getFdrpassword(),
-                in.getEmpid(),
-                in.getUserlevelid().getUserlevelid(),
-                in.getLog());
+                in.getFdempid().getEmpid(),
+                in.getFdruserlevelid().getUserlevelid(),
+                in.getFdrlog());
     }
     
     @Override

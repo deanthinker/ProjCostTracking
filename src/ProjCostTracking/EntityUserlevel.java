@@ -50,7 +50,7 @@ public class EntityUserlevel implements Serializable {
     private String fdrlevelname;
     @Lob
     private String fdnote;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "userlevelid")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "fdruserlevelid")
     private List<EntityUser> entityUserList;
 
     public EntityUserlevel() {
@@ -132,17 +132,16 @@ public class EntityUserlevel implements Serializable {
         return "ProjCostTracking.EntityUserlevel[ userlevelid=" + userlevelid + " ]";
     }
     
-    private Integer getTextFieldInteger(TextField txf) {
-        if (txf.getText().length() == 0) {
+    private Integer getTextFieldInteger(String s){
+        if (s.isEmpty())
             return 0;
-        } else {
-            return Integer.valueOf(txf.getText());
-        }
+        else
+            return Integer.valueOf(s);
     }
     
     public void save(List<Object> ctrlList){
         EntityUserlevel ul = new EntityUserlevel();
-        ul.setFdrlevel( getTextFieldInteger(  (TextField)(ctrlList.get(0))  )  );
+        ul.setFdrlevel( getTextFieldInteger(  ((TextField)(ctrlList.get(0))).getText()  )  );
         ul.setFdrlevelname( ((TextField)(ctrlList.get(1))).getText()    );
         ul.setFdnote( ((TextField)(ctrlList.get(2))).getText()    );
         if(!Main.db.em.getTransaction().isActive())
@@ -179,6 +178,6 @@ public class EntityUserlevel implements Serializable {
             Main.db.em.getTransaction().commit();
         }
         return response.toString();
-    }    
+    }        
     
 }

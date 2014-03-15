@@ -36,8 +36,7 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "EntityUser.findByFdrusername", query = "SELECT e FROM EntityUser e WHERE e.fdrusername = :fdrusername"),
     @NamedQuery(name = "EntityUser.findByFdrpassword", query = "SELECT e FROM EntityUser e WHERE e.fdrpassword = :fdrpassword"),
     @NamedQuery(name = "EntityUser.findByEntrydate", query = "SELECT e FROM EntityUser e WHERE e.entrydate = :entrydate"),
-    @NamedQuery(name = "EntityUser.findByEmpid", query = "SELECT e FROM EntityUser e WHERE e.empid = :empid"),
-    @NamedQuery(name = "EntityUser.findByLog", query = "SELECT e FROM EntityUser e WHERE e.log = :log")})
+    @NamedQuery(name = "EntityUser.findByFdrlog", query = "SELECT e FROM EntityUser e WHERE e.fdrlog = :fdrlog")})
 public class EntityUser implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
@@ -51,14 +50,15 @@ public class EntityUser implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private Date entrydate;
     @Basic(optional = false)
-    private int empid;
+    private int fdrlog;
     @Lob
-    private String note;
-    @Basic(optional = false)
-    private int log;
-    @JoinColumn(name = "userlevelid", referencedColumnName = "userlevelid")
+    private String fdnote;
+    @JoinColumn(name = "fdruserlevelid", referencedColumnName = "userlevelid")
     @ManyToOne(optional = false)
-    private EntityUserlevel userlevelid;
+    private EntityUserlevel fdruserlevelid;
+    @JoinColumn(name = "fdempid", referencedColumnName = "empid")
+    @ManyToOne(optional = false)
+    private EntityEmployee fdempid;
 
     public EntityUser() {
     }
@@ -67,12 +67,11 @@ public class EntityUser implements Serializable {
         this.userid = userid;
     }
 
-    public EntityUser(Integer userid, String fdrusername, String fdrpassword, int empid, int log) {
+    public EntityUser(Integer userid, String fdrusername, String fdrpassword, int fdrlog) {
         this.userid = userid;
         this.fdrusername = fdrusername;
         this.fdrpassword = fdrpassword;
-        this.empid = empid;
-        this.log = log;
+        this.fdrlog = fdrlog;
     }
 
     public Integer getUserid() {
@@ -107,36 +106,36 @@ public class EntityUser implements Serializable {
         this.entrydate = entrydate;
     }
 
-    public int getEmpid() {
-        return empid;
+    public int getFdrlog() {
+        return fdrlog;
     }
 
-    public void setEmpid(int empid) {
-        this.empid = empid;
+    public void setFdrlog(int fdrlog) {
+        this.fdrlog = fdrlog;
     }
 
-    public String getNote() {
-        return note;
+    public String getFdnote() {
+        return fdnote;
     }
 
-    public void setNote(String note) {
-        this.note = note;
+    public void setFdnote(String fdnote) {
+        this.fdnote = fdnote;
     }
 
-    public int getLog() {
-        return log;
+    public EntityUserlevel getFdruserlevelid() {
+        return fdruserlevelid;
     }
 
-    public void setLog(int log) {
-        this.log = log;
+    public void setFdruserlevelid(EntityUserlevel fdruserlevelid) {
+        this.fdruserlevelid = fdruserlevelid;
     }
 
-    public EntityUserlevel getUserlevelid() {
-        return userlevelid;
+    public EntityEmployee getFdempid() {
+        return fdempid;
     }
 
-    public void setUserlevelid(EntityUserlevel userlevelid) {
-        this.userlevelid = userlevelid;
+    public void setFdempid(EntityEmployee fdempid) {
+        this.fdempid = fdempid;
     }
 
     @Override

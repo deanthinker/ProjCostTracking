@@ -336,16 +336,16 @@ public class DBeditEntityUserlevel implements Initializable {
                 return true;
             }
             
-            private Integer getTextFieldInteger(TextField txf){
-                if (txf.getText().length() == 0)
+            private Integer getTextFieldInteger(String s){
+                if (s.isEmpty())
                     return 0;
                 else
-                    return Integer.valueOf(txf.getText());
+                    return Integer.valueOf(s);
             }
             
             private void saveRecord(){
                 EntityUserlevel ul = new EntityUserlevel();
-                ul.setFdrlevel( getTextFieldInteger(  (TextField)(ctrlList.get(0))  )  );
+                ul.setFdrlevel( getTextFieldInteger(  ((TextField)(ctrlList.get(0))).getText()  )  );
                 ul.setFdrlevelname( ((TextField)(ctrlList.get(1))).getText()    );
                 ul.setFdnote( ((TextField)(ctrlList.get(2))).getText()    );
                 if(!Main.db.em.getTransaction().isActive())

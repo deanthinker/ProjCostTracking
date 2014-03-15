@@ -401,6 +401,7 @@ public class Test_DynamicController <T> implements Initializable {
     }
 
     private void search(){
+        /*
         ObservableList<T> obslist = null;
         
         if (txfSearch.getText().isEmpty()){
@@ -414,6 +415,7 @@ public class Test_DynamicController <T> implements Initializable {
         }
          
         loadViewTable(obslist);        
+                */
     }
     
     @FXML
