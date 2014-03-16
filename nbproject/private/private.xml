@@ -5,10 +5,8 @@
         <group>
             <file>file:/D:/NetBeansWork/ProjCostTracking/src/ProjCostTracking/Main.java</file>
             <file>file:/D:/NetBeansWork/ProjCostTracking/src/ProjCostTracking/MainMenuController.java</file>
-            <file>file:/D:/NetBeansWork/ProjCostTracking/src/ProjCostTracking/CurrentUser.java</file>
-            <file>file:/D:/NetBeansWork/ProjCostTracking/src/ProjCostTracking/FieldQuery.java</file>
-            <file>file:/D:/NetBeansWork/ProjCostTracking/src/ProjCostTracking/EntityUserlevel.java</file>
-            <file>file:/D:/NetBeansWork/ProjCostTracking/src/ProjCostTracking/DBeditEntityUserlevel.java</file>
+            <file>file:/D:/NetBeansWork/ProjCostTracking/src/ProjCostTracking/EntityEmployee.java</file>
+            <file>file:/D:/NetBeansWork/ProjCostTracking/src/ProjCostTracking/DBeditEntityEmployee.java</file>
         </group>
     </open-files>
 </project-private>

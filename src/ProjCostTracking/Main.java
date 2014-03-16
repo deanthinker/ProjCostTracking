@@ -6,9 +6,13 @@
 
 package ProjCostTracking;
 
+import java.time.Instant;
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import javafx.application.Application;
+import javafx.scene.control.DatePicker;
 import javafx.stage.Stage;
 
 public class Main extends Application {
@@ -32,12 +36,32 @@ public class Main extends Application {
         //translate 
     static final Map<String, String> tr = new HashMap<>();
     static {
-        tr.put("userlevelid", "ID");
-        tr.put("fdrlevel", "使用者層級值");
-        tr.put("fdrlevelname", "層級名稱(0~99)");
         tr.put("fdnote", "備註");
+        //entityUserlevel
+        tr.put("userlevelid", "ID");
+        tr.put("fdrlevel", "使用者層級值(0~99)");
+        tr.put("fdrlevelname", "層級名稱");
+        //entityEmployee
+        tr.put("empid", "ID");
+        tr.put("fdrname", "姓名");
+        tr.put("fdlastname", "姓");
+        tr.put("fdbadgeid", "工號");
+        tr.put("fdtitle", "職稱");
+        tr.put("fdgender", "性別");
+        tr.put("fdbirthday", "生日");
     }
-     
+    public static Integer getTextFieldInteger(String s){
+        if (s.isEmpty())
+            return 0;
+        else
+            return Integer.valueOf(s);
+    }
+    
+    public static Date getDatePickerDate(DatePicker dp){
+        Instant instant = dp.getValue().atStartOfDay().atZone(ZoneId.systemDefault()).toInstant();
+        return Date.from(instant);        
+    }
+    
     //create a window class that holds loader, parent and controller
     public static HashMap<String, Window> winCollection = new HashMap<>();
 

@@ -7,8 +7,12 @@
 package ProjCostTracking;
 
 import java.io.Serializable;
+import java.time.Instant;
+import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
+import javafx.scene.control.DatePicker;
+import javafx.scene.control.TextField;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -24,6 +28,8 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
+import org.controlsfx.control.action.Action;
+import org.controlsfx.dialog.Dialogs;
 
 /**
  *
@@ -169,5 +175,50 @@ public class EntityEmployee implements Serializable {
     public String toString() {
         return "ProjCostTracking.EntityEmployee[ empid=" + empid + " ]";
     }
-    
+    public void save(List<Object> ctrlList){
+        EntityEmployee entity = new EntityEmployee();
+        entity.setFdrname( ((TextField)(ctrlList.get(0))).getText()    );
+        entity.setFdlastname( ((TextField)(ctrlList.get(1))).getText()    );
+        entity.setFdbadgeid( ((TextField)(ctrlList.get(2))).getText()    );
+        entity.setFdtitle( ((TextField)(ctrlList.get(3))).getText()    );
+        entity.setFdgender( ((TextField)(ctrlList.get(4))).getText()    );
+        entity.setFdbirthday(  Main.getDatePickerDate((DatePicker)ctrlList.get(5))   );
+        
+        entity.setFdnote( ((TextField)(ctrlList.get(6))).getText()    );
+        
+        if(!Main.db.em.getTransaction().isActive())
+            Main.db.em.getTransaction().begin();
+
+        Main.db.em.persist(entity);
+        Main.db.em.getTransaction().commit();        
+    }
+
+    public String delete(EntityEmployee entity){
+        String userline = "";
+        
+        if (entity.getEntityUserList().size() > 0 ){
+            for (EntityUser u : entity.getEntityUserList()){
+                userline += ", " + u.getFdrusername();
+            }
+            userline = "This will also delete other " + entity.getEntityUserList().size() + " user account(s): " + userline;
+        }
+        
+        Action response = Dialogs.create()
+            .owner( null)
+            .title("Confirmation")
+            .masthead("Are you sure to delete : '"+ entity.getFdrname()+"' ?")
+            .message(userline)
+            .showConfirm();
+
+        System.out.println("response: " + response);        
+          
+        if (response.toString().equals("YES")){
+            if(!Main.db.em.getTransaction().isActive())
+                Main.db.em.getTransaction().begin();
+            
+            Main.db.em.remove(entity);
+            Main.db.em.getTransaction().commit();
+        }
+        return response.toString();
+    }        
 }

@@ -131,17 +131,10 @@ public class EntityUserlevel implements Serializable {
     public String toString() {
         return "ProjCostTracking.EntityUserlevel[ userlevelid=" + userlevelid + " ]";
     }
-    
-    private Integer getTextFieldInteger(String s){
-        if (s.isEmpty())
-            return 0;
-        else
-            return Integer.valueOf(s);
-    }
-    
+  
     public void save(List<Object> ctrlList){
         EntityUserlevel ul = new EntityUserlevel();
-        ul.setFdrlevel( getTextFieldInteger(  ((TextField)(ctrlList.get(0))).getText()  )  );
+        ul.setFdrlevel( Main.getTextFieldInteger(  ((TextField)(ctrlList.get(0))).getText()  )  );
         ul.setFdrlevelname( ((TextField)(ctrlList.get(1))).getText()    );
         ul.setFdnote( ((TextField)(ctrlList.get(2))).getText()    );
         if(!Main.db.em.getTransaction().isActive())
@@ -151,20 +144,20 @@ public class EntityUserlevel implements Serializable {
         Main.db.em.getTransaction().commit();        
     }
 
-    public String delete(EntityUserlevel ul){
+    public String delete(EntityUserlevel entity){
         String userline = "";
         
-        if (ul.getEntityUserList().size() > 0 ){
-            for (EntityUser u : ul.getEntityUserList()){
+        if (entity.getEntityUserList().size() > 0 ){
+            for (EntityUser u : entity.getEntityUserList()){
                 userline += ", " + u.getFdrusername();
             }
-            userline = "This will also delete other " + ul.getEntityUserList().size() + " user account(s): " + userline;
+            userline = "This will also delete other " + entity.getEntityUserList().size() + " user account(s): " + userline;
         }
         
         Action response = Dialogs.create()
             .owner( null)
             .title("Confirmation")
-            .masthead("Are you sure to delete : '"+ ul.getFdrlevelname()+"' ?")
+            .masthead("Are you sure to delete : '"+ entity.getFdrlevelname()+"' ?")
             .message(userline)
             .showConfirm();
 
@@ -174,7 +167,7 @@ public class EntityUserlevel implements Serializable {
             if(!Main.db.em.getTransaction().isActive())
                 Main.db.em.getTransaction().begin();
             
-            Main.db.em.remove(ul);
+            Main.db.em.remove(entity);
             Main.db.em.getTransaction().commit();
         }
         return response.toString();

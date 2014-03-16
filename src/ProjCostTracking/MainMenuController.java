@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 
 package ProjCostTracking;
 
@@ -100,7 +95,6 @@ public class MainMenuController implements Initializable {
                 lblMessage.setText("");
         }
       });
-                
     }    
 
     @FXML
@@ -129,6 +123,13 @@ public class MainMenuController implements Initializable {
 
     @FXML
     private void mnuEmployee_onClick(ActionEvent event) {
+        mainContent.getChildren().clear();
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("DBedit.fxml"));
+        DBeditEntityEmployee controller = new DBeditEntityEmployee();
+
+        loader.setController(controller);
+        controller.setParent(mainContent);
+        fitToParent(loader);
     }
 
     @FXML
@@ -156,11 +157,13 @@ public class MainMenuController implements Initializable {
         //dynamic class type NOT WORKING yet
         //Test_DynamicController<EntityUserlevel> controller = new Test_DynamicController<>();
         //controller.setEntity(EntityUserlevel.class);
-                
+
         loader.setController(controller);
         controller.setParent(mainContent);
+        fitToParent(loader);
+    }
 
-        
+    private void fitToParent(FXMLLoader loader){
         try {
             //expand the Child pane to the size of the parent
                Node n = (Node)loader.load();
@@ -171,9 +174,8 @@ public class MainMenuController implements Initializable {
                mainContent.getChildren().setAll(n);
         } catch (IOException e){
                System.out.println(e.getMessage());
-        }
+        }        
     }
-
     @FXML
     private void mnuPreferences_onClick(ActionEvent event) {
     }
