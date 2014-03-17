@@ -278,8 +278,8 @@ public class DBeditEntityUserlevel implements Initializable {
             }
         }
 
-        final Action actionLogin;    
-        actionLogin = new AbstractAction("Save") {
+        final Action actionSave;    
+        actionSave = new AbstractAction("Save") {
             { 
                 ButtonBar.setType(this, ButtonBar.ButtonType.OK_DONE);
             }
@@ -384,7 +384,7 @@ public class DBeditEntityUserlevel implements Initializable {
      dlg.setIconifiable(false);
 
      dlg.setContent(content);
-     dlg.getActions().addAll(actionLogin, Dialog.Actions.CANCEL);
+     dlg.getActions().addAll(actionSave, Dialog.Actions.CANCEL);
      dlg.show();
     }
 

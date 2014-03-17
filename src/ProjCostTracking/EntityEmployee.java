@@ -7,10 +7,9 @@
 package ProjCostTracking;
 
 import java.io.Serializable;
-import java.time.Instant;
-import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
 import javax.persistence.Basic;
@@ -41,10 +40,10 @@ import org.controlsfx.dialog.Dialogs;
 @NamedQueries({
     @NamedQuery(name = "EntityEmployee.findAll", query = "SELECT e FROM EntityEmployee e"),
     @NamedQuery(name = "EntityEmployee.findByEmpid", query = "SELECT e FROM EntityEmployee e WHERE e.empid = :empid"),
-    @NamedQuery(name = "EntityEmployee.findByFdrname", query = "SELECT e FROM EntityEmployee e WHERE e.fdrname = :fdrname"),
-    @NamedQuery(name = "EntityEmployee.findByFdlastname", query = "SELECT e FROM EntityEmployee e WHERE e.fdlastname = :fdlastname"),
-    @NamedQuery(name = "EntityEmployee.findByFdbadgeid", query = "SELECT e FROM EntityEmployee e WHERE e.fdbadgeid = :fdbadgeid"),
-    @NamedQuery(name = "EntityEmployee.findByFdtitle", query = "SELECT e FROM EntityEmployee e WHERE e.fdtitle = :fdtitle"),
+    @NamedQuery(name = "EntityEmployee.findByFdrname", query = "SELECT e FROM EntityEmployee e WHERE e.fdrname LIKE :fdrname"),
+    @NamedQuery(name = "EntityEmployee.findByFdlastname", query = "SELECT e FROM EntityEmployee e WHERE e.fdlastname LIKE :fdlastname"),
+    @NamedQuery(name = "EntityEmployee.findByFdbadgeid", query = "SELECT e FROM EntityEmployee e WHERE e.fdbadgeid LIKE :fdbadgeid"),
+    @NamedQuery(name = "EntityEmployee.findByFdtitle", query = "SELECT e FROM EntityEmployee e WHERE e.fdtitle LIKE :fdtitle"),
     @NamedQuery(name = "EntityEmployee.findByFdgender", query = "SELECT e FROM EntityEmployee e WHERE e.fdgender = :fdgender"),
     @NamedQuery(name = "EntityEmployee.findByFdbirthday", query = "SELECT e FROM EntityEmployee e WHERE e.fdbirthday = :fdbirthday")})
 public class EntityEmployee implements Serializable {
@@ -181,7 +180,7 @@ public class EntityEmployee implements Serializable {
         entity.setFdlastname( ((TextField)(ctrlList.get(1))).getText()    );
         entity.setFdbadgeid( ((TextField)(ctrlList.get(2))).getText()    );
         entity.setFdtitle( ((TextField)(ctrlList.get(3))).getText()    );
-        entity.setFdgender( ((TextField)(ctrlList.get(4))).getText()    );
+        entity.setFdgender( ((ComboBox)(ctrlList.get(4))).getValue().toString()    );
         entity.setFdbirthday(  Main.getDatePickerDate((DatePicker)ctrlList.get(5))   );
         
         entity.setFdnote( ((TextField)(ctrlList.get(6))).getText()    );

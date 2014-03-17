@@ -16,6 +16,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -229,9 +230,27 @@ public class DBeditEntityEmployee implements Initializable {
                         }
                 );
             } 
+            
             //Handle Date type
             else if (f.getType().equals(Date.class)) {
-                
+                c.setCellFactory(new Callback<TableColumn<EntityEmployee, Date>, TableCell<EntityEmployee, Date>>() {
+                    @Override
+                    public TableCell<EntityEmployee, Date> call(TableColumn<EntityEmployee, Date> arg0) {
+                            return new TableCell<EntityEmployee, Date>(){
+                                //set how DATE is displayed in the cell
+                                @Override protected void updateItem(Date d, boolean empty) {
+                                    SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
+                                     super.updateItem(d, empty);
+                                     if (d == null || empty) {
+                                         setText(null);
+                                     } else {
+                                         setText(sdf.format(d) );
+                                     }
+                                 }                                
+                                
+                            };
+                    }
+                });                
             }
             
             tbvMain.getColumns().add(c); //add column to the TableView
@@ -271,21 +290,29 @@ public class DBeditEntityEmployee implements Initializable {
         //insert Controls into a list
         for (Field f : fList){
             lblList.add(new Label( Main.tr.get(f.getName())  ));
-            if (!f.getType().equals(Date.class)){
-                ctrlList.add(new TextField());
-            }
-            else{
+            if (f.getType().equals(Date.class)){
+                //handle DATE
                 DatePicker dp = new DatePicker( LocalDate.now());
                 dp.setEditable(true);
                 ctrlList.add(dp);
                 Instant instant = dp.getValue().atStartOfDay().atZone(ZoneId.systemDefault()).toInstant();
                 Date dt =  Date.from(instant);
-                //System.out.println("converted:"+ dt.toString());
+                //System.out.println("converted:"+ dt.toString());                
+                
+            }
+            else if (f.getName().contains("gender")){
+                //handle GENDER, using ComboBox
+                ComboBox cbx = new ComboBox(FXCollections.observableArrayList("M","F"));
+                cbx.getSelectionModel().selectFirst();
+                ctrlList.add(cbx);
+            }
+            else{//handle other types
+                ctrlList.add(new TextField());
             }
         }
 
-        final Action actionLogin;    
-        actionLogin = new AbstractAction("Save") {
+        final Action actionSave;    
+        actionSave = new AbstractAction("Save") {
             { 
                 ButtonBar.setType(this, ButtonBar.ButtonType.OK_DONE);
             }
@@ -315,7 +342,16 @@ public class DBeditEntityEmployee implements Initializable {
                             return false;
                         }
                     }
-                    else if (f.getType().equals(Date.class)){ }
+                    else if (f.getType().equals(Date.class)){ 
+                        if ( ((DatePicker)ctrl).getValue() == null   )   {
+                            Action response = Dialogs.create()
+                                    .title("Error")
+                                    .masthead("Format Error")
+                                    .message("Field '"+  Main.tr.get(f.getName()) +"' must be set.")
+                                    .showError();
+                            return false;
+                        }                        
+                    }
                 }
                 return true;
             }
@@ -369,9 +405,15 @@ public class DBeditEntityEmployee implements Initializable {
           
      for (int idx=0; idx<fList.size(); idx++){
         content.add(lblList.get(idx), 0, idx);
+        System.out.println("adding to content: "+ lblList.get(idx).getText());
         if (fList.get(idx).getType().equals(Date.class)){
+            //handle DATE
             content.add((DatePicker)ctrlList.get(idx), 1, idx);
             GridPane.setHgrow((DatePicker)ctrlList.get(idx), Priority.ALWAYS);
+        }
+        else if (fList.get(idx).getName().contains("gender")){
+            //handle genderr
+            content.add(  (ComboBox)ctrlList.get(idx), 1, idx);
         }
         else{
             content.add((TextField)ctrlList.get(idx), 1, idx);
@@ -383,7 +425,7 @@ public class DBeditEntityEmployee implements Initializable {
      dlg.setIconifiable(false);
 
      dlg.setContent(content);
-     dlg.getActions().addAll(actionLogin, Dialog.Actions.CANCEL);
+     dlg.getActions().addAll(actionSave, Dialog.Actions.CANCEL);
      dlg.show();
     }
 

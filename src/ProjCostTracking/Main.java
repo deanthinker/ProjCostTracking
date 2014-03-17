@@ -48,7 +48,7 @@ public class Main extends Application {
         tr.put("fdbadgeid", "工號");
         tr.put("fdtitle", "職稱");
         tr.put("fdgender", "性別");
-        tr.put("fdbirthday", "生日");
+        tr.put("fdbirthday", "生日(月/日/年");
     }
     public static Integer getTextFieldInteger(String s){
         if (s.isEmpty())
