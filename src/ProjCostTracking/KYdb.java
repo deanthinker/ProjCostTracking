@@ -6,12 +6,9 @@
 
 package ProjCostTracking;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.List;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
@@ -25,15 +22,13 @@ public class KYdb {
     
     public static EntityManagerFactory emf = null;
     public static EntityManager em = null;
+    public static EntityManager tmpem = null;
     
     public KYdb(String factoryName){
         emf = Persistence.createEntityManagerFactory(factoryName);
         em = emf.createEntityManager();
+        tmpem = emf.createEntityManager();
     }
-    
-    public EntityManager getEntityManager(){
-        return this.em;
-    }    
         
     public boolean setLoginUser(String username, String password){
         List<EntityUser> ul = em.createQuery("select u from EntityUser u where u.fdrusername = '" + username + "' and  u.fdrpassword = '" + password +"' ").getResultList();
@@ -45,7 +40,22 @@ public class KYdb {
             }
         }
         return false;
-    }    
+    }
+    
+    public ObservableList<EntityUserlevel> getUserlevelList() {
+        List<EntityUserlevel> thelist = Main.db.tmpem.createQuery("select e from EntityUserlevel e").getResultList();
+        ObservableList<EntityUserlevel> obslist = FXCollections.observableList(thelist);
+        tmpem.clear();
+        return obslist;
+    }
+
+    public ObservableList<EntityEmployee> getEmployeeList() {
+        List<EntityEmployee> thelist = Main.db.tmpem.createQuery("select e from EntityEmployee e").getResultList();
+        ObservableList<EntityEmployee> obslist = FXCollections.observableList(thelist);
+        tmpem.clear();
+        return obslist;
+    }
+    
     
     //the following commented out code uses traditional JDBC connection ; it is now replaced by JPA (Java Persistence API)
     /* 

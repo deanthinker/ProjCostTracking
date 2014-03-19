@@ -5,8 +5,13 @@
         <group>
             <file>file:/D:/NetBeansWork/ProjCostTracking/src/ProjCostTracking/Main.java</file>
             <file>file:/D:/NetBeansWork/ProjCostTracking/src/ProjCostTracking/MainMenuController.java</file>
+            <file>file:/D:/NetBeansWork/ProjCostTracking/src/ProjCostTracking/DBeditEntityUser.java</file>
+            <file>file:/D:/NetBeansWork/ProjCostTracking/src/ProjCostTracking/KYdb.java</file>
             <file>file:/D:/NetBeansWork/ProjCostTracking/src/ProjCostTracking/EntityEmployee.java</file>
+            <file>file:/D:/NetBeansWork/ProjCostTracking/src/ProjCostTracking/EntityUserlevel.java</file>
             <file>file:/D:/NetBeansWork/ProjCostTracking/src/ProjCostTracking/DBeditEntityEmployee.java</file>
+            <file>file:/D:/NetBeansWork/ProjCostTracking/src/ProjCostTracking/DBeditEntityUserlevel.java</file>
+            <file>file:/D:/NetBeansWork/ProjCostTracking/src/ProjCostTracking/EntityUser.java</file>
         </group>
     </open-files>
 </project-private>

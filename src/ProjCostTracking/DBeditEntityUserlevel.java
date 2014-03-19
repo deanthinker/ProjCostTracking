@@ -345,7 +345,7 @@ public class DBeditEntityUserlevel implements Initializable {
             
             private void saveRecord(){
                 EntityUserlevel entity = new EntityUserlevel();
-                entity.save(ctrlList);
+                save(ctrlList);
 
                 loadViewTable(getAllData());
             }
@@ -414,10 +414,13 @@ public class DBeditEntityUserlevel implements Initializable {
     @FXML
     private void btnDelete_onClick(ActionEvent event) {
         EntityUserlevel ul = (EntityUserlevel)tbvMain.getSelectionModel().getSelectedItem();
-        String response = ul.delete(ul);
-        if (response.equals("YES"))
-            tbvMain.getItems().remove(tbvMain.getSelectionModel().getSelectedIndex());
-    
+        if (ul == null)
+            System.out.println("Select null!");
+        else{
+            String response = delete(ul);
+            if (response.equals("YES"))
+                tbvMain.getItems().remove(tbvMain.getSelectionModel().getSelectedIndex());
+        }
     }
 
     @FXML
@@ -443,7 +446,47 @@ public class DBeditEntityUserlevel implements Initializable {
     private void btnSearch_onClick(ActionEvent event) {
         search();
     }
-    
+  
+    public void save(List<Object> ctrlList){
+        EntityUserlevel ul = new EntityUserlevel();
+        ul.setFdrlevel( Main.getTextFieldInteger(  ((TextField)(ctrlList.get(0))).getText()  )  );
+        ul.setFdrlevelname( ((TextField)(ctrlList.get(1))).getText()    );
+        ul.setFdnote( ((TextField)(ctrlList.get(2))).getText()    );
+        if(!Main.db.em.getTransaction().isActive())
+            Main.db.em.getTransaction().begin();
+
+        Main.db.em.persist(ul);
+        Main.db.em.getTransaction().commit();
+    }
+
+    public String delete(EntityUserlevel entity){
+        String userline = "";
+
+        if (entity.getEntityUserList().size() > 0 ){
+            for (EntityUser u : entity.getEntityUserList()){
+                userline += ", " + u.getFdrusername();
+            }
+            userline = "This will also delete other " + entity.getEntityUserList().size() + " user account(s): " + userline;
+        }
+        
+        Action response = Dialogs.create()
+            .owner( null)
+            .title("Confirmation")
+            .masthead("Are you sure to delete : '"+ entity.getFdrlevelname()+"' ?")
+            .message(userline)
+            .showConfirm();
+
+        System.out.println("response: " + response);        
+          
+        if (response.toString().equals("YES")){
+            if(!Main.db.em.getTransaction().isActive())
+                Main.db.em.getTransaction().begin();
+            
+            Main.db.em.remove(entity);
+            Main.db.em.getTransaction().commit();
+        }
+        return response.toString();
+    }        
 
     
 }

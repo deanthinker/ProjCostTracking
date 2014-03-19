@@ -118,7 +118,13 @@ public class MainMenuController implements Initializable {
 
     @FXML
     private void mnuUser_onClick(ActionEvent event) {
+        mainContent.getChildren().clear();
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("DBedit.fxml"));
+        DBeditEntityUser controller = new DBeditEntityUser();
 
+        loader.setController(controller);
+        controller.setParent(mainContent);
+        fitToParent(loader);
     }
 
     @FXML

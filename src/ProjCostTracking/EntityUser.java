@@ -10,6 +10,7 @@ import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -36,7 +37,8 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "EntityUser.findByFdrusername", query = "SELECT e FROM EntityUser e WHERE e.fdrusername = :fdrusername"),
     @NamedQuery(name = "EntityUser.findByFdrpassword", query = "SELECT e FROM EntityUser e WHERE e.fdrpassword = :fdrpassword"),
     @NamedQuery(name = "EntityUser.findByEntrydate", query = "SELECT e FROM EntityUser e WHERE e.entrydate = :entrydate"),
-    @NamedQuery(name = "EntityUser.findByFdrlog", query = "SELECT e FROM EntityUser e WHERE e.fdrlog = :fdrlog")})
+    @NamedQuery(name = "EntityUser.findByFdrlog", query = "SELECT e FROM EntityUser e WHERE e.fdrlog = :fdrlog"),
+    @NamedQuery(name = "EntityUser.findByFdnote", query = "SELECT e FROM EntityUser e WHERE e.fdnote LIKE :fdnote")})
 public class EntityUser implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
@@ -47,18 +49,19 @@ public class EntityUser implements Serializable {
     private String fdrusername;
     @Basic(optional = false)
     private String fdrpassword;
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date entrydate;
-    @Basic(optional = false)
-    private int fdrlog;
-    @Lob
-    private String fdnote;
+
     @JoinColumn(name = "fdruserlevelid", referencedColumnName = "userlevelid")
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, fetch = FetchType.EAGER)
     private EntityUserlevel fdruserlevelid;
     @JoinColumn(name = "fdempid", referencedColumnName = "empid")
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, fetch = FetchType.EAGER)
     private EntityEmployee fdempid;
+    @Basic(optional = false)
+    private Boolean fdrlog;
+    @Lob
+    private String fdnote;
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date entrydate;
 
     public EntityUser() {
     }
@@ -67,7 +70,7 @@ public class EntityUser implements Serializable {
         this.userid = userid;
     }
 
-    public EntityUser(Integer userid, String fdrusername, String fdrpassword, int fdrlog) {
+    public EntityUser(Integer userid, String fdrusername, String fdrpassword, Boolean fdrlog) {
         this.userid = userid;
         this.fdrusername = fdrusername;
         this.fdrpassword = fdrpassword;
@@ -106,11 +109,11 @@ public class EntityUser implements Serializable {
         this.entrydate = entrydate;
     }
 
-    public int getFdrlog() {
+    public Boolean getFdrlog() {
         return fdrlog;
     }
 
-    public void setFdrlog(int fdrlog) {
+    public void setFdrlog(Boolean fdrlog) {
         this.fdrlog = fdrlog;
     }
 
@@ -162,5 +165,5 @@ public class EntityUser implements Serializable {
     public String toString() {
         return "ProjCostTracking.EntityUser[ userid=" + userid + " ]";
     }
-    
+          
 }

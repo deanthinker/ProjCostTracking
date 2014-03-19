@@ -49,6 +49,14 @@ public class Main extends Application {
         tr.put("fdtitle", "職稱");
         tr.put("fdgender", "性別");
         tr.put("fdbirthday", "生日(月/日/年");
+        //entityUser
+        tr.put("userid", "ID");
+        tr.put("fdrusername", "使用者名稱");
+        tr.put("fdrpassword", "密碼");
+        tr.put("fdruserlevelid", "使用者層級");
+        tr.put("fdempid", "員工");
+        tr.put("fdrlog", "紀錄");
+        
     }
     public static Integer getTextFieldInteger(String s){
         if (s.isEmpty())
@@ -83,7 +91,7 @@ public class Main extends Application {
      
     @Override
     public void start(Stage stage) throws Exception {
-        //System.exit(0);
+                
         loadWindows();
         winCollection.get(SCREEN_MAINMENU).show();
  

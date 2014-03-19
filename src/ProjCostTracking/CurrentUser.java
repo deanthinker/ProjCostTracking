@@ -17,22 +17,23 @@ public class CurrentUser {
     private Integer userid;
     private String username, password;
 
-    private int empid, level, log;
+    private int empid, level;
+    private boolean log;
     private final Calendar login_time = Calendar.getInstance();
     public SimpleStringProperty namebind = new SimpleStringProperty(""); // this variable MUST be updated with username, so that changes are upaded for the binding listener
    
     public CurrentUser(){ //for Main.user for initialization
-        setUser(0,"","",0,0,0);
+        setUser(0,"","",0,0, true);
     }
-    public CurrentUser(Integer userid, String username, String password, Integer empid, int level, int log) {
+    public CurrentUser(Integer userid, String username, String password, Integer empid, int level, boolean log) {
         setUser( userid,  username,  password,  empid,  level,  log);
     }
         
     public void logout(){
-        setUser(0,"","",0,0,0);
+        setUser(0,"","",0,0,true);
     }
 
-    public void setUser(Integer userid, String username, String password, Integer empid, int level, int log) {
+    public void setUser(Integer userid, String username, String password, Integer empid, int level, boolean log) {
         setUserid(userid);
         setUsername(username);
         setPassword(password);
@@ -74,7 +75,7 @@ public class CurrentUser {
         this.level = level;
     }
 
-    public void setLog(int log) {
+    public void setLog(boolean log) {
         this.log = log;
     }
 
@@ -101,7 +102,7 @@ public class CurrentUser {
     public int getLevel() {
         return level;
     }
-    public int getLog() {
+    public boolean getLog() {
         return log;
     }
     

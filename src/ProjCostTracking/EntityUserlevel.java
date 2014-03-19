@@ -12,6 +12,7 @@ import javafx.scene.control.TextField;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -50,7 +51,7 @@ public class EntityUserlevel implements Serializable {
     private String fdrlevelname;
     @Lob
     private String fdnote;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "fdruserlevelid")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "fdruserlevelid", fetch = FetchType.EAGER)
     private List<EntityUser> entityUserList;
 
     public EntityUserlevel() {
@@ -129,48 +130,7 @@ public class EntityUserlevel implements Serializable {
 
     @Override
     public String toString() {
-        return "ProjCostTracking.EntityUserlevel[ userlevelid=" + userlevelid + " ]";
+        return userlevelid +":"+ fdrlevelname;
     }
-  
-    public void save(List<Object> ctrlList){
-        EntityUserlevel ul = new EntityUserlevel();
-        ul.setFdrlevel( Main.getTextFieldInteger(  ((TextField)(ctrlList.get(0))).getText()  )  );
-        ul.setFdrlevelname( ((TextField)(ctrlList.get(1))).getText()    );
-        ul.setFdnote( ((TextField)(ctrlList.get(2))).getText()    );
-        if(!Main.db.em.getTransaction().isActive())
-            Main.db.em.getTransaction().begin();
-
-        Main.db.em.persist(ul);
-        Main.db.em.getTransaction().commit();        
-    }
-
-    public String delete(EntityUserlevel entity){
-        String userline = "";
-        
-        if (entity.getEntityUserList().size() > 0 ){
-            for (EntityUser u : entity.getEntityUserList()){
-                userline += ", " + u.getFdrusername();
-            }
-            userline = "This will also delete other " + entity.getEntityUserList().size() + " user account(s): " + userline;
-        }
-        
-        Action response = Dialogs.create()
-            .owner( null)
-            .title("Confirmation")
-            .masthead("Are you sure to delete : '"+ entity.getFdrlevelname()+"' ?")
-            .message(userline)
-            .showConfirm();
-
-        System.out.println("response: " + response);        
-          
-        if (response.toString().equals("YES")){
-            if(!Main.db.em.getTransaction().isActive())
-                Main.db.em.getTransaction().begin();
-            
-            Main.db.em.remove(entity);
-            Main.db.em.getTransaction().commit();
-        }
-        return response.toString();
-    }        
     
 }
