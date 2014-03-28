@@ -608,8 +608,8 @@ public class DBeditEntityUser implements Initializable {
         EntityUser entity = new EntityUser();
         entity.setFdrusername(((TextField)(ctrlList.get(0))).getText());
         entity.setFdrpassword(((TextField)(ctrlList.get(1))).getText());
-        
-        entity.setFdruserlevelid( ((ComboBox<EntityUserlevel>)ctrlList.get(2)).getValue()       );
+        EntityUserlevel ul = ((ComboBox<EntityUserlevel>)ctrlList.get(2)).getValue();
+        entity.setFdruserlevelid( ul       );
         entity.setFdempid(   (EntityEmployee)((ComboBox)ctrlList.get(3)).getValue()    );
         entity.setFdrlog(  (Boolean) ((ComboBox)ctrlList.get(4)).getValue()   );
 
@@ -619,6 +619,7 @@ public class DBeditEntityUser implements Initializable {
 
         Main.db.em.persist(entity);
         Main.db.em.getTransaction().commit();        
+        
     }
 
     public String delete(EntityUser entity){

@@ -414,6 +414,15 @@ public class DBeditEntityUserlevel implements Initializable {
     @FXML
     private void btnDelete_onClick(ActionEvent event) {
         EntityUserlevel ul = (EntityUserlevel)tbvMain.getSelectionModel().getSelectedItem();
+            //newly added EntityUserlevel.getEntityUserList  is EMPTY; we have to make the relationship manually!!!!
+            //otherwise, DELETE error!
+            int id = ul.getUserlevelid();
+            List<EntityUser> u = Main.db.em.createQuery("select u from EntityUser u where u.fdruserlevelid = :ul")
+                    .setParameter("ul", ul)
+                    .getResultList();
+            ul.setEntityUserList(u);
+        
+        System.out.println("user list:"+u.toString());
         if (ul == null)
             System.out.println("Select null!");
         else{
@@ -466,7 +475,7 @@ public class DBeditEntityUserlevel implements Initializable {
             for (EntityUser u : entity.getEntityUserList()){
                 userline += ", " + u.getFdrusername();
             }
-            userline = "This will also delete other " + entity.getEntityUserList().size() + " user account(s): " + userline;
+            userline = "這同時會刪除 " + entity.getEntityUserList().size() + "個使用者帳號: " + userline;
         }
         
         Action response = Dialogs.create()
