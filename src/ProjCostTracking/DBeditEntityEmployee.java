@@ -61,7 +61,7 @@ public class DBeditEntityEmployee implements Initializable {
 
     final Field[] actualFieldsArray = EntityEmployee.class.getDeclaredFields();
     final List<Field> fList = new ArrayList<>();
-    
+    final String tbname = "employee";
     @FXML
     private AnchorPane myanchorpane;
     @FXML
@@ -455,6 +455,40 @@ public class DBeditEntityEmployee implements Initializable {
     @FXML
     private void btnDelete_onClick(ActionEvent event) {
         EntityEmployee entity = (EntityEmployee)tbvMain.getSelectionModel().getSelectedItem();
+        //newly added EntityEmployee.getEntityUserList  is EMPTY; we have to make the relationship manually!!!!
+        //otherwise, DELETE error!
+        int id = entity.getEmpid();
+        List<EntityUser> u = Main.db.em.createQuery("select u from EntityUser u where u.fdempid = :id")
+                .setParameter("id", entity)
+                .getResultList();
+        entity.setEntityUserList(u);
+        
+        System.out.println("user list:"+u.toString());
+        if ( entity == null){
+            Dialogs.create()
+                .title("警告")
+                .masthead("")
+                .message("請先選擇一筆資料")
+                .showError(); 
+        }
+        else{
+            if (u.size()> 0  ){
+            Dialogs.create()
+                .title("警告")
+                .masthead("不可刪除")
+                .message("此資料已被引用, 必須先變更以下使用者設定: " + u.toString())
+                .showError();  
+            }
+            else{
+                String response = delete(entity);
+                if (response.equals("YES"))
+                    tbvMain.getItems().remove(tbvMain.getSelectionModel().getSelectedIndex());
+            }
+        }
+    
+    }    
+    private void btnDelete_onClick_old(ActionEvent event) {
+        EntityEmployee entity = (EntityEmployee)tbvMain.getSelectionModel().getSelectedItem();
         if (entity == null) return;
         String response = delete(entity);
         if (response.equals("YES"))
@@ -501,6 +535,7 @@ public class DBeditEntityEmployee implements Initializable {
 
         Main.db.em.persist(entity);
         Main.db.em.getTransaction().commit();        
+        Main.log(EntityLog.ADD, tbname, entity.getEmpid().toString());
     }
 
     public String delete(EntityEmployee entity){
@@ -528,6 +563,7 @@ public class DBeditEntityEmployee implements Initializable {
             
             Main.db.em.remove(entity);
             Main.db.em.getTransaction().commit();
+            Main.log(EntityLog.DEL, tbname, entity.getEmpid().toString());
         }
         return response.toString();
     }         

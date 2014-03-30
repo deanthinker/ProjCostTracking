@@ -62,6 +62,7 @@ public class DBeditEntityUser implements Initializable {
     final ObservableList<EntityUserlevel> ulList = Main.db.getUserlevelList();
     final ObservableList<EntityEmployee> empList = Main.db.getEmployeeList();
     final ObservableList<Boolean> boolList =  FXCollections.observableArrayList(true, false);
+    final String tbname = "user";
     
     @FXML
     private AnchorPane myanchorpane;
@@ -619,7 +620,7 @@ public class DBeditEntityUser implements Initializable {
 
         Main.db.em.persist(entity);
         Main.db.em.getTransaction().commit();        
-        
+        Main.log(EntityLog.ADD, tbname, entity.getUserid().toString());
     }
 
     public String delete(EntityUser entity){
@@ -640,7 +641,10 @@ public class DBeditEntityUser implements Initializable {
             
             Main.db.em.remove(entity);
             Main.db.em.getTransaction().commit();
+            Main.log(EntityLog.DEL, tbname, entity.getUserid().toString());
         }
+        
+        
         return response.toString();
     }    
 

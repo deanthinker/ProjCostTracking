@@ -93,7 +93,8 @@ public class Main extends Application {
     public void start(Stage stage) throws Exception {
                 
         loadWindows();
-        winCollection.get(SCREEN_MAINMENU).show();
+        winCollection.get(SCREEN_LOGIN).show();
+        //winCollection.get(SCREEN_MAINMENU).show();
  
     }
 
@@ -101,4 +102,12 @@ public class Main extends Application {
         launch(args);
     }
     
+    public static void log(int logtype, String tablename, String note){
+        EntityLog el = new EntityLog(logtype, Main.currentUser.getUserid(), tablename, note);
+        if(!Main.db.em.getTransaction().isActive())
+            Main.db.em.getTransaction().begin();
+
+        Main.db.em.persist(el);
+        Main.db.em.getTransaction().commit();
+    }
 }

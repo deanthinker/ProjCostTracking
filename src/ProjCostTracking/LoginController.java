@@ -57,6 +57,7 @@ public class LoginController implements Initializable {
                 txfPassword.setText("");
                 Main.winCollection.get(Main.SCREEN_MAINMENU).show();
                 Main.winCollection.get(Main.SCREEN_LOGIN).close();
+                Main.log(EntityLog.LOGIN_PASS, null, null);
             } catch (Exception ex) {
                 Logger.getLogger(LoginController.class.getName()).log(Level.SEVERE, null, ex);
             }

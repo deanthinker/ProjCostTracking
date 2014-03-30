@@ -59,6 +59,7 @@ public class DBeditEntityUserlevel implements Initializable {
 
     final Field[] actualFieldsArray = EntityUserlevel.class.getDeclaredFields();
     final List<Field> fList = new ArrayList<>();
+    final String tbname = "userlevel";
     
     @FXML
     private AnchorPane myanchorpane;
@@ -414,6 +415,39 @@ public class DBeditEntityUserlevel implements Initializable {
     @FXML
     private void btnDelete_onClick(ActionEvent event) {
         EntityUserlevel ul = (EntityUserlevel)tbvMain.getSelectionModel().getSelectedItem();
+        //newly added EntityUserlevel.getEntityUserList  is EMPTY; we have to make the relationship manually!!!!
+        //otherwise, DELETE error!
+        int id = ul.getUserlevelid();
+        List<EntityUser> u = Main.db.em.createQuery("select u from EntityUser u where u.fdruserlevelid = :ul")
+                .setParameter("ul", ul)
+                .getResultList();
+        ul.setEntityUserList(u);
+        
+        System.out.println("user list:"+u.toString());
+        if (ul == null){
+            Dialogs.create()
+                .title("警告")
+                .masthead("")
+                .message("請先選擇一筆資料")
+                .showError(); 
+        }
+        else{
+            if (u.size()> 0  ){
+            Dialogs.create()
+                .title("警告")
+                .masthead("不可刪除")
+                .message("此資料已被引用, 必須先變更以下使用者設定: " + u.toString())
+                .showError();  
+            }
+            else{
+                String response = delete(ul);
+                if (response.equals("YES"))
+                    tbvMain.getItems().remove(tbvMain.getSelectionModel().getSelectedIndex());
+            }
+        }
+    }
+    private void btnDelete_onClick_old(ActionEvent event) {
+        EntityUserlevel ul = (EntityUserlevel)tbvMain.getSelectionModel().getSelectedItem();
             //newly added EntityUserlevel.getEntityUserList  is EMPTY; we have to make the relationship manually!!!!
             //otherwise, DELETE error!
             int id = ul.getUserlevelid();
@@ -466,6 +500,7 @@ public class DBeditEntityUserlevel implements Initializable {
 
         Main.db.em.persist(ul);
         Main.db.em.getTransaction().commit();
+        Main.log(EntityLog.ADD, tbname, ul.getUserlevelid().toString());
     }
 
     public String delete(EntityUserlevel entity){
@@ -493,6 +528,7 @@ public class DBeditEntityUserlevel implements Initializable {
             
             Main.db.em.remove(entity);
             Main.db.em.getTransaction().commit();
+            Main.log(EntityLog.DEL, tbname, entity.getUserlevelid().toString());
         }
         return response.toString();
     }        
