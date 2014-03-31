@@ -56,7 +56,18 @@ public class Main extends Application {
         tr.put("fdruserlevelid", "使用者層級");
         tr.put("fdempid", "員工");
         tr.put("fdrlog", "紀錄");
-        
+        //entityCosttype
+        tr.put("costtypeid", "ID");
+        tr.put("fdrtypename", "類型名稱");
+        //entityCost
+        tr.put("costid", "ID");
+        tr.put("fdrcosttypeid", "費用類型");
+        tr.put("fdrcostname", "費用名稱");
+        tr.put("fdrcost", "金額");
+        tr.put("fdrunit", "單位");
+        //entityProjectType
+        tr.put("projecttypeid", "ID");
+        tr.put("fdrtypename", "類型名稱");
     }
     public static Integer getTextFieldInteger(String s){
         if (s.isEmpty())

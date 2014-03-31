@@ -117,7 +117,7 @@ public class DBeditEntityEmployee implements Initializable {
         List<FieldQuery> fqList = new  ArrayList<>();
                 
         for (Field f : fList){
-            FieldQuery fq = new FieldQuery("EntityEmployee", f.getName());
+            FieldQuery fq = new FieldQuery("EntityEmployee", f);
             fqList.add(fq);
             //System.out.println("add query:" + fq.getQString());
         }

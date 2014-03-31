@@ -41,6 +41,13 @@ public class KYdb {
         }
         return false;
     }
+
+    public ObservableList<EntityCosttype> getCosttypeList() {
+        List<EntityCosttype> thelist = Main.db.tmpem.createQuery("select e from EntityCosttype e").getResultList();
+        ObservableList<EntityCosttype> obslist = FXCollections.observableList(thelist);
+        tmpem.clear();
+        return obslist;
+    }
     
     public ObservableList<EntityUserlevel> getUserlevelList() {
         List<EntityUserlevel> thelist = Main.db.tmpem.createQuery("select e from EntityUserlevel e").getResultList();

@@ -16,9 +16,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URL;
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.ZoneId;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -31,6 +29,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Control;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableCell;
@@ -38,6 +37,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableColumn.CellEditEvent;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.AnchorPane;
@@ -55,7 +55,12 @@ import org.controlsfx.dialog.Dialog;
 import org.controlsfx.dialog.Dialogs;
 
 
-public class Test_DynamicController <T> implements Initializable {
+public class DBeditEntityCosttype implements Initializable {
+
+    final Field[] actualFieldsArray = EntityCosttype.class.getDeclaredFields();
+    final List<Field> fList = new ArrayList<>();
+    final String tbname = "costtype";
+    
     @FXML
     private AnchorPane myanchorpane;
     @FXML
@@ -73,32 +78,18 @@ public class Test_DynamicController <T> implements Initializable {
     @FXML
     private TextField txfSearch;
     @FXML
-    private ComboBox<?> cbxSearch;
+    private ComboBox<FieldQuery> cbxSearch;
     @FXML
     private Button btnSearch;
     
     private AnchorPane parent; //this is to be assigned from MainMenuController 
     private int commit_count=0;
-
-    private Class<T> entity ;
-    Field[] actualFieldsArray = null;
-    List<Field> fList = new ArrayList<>();    
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        tbvMain.getColumns().clear();//!!! MUST BE HERE or nullPointError
-        btnSave.setDisable(true);//!!! MUST BE HERE or nullPointError
-        tbvMain.setEditable(true);//!!! MUST BE HERE or nullPointError
-        System.out.println("no problem!");
-    }
-    
-    @FXML
-    public void setEntity(Class<T> entity){
-        this.entity = entity;
-        actualFieldsArray = entity.getDeclaredFields();
-        
         loadEntityFields();
         loadViewTable(getAllData());
+        loadSearchComboBox();
     }
     
     private void loadEntityFields(){
@@ -106,7 +97,6 @@ public class Test_DynamicController <T> implements Initializable {
             f.setAccessible(true); //make "private" member visible
             //we only handle those that name with "fd...."
             if (f.getName().substring(0, 2).equals("fd")){
-                System.out.println(f.getName());
                 fList.add(f);
             }            
         } 
@@ -115,52 +105,54 @@ public class Test_DynamicController <T> implements Initializable {
         if (fList.isEmpty()) {System.out.print("Entity has zero field!"); return;}
     }
     
-    public String stringAfter(String s, String c){
-        int idx = -1;
-        
-        idx = s.lastIndexOf(c);
-        if (idx == -1) return "";
-        return s.substring(idx+1);
-        
-    }
-    private ObservableList<T> getAllData() {
-        
-        String entityName = stringAfter(entity.getName(), "."); // EntityProjCostTracking.EntityUserlevel  --> EntityUserlevel
-        
-        //        entityName = "Entity" + entityName.substring(0, 1).toUpperCase() + entityName.substring(1); //EntityUserlevel
-        String jql = "select e from " + entityName + " e";
-        System.out.println(jql);
-        
-        List<T> thelist = Main.db.em.createQuery(jql).getResultList();
-        ObservableList<T> obslist = FXCollections.observableList(thelist);
-        
-        System.out.println("records: " + obslist.size());
+    private ObservableList<EntityCosttype> getAllData() {
+        List<EntityCosttype> thelist = Main.db.em.createQuery("select e from EntityCosttype e").getResultList();
+        ObservableList<EntityCosttype> obslist = FXCollections.observableList(thelist);
         return obslist;
     }
     
-    public void loadViewTable(ObservableList<T> ol){
+    public void loadSearchComboBox(){
+        //ComboBox will contain an Observable list of FieldQuery object
+        //The text shown in the ComboBox is defined by FieldQuery.toString()
+        List<FieldQuery> fqList = new  ArrayList<>();
+                
+        for (Field f : fList){
+            FieldQuery fq = new FieldQuery("EntityCosttype", f);
+            if (f.getType().equals(String.class)
+                    || f.getType().equals(Integer.class)
+                    || f.getType().equals(Float.class) 
+                    || f.getType().equals(Double.class)){
+                fqList.add(fq);
+                //System.out.println("add query:" + fq.getQString());
+            }
+        }
+        ObservableList<FieldQuery> obsFQlist = FXCollections.observableList(fqList);
+        cbxSearch.setItems(obsFQlist);
+    }
+    
+    public void loadViewTable(ObservableList ol){
         tbvMain.getColumns().clear();
         btnSave.setDisable(true);
         tbvMain.setEditable(true);
-
+        
         for (Field f : fList){
             TableColumn c = new TableColumn( Main.tr.get(f.getName())  );//set  Column title
             c.setCellValueFactory(new PropertyValueFactory<>( f.getName() )); //set DB filed name
             //Handle Integer, int
             if (f.getType().equals(Integer.class)) {
-                c.setCellFactory(new Callback<TableColumn<T, Integer>, TableCell<T, Integer>>() {
+                c.setCellFactory(new Callback<TableColumn<EntityCosttype, Integer>, TableCell<EntityCosttype, Integer>>() {
                     @Override
-                    public TableCell<T, Integer> call(TableColumn<T, Integer> arg0) {
+                    public TableCell<EntityCosttype, Integer> call(TableColumn<EntityCosttype, Integer> arg0) {
                         return new TextFieldTableCell<>(new IntegerStringConverter());
                     }
                 });
 
                 c.setOnEditCommit(
-                        new EventHandler<CellEditEvent<T, Integer>>() {
+                        new EventHandler<CellEditEvent<EntityCosttype, Integer>>() {
                             @Override
-                            public void handle(CellEditEvent<T, Integer> t) {
+                            public void handle(CellEditEvent<EntityCosttype, Integer> t) {
                                 Method m = null;
-                                T ul = (T) t.getTableView().getItems().get(t.getTablePosition().getRow());
+                                EntityCosttype ul = (EntityCosttype) t.getTableView().getItems().get(t.getTablePosition().getRow());
                                 System.out.println("old:" + t.getOldValue() + "\t new:" + t.getNewValue());
                                 try {//get the "Method object" by supplying its String name
                                     m = ul.getClass().getMethod(Main.field2methodName(f.getName()), Integer.class);
@@ -182,25 +174,25 @@ public class Test_DynamicController <T> implements Initializable {
             
             //Handle String type
             else if (f.getType().equals(String.class)) {
-                c.setCellFactory(new Callback<TableColumn<T, String>, TableCell<T, String>>() {
+                c.setCellFactory(new Callback<TableColumn<EntityCosttype, String>, TableCell<EntityCosttype, String>>() {
                     @Override
-                    public TableCell<T, String> call(TableColumn<T, String> arg0) {
+                    public TableCell<EntityCosttype, String> call(TableColumn<EntityCosttype, String> arg0) {
                         return new TextFieldTableCell<>(new DefaultStringConverter());
                     }
                 });
 
                 c.setOnEditCommit(
-                        new EventHandler<CellEditEvent<T, String>>() {
+                        new EventHandler<CellEditEvent<EntityCosttype, String>>() {
                             @Override
-                            public void handle(CellEditEvent<T, String> t) {
+                            public void handle(CellEditEvent<EntityCosttype, String> t) {
                                 Method m = null;
-                                T ul = (T) t.getTableView().getItems().get(t.getTablePosition().getRow());
+                                EntityCosttype entity = (EntityCosttype) t.getTableView().getItems().get(t.getTablePosition().getRow());
                                 System.out.println("old:" + t.getOldValue() + "\t new:" + t.getNewValue());
                                 try {//get the "Method object" by supplying its String name
-                                    m = ul.getClass().getMethod(Main.field2methodName(f.getName()), String.class);
+                                    m = entity.getClass().getMethod(Main.field2methodName(f.getName()), String.class);
                                 } catch (SecurityException | NoSuchMethodException e) {System.out.println(e.getMessage());}
 
-                                try { if (m!=null) m.invoke(ul, t.getNewValue());} 
+                                try { if (m!=null) m.invoke(entity, t.getNewValue());} 
                                 catch (IllegalArgumentException | IllegalAccessException | InvocationTargetException e) {
                                     System.out.println("No such method found for :" + f.getName());
                                 }                                
@@ -212,25 +204,25 @@ public class Test_DynamicController <T> implements Initializable {
             } 
             //Handle Float, float
             else if (f.getType().equals(Float.class) || f.getType().equals(float.class)) {
-                c.setCellFactory(new Callback<TableColumn<T, Float>, TableCell<T, Float>>() {
+                c.setCellFactory(new Callback<TableColumn<EntityCosttype, Float>, TableCell<EntityCosttype, Float>>() {
                     @Override
-                    public TableCell<T, Float> call(TableColumn<T, Float> arg0) {
+                    public TableCell<EntityCosttype, Float> call(TableColumn<EntityCosttype, Float> arg0) {
                         return new TextFieldTableCell<>(new FloatStringConverter());
                     }
                 });
 
                 c.setOnEditCommit(
-                        new EventHandler<CellEditEvent<T, Float>>() {
+                        new EventHandler<CellEditEvent<EntityCosttype, Float>>() {
                             @Override
-                            public void handle(CellEditEvent<T, Float> t) {
+                            public void handle(CellEditEvent<EntityCosttype, Float> t) {
                                 Method m = null;
-                                T ul = (T) t.getTableView().getItems().get(t.getTablePosition().getRow());
+                                EntityCosttype entity = (EntityCosttype) t.getTableView().getItems().get(t.getTablePosition().getRow());
                                 System.out.println("old:" + t.getOldValue() + "\t new:" + t.getNewValue());
                                 try {//get the "Method object" by supplying its String name
-                                    m = ul.getClass().getMethod(Main.field2methodName(f.getName()), Float.class);
+                                    m = entity.getClass().getMethod(Main.field2methodName(f.getName()), Float.class);
                                 } catch (SecurityException | NoSuchMethodException e) {System.out.println(e.getMessage());}
                                 
-                                try { if (m!=null) m.invoke(ul, t.getNewValue());} //same as call  ul.setFdxxxxxxxx()
+                                try { if (m!=null) m.invoke(entity, t.getNewValue());} //same as call  ul.setFdxxxxxxxx()
                                 catch (IllegalArgumentException | IllegalAccessException | InvocationTargetException e) {
                                     System.out.println("No such method found for :" + f.getName());
                                 }
@@ -240,9 +232,63 @@ public class Test_DynamicController <T> implements Initializable {
                         }
                 );
             } 
-            //Handle Date type
+            
+            //Handle Date type 
             else if (f.getType().equals(Date.class)) {
+                c.setCellFactory(new Callback<TableColumn<EntityCosttype, Date>, TableCell<EntityCosttype, Date>>() {
+                    @Override
+                    public TableCell<EntityCosttype, Date> call(TableColumn<EntityCosttype, Date> arg0) {
+                            return new TableCell<EntityCosttype, Date>(){
+                                //set how DATE is displayed in the cell
+                                @Override protected void updateItem(Date d, boolean empty) {
+                                    SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
+                                     super.updateItem(d, empty);
+                                     if (d == null || empty) {
+                                         setText(null);
+                                     } else {
+                                         setText(sdf.format(d) );
+                                     }
+                                 }                                
+                                
+                            };
+                    }
+                });                
             }
+            //Handle Boolean (fdrlog)
+            else if (f.getType().equals(Boolean.class)) {
+                c.setCellFactory(new Callback<TableColumn<EntityCosttype, Boolean>, TableCell<EntityCosttype, Boolean>>() {
+                    @Override
+                    public TableCell<EntityCosttype, Boolean> call(TableColumn<EntityCosttype, Boolean> arg0) {
+                            return new ComboBoxTableCell<>(true, false);
+                    }
+                });
+
+                c.setOnEditCommit(
+                        new EventHandler<CellEditEvent<EntityCosttype, Boolean>>() {
+                            @Override
+                            public void handle(CellEditEvent<EntityCosttype, Boolean> t) {
+                                Method m = null;
+                                EntityCosttype entity = (EntityCosttype) t.getTableView().getItems().get(t.getTablePosition().getRow());
+                                System.out.println("old:" + t.getOldValue().toString() + "\t new:" + t.getNewValue().toString());
+                                try {//get the "Method object" by supplying its String name
+                                    m = entity.getClass().getMethod(Main.field2methodName(f.getName()), Boolean.class);
+                                } catch (SecurityException | NoSuchMethodException e) {System.out.println("error:"+e.getMessage());}
+
+                                try { if (m!=null) m.invoke(entity, t.getNewValue());} 
+                                catch (IllegalArgumentException | IllegalAccessException | InvocationTargetException e) {
+                                    System.out.println("No such method found for :" + f.getName());
+                                }                                
+                                saveOn();
+                            }
+                        }
+                );
+            }    
+
+            else{
+                System.out.println("ERROR Exit! MUST handle type: " + f.getName().toString());
+                System.exit(0);
+            }
+            
             tbvMain.getColumns().add(c); //add column to the TableView
         }
          
@@ -274,27 +320,19 @@ public class Test_DynamicController <T> implements Initializable {
     
     @FXML
     private void btnAdd_onClick(ActionEvent event) {
-        final List<Object> ctrlList = new ArrayList();
+        final List<Control> ctrlList = new ArrayList<>();
         final List<Label> lblList = new ArrayList<>();
         
         //insert Controls into a list
         for (Field f : fList){
             lblList.add(new Label( Main.tr.get(f.getName())  ));
-            if (!f.getType().equals(Date.class)){
-                ctrlList.add(new TextField());
-            }
-            else{
-                DatePicker dp = new DatePicker( LocalDate.now());
-                dp.setEditable(false);
-                ctrlList.add(dp);
-                Instant instant = dp.getValue().atStartOfDay().atZone(ZoneId.systemDefault()).toInstant();
-                Date dt =  Date.from(instant);
-                //System.out.println("converted:"+ dt.toString());
-            }
+
+            ctrlList.add(new TextField());
+
         }
 
-        final Action actionLogin;    
-        actionLogin = new AbstractAction("Save") {
+        final Action actionSave;    
+        actionSave = new AbstractAction("Save") {
             { 
                 ButtonBar.setType(this, ButtonBar.ButtonType.OK_DONE);
             }
@@ -302,7 +340,7 @@ public class Test_DynamicController <T> implements Initializable {
             private boolean dataFormatIsOK(){
                 for (int idx=0;idx<ctrlList.size();idx++){
                     Field f = fList.get(idx);
-                    Object ctrl = ctrlList.get(idx);
+                    Control ctrl = ctrlList.get(idx);
                     if (f.getType().equals(String.class)){}
                     else if (f.getType().equals(Integer.class)  ||  f.getType().equals(int.class)  ){ 
                         if (! ((TextField)ctrl).getText().matches("[0-9]*")   ) {
@@ -324,41 +362,47 @@ public class Test_DynamicController <T> implements Initializable {
                             return false;
                         }
                     }
-                    else if (f.getType().equals(Date.class)){ }
-                }
-                return true;
-            }
-            
-            private boolean requiredDataOk(){
-                for (int idx=0;idx < fList.size(); idx++){
-                    Field f = fList.get(idx);
-                    Object ctrl = ctrlList.get(idx);
-                    //find required fields
-                    if (fList.get(idx).getName().substring(0, 3).equals("fdr") ){
-                        if (!f.getType().equals(Date.class)){ //String, Integer, Float ... except Date
-                            if ( ((TextField)ctrl).getText().isEmpty() ){
-                                Action response = Dialogs.create()
-                                       .title("Error")
-                                       .masthead("Data Required")
-                                       .message("Please enter data for the field: '"+  Main.tr.get(f.getName()) +"'")
-                                       .showError();
-                                return false;
-                            }
-                        }
-                        else if (f.getType().equals(Date.class)){ }
+                    else if (f.getType().equals(Date.class)){ 
+                        if ( ((DatePicker)ctrl).getValue() == null   )   {
+                            Action response = Dialogs.create()
+                                    .title("Error")
+                                    .masthead("Format Error")
+                                    .message("Field '"+  Main.tr.get(f.getName()) +"' must be chosen.")
+                                    .showError();
+                            return false;
+                        }                        
                     }
                 }
                 return true;
             }
             
-            private void saveRecord(){
-                Method m = null;
-                try {//get the "Method object" by supplying its String name
-                    m = entity.getClass().getMethod("save", List.class);
-                } catch (SecurityException | NoSuchMethodException e) {
-                    System.out.println(e.getMessage());
+            private boolean requiredDataOk(){
+                boolean pass = true;
+                for (int idx=0;idx < fList.size(); idx++){
+                    Field f = fList.get(idx);
+                    Control ctrl = ctrlList.get(idx);
+                    //find required fields
+                    if (fList.get(idx).getName().substring(0, 3).equals("fdr") ){
+                        if ( ((TextField)ctrl).getText().isEmpty() ){
+                            pass = false;
+                        }
+                    }
+                    
+                    if (!pass){
+                        Action response = Dialogs.create()
+                               .title("Error")
+                               .masthead("Data Required")
+                               .message("Please enter data for the field: '"+  Main.tr.get(f.getName()) +"'")
+                               .showError();
+                        return false;
+                    }
                 }
-
+                return true;
+            }
+           
+            private void saveRecord(){
+                EntityCosttype entity = new EntityCosttype();
+                save(ctrlList);
                 loadViewTable(getAllData());
             }
             
@@ -379,14 +423,16 @@ public class Test_DynamicController <T> implements Initializable {
      final GridPane content = new GridPane();
      content.setHgap(10);
      content.setVgap(10);
-          
+     
+     //add the generated Control comps to the Content 
      for (int idx=0; idx<fList.size(); idx++){
         content.add(lblList.get(idx), 0, idx);
-        if (fList.get(idx).getType().equals(Date.class)){
+        System.out.println("adding to content: "+ lblList.get(idx).getText());
+        if (fList.get(idx).getType().equals(Date.class)){ //handle DATE
             content.add((DatePicker)ctrlList.get(idx), 1, idx);
             GridPane.setHgrow((DatePicker)ctrlList.get(idx), Priority.ALWAYS);
         }
-        else{
+        else{ //treat all other type with TextField
             content.add((TextField)ctrlList.get(idx), 1, idx);
             GridPane.setHgrow((TextField)ctrlList.get(idx), Priority.ALWAYS);
         }
@@ -396,26 +442,24 @@ public class Test_DynamicController <T> implements Initializable {
      dlg.setIconifiable(false);
 
      dlg.setContent(content);
-     dlg.getActions().addAll(actionLogin, Dialog.Actions.CANCEL);
+     dlg.getActions().addAll(actionSave, Dialog.Actions.CANCEL);
      dlg.show();
     }
 
     private void search(){
-        /*
-        ObservableList<T> obslist = null;
-        
+        ObservableList<EntityCosttype> obslist = null;
+        FieldQuery fq = (FieldQuery) cbxSearch.getSelectionModel().getSelectedItem();
         if (txfSearch.getText().isEmpty()){
             obslist = getAllData();
         }
         else{
-            List<T> thelist = Main.db.em.createNamedQuery(Main.toFindByQueryName("T", "fdrlevelname"))
-                    .setParameter("fdrlevelname", txfSearch.getText())
+             List<EntityCosttype> thelist = Main.db.em.createNamedQuery(fq.getQString())
+                    .setParameter(fq.getFieldName(), txfSearch.getText())
                     .getResultList();
-            obslist = FXCollections.observableList(thelist);
-        }
+            obslist = FXCollections.observableList(thelist);           
+        }        
          
         loadViewTable(obslist);        
-                */
     }
     
     @FXML
@@ -427,11 +471,38 @@ public class Test_DynamicController <T> implements Initializable {
 
     @FXML
     private void btnDelete_onClick(ActionEvent event) {
-        T ul = (T)tbvMain.getSelectionModel().getSelectedItem();
-        String r = "";
-        if (r.equals("YES")){
-            tbvMain.getItems().remove(tbvMain.getSelectionModel().getSelectedIndex());
+        EntityCosttype entity = (EntityCosttype)tbvMain.getSelectionModel().getSelectedItem();
+        //newly added EntityUserlevel.getEntityUserList  is EMPTY; we have to make the relationship manually!!!!
+        //otherwise, DELETE error!
+        //Integer id = entity.getCosttypeid();
+        List<EntityCost> lst = Main.db.em.createQuery("select e from EntityCost e where e.fdrcosttypeid = :id")
+                .setParameter("id", entity)
+                .getResultList();
+        entity.setEntityCostList(lst);
+        
+        System.out.println("user list:"+lst.toString());
+        if (entity == null){
+            Dialogs.create()
+                .title("警告")
+                .masthead("")
+                .message("請先選擇一筆資料")
+                .showError(); 
         }
+        else{
+            if (lst.size()> 0  ){
+            Dialogs.create()
+                .title("警告")
+                .masthead("不可刪除")
+                .message("此資料已被引用, 必須先變更以下費用設定: " + lst.toString())
+                .showError();  
+            }
+            else{
+                String response = delete(entity);
+                if (response.equals("YES"))
+                    tbvMain.getItems().remove(tbvMain.getSelectionModel().getSelectedIndex());
+            }
+        }
+    
     }
 
     @FXML
@@ -457,7 +528,44 @@ public class Test_DynamicController <T> implements Initializable {
     private void btnSearch_onClick(ActionEvent event) {
         search();
     }
-    
-    
+
+    public void save(List<Control> ctrlList){
+        EntityCosttype entity = new EntityCosttype();
+        entity.setFdrtypename(((TextField)(ctrlList.get(0))).getText());
+        entity.setFdnote(((TextField)(ctrlList.get(1))).getText());
+
+        if(!Main.db.em.getTransaction().isActive())
+            Main.db.em.getTransaction().begin();
+
+        Main.db.em.persist(entity);
+        Main.db.em.getTransaction().commit();        
+        Main.log(EntityLog.ADD, tbname, entity.getCosttypeid().toString());
+    }
+
+    public String delete(EntityCosttype entity){
+        String userline = "";
+        
+        Action response = Dialogs.create()
+            .owner( null)
+            .title("Confirmation")
+            .masthead("Are you sure to delete : '"+ entity.getFdrtypename()+"' ?")
+            .message(userline)
+            .showConfirm();
+
+        System.out.println("response: " + response);        
+          
+        if (response.toString().equals("YES")){
+            if(!Main.db.em.getTransaction().isActive())
+                Main.db.em.getTransaction().begin();
+            
+            Main.db.em.remove(entity);
+            Main.db.em.getTransaction().commit();
+            Main.log(EntityLog.DEL, tbname, entity.getCosttypeid().toString());
+        }
+        
+        
+        return response.toString();
+    }    
+
     
 }

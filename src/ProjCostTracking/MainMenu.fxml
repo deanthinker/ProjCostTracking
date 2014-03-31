@@ -26,7 +26,7 @@
             </MenuItem>
           </items>
         </Menu>
-        <Menu mnemonicParsing="false" text="Project">
+        <Menu mnemonicParsing="false" text="專案管理">
           <items>
             <MenuItem mnemonicParsing="false" onAction="#mnuNewProject_onClick" text="New Project" fx:id="mnuNewProject">
               <accelerator>
@@ -40,18 +40,18 @@
             </MenuItem>
           </items>
         </Menu>
-        <Menu mnemonicParsing="false" text="Maintain">
+        <Menu mnemonicParsing="false" text="資料庫維護">
           <items>
-            <MenuItem mnemonicParsing="false" onAction="#mnuCost_onClick" text="Cost" fx:id="mnuCost" />
-            <MenuItem mnemonicParsing="false" onAction="#mnuCostType_onClick" text="CostType" fx:id="mnuCostType" />
-            <MenuItem mnemonicParsing="false" onAction="#mnuStage_onClick" text="Task" fx:id="mnuStage" />
-            <MenuItem mnemonicParsing="false" onAction="#mnuProjectType_onClick" text="ProjectType" fx:id="mnuProjectType" />
-            <MenuItem mnemonicParsing="false" onAction="#mnuEmployee_onClick" text="Employee" fx:id="mnuEmployee" />
-            <MenuItem mnemonicParsing="false" onAction="#mnuUser_onClick" text="User" fx:id="mnuUser" />
-            <MenuItem mnemonicParsing="false" onAction="#mnuUserLevel_onClick" text="User Level" fx:id="mnuUserLevel" />
+            <MenuItem mnemonicParsing="false" onAction="#mnuCost_onClick" text="費用" fx:id="mnuCost" />
+            <MenuItem mnemonicParsing="false" onAction="#mnuCostType_onClick" text="費用類別" fx:id="mnuCostType" />
+            <MenuItem mnemonicParsing="false" onAction="#mnuStage_onClick" text="任務" fx:id="mnuStage" />
+            <MenuItem mnemonicParsing="false" onAction="#mnuProjectType_onClick" text="專案類別" fx:id="mnuProjectType" />
+            <MenuItem mnemonicParsing="false" onAction="#mnuEmployee_onClick" text="職員檔案" fx:id="mnuEmployee" />
+            <MenuItem mnemonicParsing="false" onAction="#mnuUser_onClick" text="使用者帳戶" fx:id="mnuUser" />
+            <MenuItem mnemonicParsing="false" onAction="#mnuUserLevel_onClick" text="使用者層級" fx:id="mnuUserLevel" />
           </items>
         </Menu>
-        <Menu mnemonicParsing="false" text="Setting">
+        <Menu mnemonicParsing="false" text="設定">
           <items>
             <MenuItem mnemonicParsing="false" onAction="#mnuPreferences_onClick" text="Preferences" fx:id="mnuPreferences" />
             <MenuItem mnemonicParsing="false" onAction="#mnuDBconn_onClick" text="DB Connection" fx:id="mnuDBconn" />

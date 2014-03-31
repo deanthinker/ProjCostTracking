@@ -163,7 +163,7 @@ public class EntityUser implements Serializable {
 
     @Override
     public String toString() {
-        return "ProjCostTracking.EntityUser[ userid=" + userid + " ]";
+        return fdrusername;
     }
           
 }

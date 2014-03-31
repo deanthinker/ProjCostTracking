@@ -140,10 +140,24 @@ public class MainMenuController implements Initializable {
 
     @FXML
     private void mnuCost_onClick(ActionEvent event) {
+        mainContent.getChildren().clear();
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("DBedit.fxml"));
+        DBeditEntityCost controller = new DBeditEntityCost();
+
+        loader.setController(controller);
+        controller.setParent(mainContent);
+        fitToParent(loader);     
     }
 
     @FXML
     private void mnuCostType_onClick(ActionEvent event) {
+        mainContent.getChildren().clear();
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("DBedit.fxml"));
+        DBeditEntityCosttype controller = new DBeditEntityCosttype();
+
+        loader.setController(controller);
+        controller.setParent(mainContent);
+        fitToParent(loader);        
     }
 
     @FXML
@@ -152,6 +166,13 @@ public class MainMenuController implements Initializable {
 
     @FXML
     private void mnuProjectType_onClick(ActionEvent event) {
+        mainContent.getChildren().clear();
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("DBedit.fxml"));
+        DBeditEntityProjecttype controller = new DBeditEntityProjecttype();
+
+        loader.setController(controller);
+        controller.setParent(mainContent);
+        fitToParent(loader);        
     }
 
     @FXML

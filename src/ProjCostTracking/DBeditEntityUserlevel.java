@@ -116,7 +116,7 @@ public class DBeditEntityUserlevel implements Initializable {
         List<FieldQuery> fqList = new  ArrayList<>();
                 
         for (Field f : fList){
-            FieldQuery fq = new FieldQuery("EntityUserlevel", f.getName());
+            FieldQuery fq = new FieldQuery("EntityUserlevel", f);
             fqList.add(fq);
             //System.out.println("add query:" + fq.getQString());
         }
@@ -417,7 +417,7 @@ public class DBeditEntityUserlevel implements Initializable {
         EntityUserlevel ul = (EntityUserlevel)tbvMain.getSelectionModel().getSelectedItem();
         //newly added EntityUserlevel.getEntityUserList  is EMPTY; we have to make the relationship manually!!!!
         //otherwise, DELETE error!
-        int id = ul.getUserlevelid();
+        
         List<EntityUser> u = Main.db.em.createQuery("select u from EntityUser u where u.fdruserlevelid = :ul")
                 .setParameter("ul", ul)
                 .getResultList();

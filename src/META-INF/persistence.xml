@@ -7,6 +7,11 @@
     <class>ProjCostTracking.EntityTask</class>
     <class>ProjCostTracking.EntityEmployee</class>
     <class>ProjCostTracking.EntityLog</class>
+    <class>ProjCostTracking.EntityCosttype</class>
+    <class>ProjCostTracking.EntityProjecttype</class>
+    <class>ProjCostTracking.EntityProjtaskcost</class>
+    <class>ProjCostTracking.EntityProject</class>
+    <class>ProjCostTracking.EntityCost</class>
     <properties>
       <property name="eclipselink.logging.level" value="FINE"/>
       <property name="eclipselink.logging.level.sql" value="FINE"/>

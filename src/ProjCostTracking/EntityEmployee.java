@@ -60,7 +60,7 @@ public class EntityEmployee implements Serializable {
     private String fdnote;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "fdempid", fetch = FetchType.EAGER)
     private List<EntityUser> entityUserList;
-
+    
     public EntityEmployee() {
     }
 

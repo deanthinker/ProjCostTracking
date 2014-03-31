@@ -6,14 +6,17 @@
 
 package ProjCostTracking;
 
+import java.lang.reflect.Field;
+
 public class FieldQuery{
     private String queryString = "";
-    private String fieldName = "";
+    private Field field = null;
     
-    public FieldQuery(String entity, String fieldName){
+    public FieldQuery(String entity, Field f){
         //EntityUserlevel, fdrlevelname = EntityUserlevel.findByFdrlevelname
         //EntityUserlevel.findByFdrlevelname definition can be found in EntityUserlevel.java 
-        this.fieldName = fieldName;
+        String fieldName = f.getName();
+        this.field = f;
         this.queryString = entity+".findBy" + fieldName.substring(0, 1).toUpperCase() + fieldName.substring(1);
     }
         
@@ -23,7 +26,7 @@ public class FieldQuery{
     }
     
     public String getColString(){
-        return Main.tr.get(fieldName);
+        return Main.tr.get(field.getName());
     }
 
     public String getQString() {
@@ -31,8 +34,11 @@ public class FieldQuery{
     }
 
     public String getFieldName() {
-        return this.fieldName;
+        return field.getName();
     }
     
-    
+    public Class<?> getType(){
+        return field.getType();
+    }
+   
 }
