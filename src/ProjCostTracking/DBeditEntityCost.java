@@ -575,7 +575,7 @@ public class DBeditEntityCost implements Initializable {
 
         Main.db.em.persist(entity);
         Main.db.em.getTransaction().commit();        
-        //Main.log(EntityLog.ADD, tbname, entity.getCostid().toString());  //BUG!!!  DONT KNOW WHY YET
+        Main.log(EntityLog.ADD, tbname, entity.getCostid().toString());  //BUG!!!  DONT KNOW WHY YET
         
     }
 

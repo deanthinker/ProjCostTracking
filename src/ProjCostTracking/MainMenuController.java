@@ -69,7 +69,7 @@ public class MainMenuController implements Initializable {
     private MenuItem mnuProjectType;
 
     @FXML
-    private MenuItem mnuStage;
+    private MenuItem mnuTask;
 
     @FXML
     private MenuItem mnuUser;
@@ -161,7 +161,14 @@ public class MainMenuController implements Initializable {
     }
 
     @FXML
-    private void mnuStage_onClick(ActionEvent event) {
+    private void mnuTask_onClick(ActionEvent event) {
+        mainContent.getChildren().clear();
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("DBedit.fxml"));
+        DBeditEntityTask controller = new DBeditEntityTask();
+
+        loader.setController(controller);
+        controller.setParent(mainContent);
+        fitToParent(loader);    
     }
 
     @FXML

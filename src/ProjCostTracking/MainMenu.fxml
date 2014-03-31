@@ -28,7 +28,7 @@
         </Menu>
         <Menu mnemonicParsing="false" text="專案管理">
           <items>
-            <MenuItem mnemonicParsing="false" onAction="#mnuNewProject_onClick" text="New Project" fx:id="mnuNewProject">
+            <MenuItem mnemonicParsing="false" onAction="#mnuNewProject_onClick" text="新增專案" fx:id="mnuNewProject">
               <accelerator>
                 <KeyCodeCombination alt="UP" code="N" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
               </accelerator>
@@ -44,7 +44,7 @@
           <items>
             <MenuItem mnemonicParsing="false" onAction="#mnuCost_onClick" text="費用" fx:id="mnuCost" />
             <MenuItem mnemonicParsing="false" onAction="#mnuCostType_onClick" text="費用類別" fx:id="mnuCostType" />
-            <MenuItem mnemonicParsing="false" onAction="#mnuStage_onClick" text="任務" fx:id="mnuStage" />
+            <MenuItem id="mnuTask" mnemonicParsing="false" onAction="#mnuTask_onClick" text="任務" fx:id="mnuTask" />
             <MenuItem mnemonicParsing="false" onAction="#mnuProjectType_onClick" text="專案類別" fx:id="mnuProjectType" />
             <MenuItem mnemonicParsing="false" onAction="#mnuEmployee_onClick" text="職員檔案" fx:id="mnuEmployee" />
             <MenuItem mnemonicParsing="false" onAction="#mnuUser_onClick" text="使用者帳戶" fx:id="mnuUser" />

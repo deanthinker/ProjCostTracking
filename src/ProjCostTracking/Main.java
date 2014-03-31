@@ -48,7 +48,7 @@ public class Main extends Application {
         tr.put("fdbadgeid", "工號");
         tr.put("fdtitle", "職稱");
         tr.put("fdgender", "性別");
-        tr.put("fdbirthday", "生日(月/日/年");
+        tr.put("fdbirthday", "生日(dd/MM/yyyy)");
         //entityUser
         tr.put("userid", "ID");
         tr.put("fdrusername", "使用者名稱");
@@ -68,6 +68,9 @@ public class Main extends Application {
         //entityProjectType
         tr.put("projecttypeid", "ID");
         tr.put("fdrtypename", "類型名稱");
+        //entityTask
+        tr.put("taskid", "ID");
+        tr.put("fdrtaskname", "任務名稱");
     }
     public static Integer getTextFieldInteger(String s){
         if (s.isEmpty())
