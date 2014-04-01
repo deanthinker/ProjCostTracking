@@ -57,7 +57,6 @@ import org.controlsfx.dialog.Dialogs;
 
 public class DBeditEntityUserlevel implements Initializable {
 
-    final Field[] actualFieldsArray = EntityUserlevel.class.getDeclaredFields();
     final List<Field> fList = new ArrayList<>();
     final String tbname = "userlevel";
     
@@ -93,7 +92,7 @@ public class DBeditEntityUserlevel implements Initializable {
     }
     
     private void loadEntityFields(){
-        for (Field f : actualFieldsArray){ //create a list of "f_" fields
+        for (Field f : EntityUserlevel.class.getDeclaredFields()){ //create a list of "f_" fields
             f.setAccessible(true); //make "private" member visible
             //we only handle those that name with "fd...."
             if (f.getName().substring(0, 2).equals("fd")){
@@ -500,7 +499,7 @@ public class DBeditEntityUserlevel implements Initializable {
 
         Main.db.em.persist(ul);
         Main.db.em.getTransaction().commit();
-        Main.log(EntityLog.ADD, tbname, ul.getUserlevelid().toString());
+        Main.log(Main.LOGADD, tbname, ul.getUserlevelid().toString());
     }
 
     public String delete(EntityUserlevel entity){
@@ -528,7 +527,7 @@ public class DBeditEntityUserlevel implements Initializable {
             
             Main.db.em.remove(entity);
             Main.db.em.getTransaction().commit();
-            Main.log(EntityLog.DEL, tbname, entity.getUserlevelid().toString());
+            Main.log(Main.LOGDEL, tbname, entity.getUserlevelid().toString());
         }
         return response.toString();
     }        

@@ -31,6 +31,12 @@ public class Main extends Application {
     public static final int MODAL = 1;
     public static final int TRANSPARENT = 1;
     
+    public static final int LOGINOK = 001;
+    public static final int LOGOUT = 002;
+    public static final int LOGINFAIL = 003;
+    public static final int LOGADD = 100;
+    public static final int LOGDEL = 101;
+    
     public static KYdb db = new KYdb(ENTITY_MANAGER_FACTORY_NAME);
 
         //translate 
@@ -71,6 +77,13 @@ public class Main extends Application {
         //entityTask
         tr.put("taskid", "ID");
         tr.put("fdrtaskname", "任務名稱");
+        //entityProjecct
+        tr.put("projectid", "ID");
+        tr.put("fdrprojtypeid", "專案類別");
+        tr.put("fdrpjname", "專案名稱");
+        tr.put("fdpstart", "開始日");
+        tr.put("fdpend", "完成日");
+        
     }
     public static Integer getTextFieldInteger(String s){
         if (s.isEmpty())
@@ -117,7 +130,7 @@ public class Main extends Application {
     }
     
     public static void log(int logtype, String tablename, String note){
-        EntityLog el = new EntityLog(logtype, Main.currentUser.getUserid(), tablename, note);
+        Log el = new Log(logtype, Main.currentUser.getUserid(), tablename, note);
         if(!Main.db.em.getTransaction().isActive())
             Main.db.em.getTransaction().begin();
 

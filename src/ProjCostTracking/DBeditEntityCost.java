@@ -58,7 +58,7 @@ import org.controlsfx.dialog.Dialogs;
 
 public class DBeditEntityCost implements Initializable {
 
-    final Field[] actualFieldsArray = EntityCost.class.getDeclaredFields();
+    
     final List<Field> fList = new ArrayList<>();
     final ObservableList<EntityCosttype> ctList = Main.db.getCosttypeList();
     
@@ -96,7 +96,7 @@ public class DBeditEntityCost implements Initializable {
     }
     
     private void loadEntityFields(){
-        for (Field f : actualFieldsArray){ //create a list of "f_" fields
+        for (Field f : EntityCost.class.getDeclaredFields()){ //create a list of "f_" fields
             f.setAccessible(true); //make "private" member visible
             //we only handle those that name with "fd...."
             if (f.getName().substring(0, 2).equals("fd")){
@@ -271,7 +271,6 @@ public class DBeditEntityCost implements Initializable {
                                 EntityCost ec = (EntityCost) t.getTableView().getItems().get(t.getTablePosition().getRow());
                                 System.out.println("old:" + t.getOldValue().toString() + "\t new:" + t.getNewValue().toString());
                                 try {//get the "Method object" by supplying its String name
-                                    //DEBUG
                                     String ttt = Main.field2methodName(f.getName());
                                     System.out.println("debug:"+ttt);
                                     m = ec.getClass().getMethod(ttt, EntityCosttype.class);
@@ -575,7 +574,7 @@ public class DBeditEntityCost implements Initializable {
 
         Main.db.em.persist(entity);
         Main.db.em.getTransaction().commit();        
-        Main.log(EntityLog.ADD, tbname, entity.getCostid().toString());  //BUG!!!  DONT KNOW WHY YET
+        Main.log(Main.LOGADD, tbname, entity.getCostid().toString());  
         
     }
 
@@ -597,7 +596,7 @@ public class DBeditEntityCost implements Initializable {
             
             Main.db.em.remove(entity);
             Main.db.em.getTransaction().commit();
-            Main.log(EntityLog.DEL, tbname, entity.getCostid().toString());
+            Main.log(Main.LOGDEL, tbname, entity.getCostid().toString());
         }
         
         

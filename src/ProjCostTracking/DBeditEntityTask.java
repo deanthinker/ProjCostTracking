@@ -57,7 +57,6 @@ import org.controlsfx.dialog.Dialogs;
 
 public class DBeditEntityTask implements Initializable {
 
-    final Field[] actualFieldsArray = EntityTask.class.getDeclaredFields();
     final List<Field> fList = new ArrayList<>();
     final String tbname = "task";
     
@@ -93,7 +92,7 @@ public class DBeditEntityTask implements Initializable {
     }
     
     private void loadEntityFields(){
-        for (Field f : actualFieldsArray){ //create a list of "f_" fields
+        for (Field f : EntityTask.class.getDeclaredFields()){ //create a list of "f_" fields
             f.setAccessible(true); //make "private" member visible
             //we only handle those that name with "fd...."
             if (f.getName().substring(0, 2).equals("fd")){
@@ -475,10 +474,10 @@ public class DBeditEntityTask implements Initializable {
         //newly added EntityUserlevel.getEntityUserList  is EMPTY; we have to make the relationship manually!!!!
         //otherwise, DELETE error!
         
-        List<EntityProjtaskcost> lst = Main.db.em.createQuery("select e from EntityProjtaskcost e where e.fdrtaskid = :id")
+        List<EntityProjTask> lst = Main.db.em.createQuery("select e from EntityProjtask e where e.fdrtaskid = :id")
                 .setParameter("id", entity)
                 .getResultList();
-        entity.setEntityProjtaskcostList(lst);
+        entity.setEntityProjTaskList(lst);
         
         System.out.println("user list:"+lst.toString());
         if (entity == null){
@@ -539,7 +538,7 @@ public class DBeditEntityTask implements Initializable {
 
         Main.db.em.persist(entity);
         Main.db.em.getTransaction().commit();        
-        Main.log(EntityLog.ADD, tbname, entity.getTaskid().toString());
+        Main.log(Main.LOGADD, tbname, entity.getTaskid().toString());
     }
 
     public String delete(EntityTask entity){
@@ -560,7 +559,7 @@ public class DBeditEntityTask implements Initializable {
             
             Main.db.em.remove(entity);
             Main.db.em.getTransaction().commit();
-            Main.log(EntityLog.DEL, tbname, entity.getTaskid().toString());
+            Main.log(Main.LOGDEL, tbname, entity.getTaskid().toString());
         }
         
         

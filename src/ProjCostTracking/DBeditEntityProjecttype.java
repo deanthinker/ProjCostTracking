@@ -58,14 +58,7 @@ import org.controlsfx.dialog.Dialogs;
 
 
 public class DBeditEntityProjecttype implements Initializable {
-    private final Map<String, String> tr = new HashMap<>();
-    {
-        tr.put("projecttypeid", "ID");
-        tr.put("fdrtypename", "專案類型名稱");
-        tr.put("fdnote", "備註");
-    }
 
-    final Field[] actualFieldsArray = EntityProjecttype.class.getDeclaredFields();
     final List<Field> fList = new ArrayList<>();
     final String tbname = "projecttype";
     
@@ -101,7 +94,7 @@ public class DBeditEntityProjecttype implements Initializable {
     }
     
     private void loadEntityFields(){
-        for (Field f : actualFieldsArray){ //create a list of "f_" fields
+        for (Field f : EntityProjecttype.class.getDeclaredFields()){ //create a list of "f_" fields
             f.setAccessible(true); //make "private" member visible
             //we only handle those that name with "fd...."
             if (f.getName().substring(0, 2).equals("fd")){
@@ -144,7 +137,7 @@ public class DBeditEntityProjecttype implements Initializable {
         tbvMain.setEditable(true);
         
         for (Field f : fList){
-            TableColumn c = new TableColumn( tr.get(f.getName())  );//set  Column title
+            TableColumn c = new TableColumn( Main.tr.get(f.getName())  );//set  Column title
             c.setCellValueFactory(new PropertyValueFactory<>( f.getName() )); //set DB filed name
             //Handle Integer, int
             if (f.getType().equals(Integer.class)) {
@@ -333,7 +326,7 @@ public class DBeditEntityProjecttype implements Initializable {
         
         //insert Controls into a list
         for (Field f : fList){
-            lblList.add(new Label( tr.get(f.getName())  ));
+            lblList.add(new Label( Main.tr.get(f.getName())  ));
 
             ctrlList.add(new TextField());
 
@@ -355,7 +348,7 @@ public class DBeditEntityProjecttype implements Initializable {
                             Action response = Dialogs.create()
                                     .title("Error")
                                     .masthead("Format Error")
-                                    .message("Field '"+  tr.get(f.getName()) +"' must be Integer.")
+                                    .message("Field '"+  Main.tr.get(f.getName()) +"' must be Integer.")
                                     .showError();
                             return false;
                         }
@@ -365,7 +358,7 @@ public class DBeditEntityProjecttype implements Initializable {
                             Action response = Dialogs.create()
                                     .title("Error")
                                     .masthead("Format Error")
-                                    .message("Field '"+  tr.get(f.getName()) +"' must be Float.")
+                                    .message("Field '"+  Main.tr.get(f.getName()) +"' must be Float.")
                                     .showError();
                             return false;
                         }
@@ -375,7 +368,7 @@ public class DBeditEntityProjecttype implements Initializable {
                             Action response = Dialogs.create()
                                     .title("Error")
                                     .masthead("Format Error")
-                                    .message("Field '"+  tr.get(f.getName()) +"' must be chosen.")
+                                    .message("Field '"+  Main.tr.get(f.getName()) +"' must be chosen.")
                                     .showError();
                             return false;
                         }                        
@@ -400,7 +393,7 @@ public class DBeditEntityProjecttype implements Initializable {
                         Action response = Dialogs.create()
                                .title("Error")
                                .masthead("Data Required")
-                               .message("Please enter data for the field: '"+  tr.get(f.getName()) +"'")
+                               .message("Please enter data for the field: '"+  Main.tr.get(f.getName()) +"'")
                                .showError();
                         return false;
                     }
@@ -547,7 +540,7 @@ public class DBeditEntityProjecttype implements Initializable {
 
         Main.db.em.persist(entity);
         Main.db.em.getTransaction().commit();        
-        Main.log(EntityLog.ADD, tbname, entity.getProjtypeid().toString());
+        Main.log(Main.LOGADD, tbname, entity.getProjtypeid().toString());
     }
 
     public String delete(EntityProjecttype entity){
@@ -568,7 +561,7 @@ public class DBeditEntityProjecttype implements Initializable {
             
             Main.db.em.remove(entity);
             Main.db.em.getTransaction().commit();
-            Main.log(EntityLog.DEL, tbname, entity.getProjtypeid().toString());
+            Main.log(Main.LOGDEL, tbname, entity.getProjtypeid().toString());
         }
         
         

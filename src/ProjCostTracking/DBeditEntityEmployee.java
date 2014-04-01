@@ -60,7 +60,6 @@ import org.controlsfx.dialog.Dialogs;
 
 public class DBeditEntityEmployee implements Initializable {
 
-    final Field[] actualFieldsArray = EntityEmployee.class.getDeclaredFields();
     final List<Field> fList = new ArrayList<>();
     final String tbname = "employee";
     @FXML
@@ -95,7 +94,7 @@ public class DBeditEntityEmployee implements Initializable {
     }
     
     private void loadEntityFields(){
-        for (Field f : actualFieldsArray){ //create a list of "f_" fields
+        for (Field f : EntityEmployee.class.getDeclaredFields()){ //create a list of "f_" fields
             f.setAccessible(true); //make "private" member visible
             //we only handle those that name with "fd...."
             if (f.getName().substring(0, 2).equals("fd")){
@@ -308,8 +307,6 @@ public class DBeditEntityEmployee implements Initializable {
                 ctrlList.add(dp);
                 Instant instant = dp.getValue().atStartOfDay().atZone(ZoneId.systemDefault()).toInstant();
                 Date dt =  Date.from(instant);
-                //System.out.println("converted:"+ dt.toString());                
-                
             }
             else if (f.getName().contains("gender")){
                 //handle GENDER, using ComboBox
@@ -546,7 +543,7 @@ public class DBeditEntityEmployee implements Initializable {
 
         Main.db.em.persist(entity);
         Main.db.em.getTransaction().commit();        
-        Main.log(EntityLog.ADD, tbname, entity.getEmpid().toString());
+        Main.log(Main.LOGADD, tbname, entity.getEmpid().toString());
     }
 
     public String delete(EntityEmployee entity){
@@ -574,7 +571,7 @@ public class DBeditEntityEmployee implements Initializable {
             
             Main.db.em.remove(entity);
             Main.db.em.getTransaction().commit();
-            Main.log(EntityLog.DEL, tbname, entity.getEmpid().toString());
+            Main.log(Main.LOGDEL, tbname, entity.getEmpid().toString());
         }
         return response.toString();
     }         

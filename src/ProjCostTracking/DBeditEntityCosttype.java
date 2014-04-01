@@ -57,7 +57,6 @@ import org.controlsfx.dialog.Dialogs;
 
 public class DBeditEntityCosttype implements Initializable {
 
-    final Field[] actualFieldsArray = EntityCosttype.class.getDeclaredFields();
     final List<Field> fList = new ArrayList<>();
     final String tbname = "costtype";
     
@@ -93,7 +92,7 @@ public class DBeditEntityCosttype implements Initializable {
     }
     
     private void loadEntityFields(){
-        for (Field f : actualFieldsArray){ //create a list of "f_" fields
+        for (Field f : EntityCosttype.class.getDeclaredFields()){ //create a list of "f_" fields
             f.setAccessible(true); //make "private" member visible
             //we only handle those that name with "fd...."
             if (f.getName().substring(0, 2).equals("fd")){
@@ -539,7 +538,7 @@ public class DBeditEntityCosttype implements Initializable {
 
         Main.db.em.persist(entity);
         Main.db.em.getTransaction().commit();        
-        Main.log(EntityLog.ADD, tbname, entity.getCosttypeid().toString());
+        Main.log(Main.LOGADD, tbname, entity.getCosttypeid().toString());
     }
 
     public String delete(EntityCosttype entity){
@@ -560,7 +559,7 @@ public class DBeditEntityCosttype implements Initializable {
             
             Main.db.em.remove(entity);
             Main.db.em.getTransaction().commit();
-            Main.log(EntityLog.DEL, tbname, entity.getCosttypeid().toString());
+            Main.log(Main.LOGDEL, tbname, entity.getCosttypeid().toString());
         }
         
         

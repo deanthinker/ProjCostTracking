@@ -41,7 +41,18 @@ public class KYdb {
         }
         return false;
     }
-
+    public ObservableList<EntityProject> getProjectList() {
+        List<EntityProject> thelist = Main.db.tmpem.createQuery("select e from EntityProject e").getResultList();
+        ObservableList<EntityProject> obslist = FXCollections.observableList(thelist);
+        tmpem.clear();
+        return obslist;
+    }
+    public ObservableList<EntityProjecttype> getProjecttypeList() {
+        List<EntityProjecttype> thelist = Main.db.tmpem.createQuery("select e from EntityProjecttype e").getResultList();
+        ObservableList<EntityProjecttype> obslist = FXCollections.observableList(thelist);
+        tmpem.clear();
+        return obslist;
+    }    
     public ObservableList<EntityCosttype> getCosttypeList() {
         List<EntityCosttype> thelist = Main.db.tmpem.createQuery("select e from EntityCosttype e").getResultList();
         ObservableList<EntityCosttype> obslist = FXCollections.observableList(thelist);
