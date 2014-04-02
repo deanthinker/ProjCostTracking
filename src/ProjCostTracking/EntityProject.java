@@ -8,13 +8,16 @@ package ProjCostTracking;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.Lob;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -22,6 +25,7 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -35,9 +39,7 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "EntityProject.findByProjectid", query = "SELECT e FROM EntityProject e WHERE e.projectid = :projectid"),
     @NamedQuery(name = "EntityProject.findByFdrpjname", query = "SELECT e FROM EntityProject e WHERE e.fdrpjname = :fdrpjname"),
     @NamedQuery(name = "EntityProject.findByFdpstart", query = "SELECT e FROM EntityProject e WHERE e.fdpstart = :fdpstart"),
-    @NamedQuery(name = "EntityProject.findByFdpend", query = "SELECT e FROM EntityProject e WHERE e.fdpend = :fdpend"),
-    @NamedQuery(name = "EntityProject.findByFdrowner", query = "SELECT e FROM EntityProject e WHERE e.fdrowner = :fdrowner"),
-    @NamedQuery(name = "EntityProject.findByFdrclient", query = "SELECT e FROM EntityProject e WHERE e.fdrclient = :fdrclient")})
+    @NamedQuery(name = "EntityProject.findByFdpend", query = "SELECT e FROM EntityProject e WHERE e.fdpend = :fdpend")})
 public class EntityProject implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
@@ -46,21 +48,32 @@ public class EntityProject implements Serializable {
     private Integer projectid;
     @Basic(optional = false)
     private String fdrpjname;
+    @JoinColumn(name = "fdrowner", referencedColumnName = "empid")
+    @ManyToOne(optional = false)
+    private EntityEmployee fdrowner;
+    
+    @JoinColumn(name = "fdrclient", referencedColumnName = "empid")
+    @ManyToOne(optional = false)
+    private EntityEmployee fdrclient;
+    
+    @JoinColumn(name = "fdrprojtypeid", referencedColumnName = "projtypeid")
+    @ManyToOne(optional = false)
+    private EntityProjecttype fdrprojtypeid;    
     @Temporal(TemporalType.DATE)
     private Date fdpstart;
     @Temporal(TemporalType.DATE)
     private Date fdpend;
-    @Basic(optional = false)
-    private EntityEmployee fdrowner;
     @Lob
     private String fdpurpose;
-    @Basic(optional = false)
-    private EntityEmployee fdrclient;
     @Lob
     private String fdnote;
-    @JoinColumn(name = "fdrprojtypeid", referencedColumnName = "projtypeid")
-    @ManyToOne(optional = false)
-    private EntityProjecttype fdrprojtypeid;
+    @JoinTable(name = "project_employee", joinColumns = {
+        @JoinColumn(name = "projectid", referencedColumnName = "projectid")}, inverseJoinColumns = {
+        @JoinColumn(name = "empid", referencedColumnName = "empid")})
+    @ManyToMany
+    private List<EntityEmployee> entityEmployeeList;
+
+
 
     public EntityProject() {
     }
@@ -69,11 +82,9 @@ public class EntityProject implements Serializable {
         this.projectid = projectid;
     }
 
-    public EntityProject(Integer projectid, String fdrpjname, EntityEmployee fdrowner, EntityEmployee fdrclient) {
+    public EntityProject(Integer projectid, String fdrpjname) {
         this.projectid = projectid;
         this.fdrpjname = fdrpjname;
-        this.fdrowner = fdrowner;
-        this.fdrclient = fdrclient;
     }
 
     public Integer getProjectid() {
@@ -108,14 +119,6 @@ public class EntityProject implements Serializable {
         this.fdpend = fdpend;
     }
 
-    public EntityEmployee getFdrowner() {
-        return fdrowner;
-    }
-
-    public void setFdrowner(EntityEmployee fdrowner) {
-        this.fdrowner = fdrowner;
-    }
-
     public String getFdpurpose() {
         return fdpurpose;
     }
@@ -124,20 +127,37 @@ public class EntityProject implements Serializable {
         this.fdpurpose = fdpurpose;
     }
 
-    public EntityEmployee getFdrclient() {
-        return fdrclient;
-    }
-
-    public void setFdrclient(EntityEmployee fdrclient) {
-        this.fdrclient = fdrclient;
-    }
-
     public String getFdnote() {
         return fdnote;
     }
 
     public void setFdnote(String fdnote) {
         this.fdnote = fdnote;
+    }
+
+    @XmlTransient
+    public List<EntityEmployee> getEntityEmployeeList() {
+        return entityEmployeeList;
+    }
+
+    public void setEntityEmployeeList(List<EntityEmployee> entityEmployeeList) {
+        this.entityEmployeeList = entityEmployeeList;
+    }
+
+    public EntityEmployee getFdrowner() {
+        return fdrowner;
+    }
+
+    public void setFdrowner(EntityEmployee fdrowner) {
+        this.fdrowner = fdrowner;
+    }
+
+    public EntityEmployee getFdrclient() {
+        return fdrclient;
+    }
+
+    public void setFdrclient(EntityEmployee fdrclient) {
+        this.fdrclient = fdrclient;
     }
 
     public EntityProjecttype getFdrprojtypeid() {
@@ -170,7 +190,7 @@ public class EntityProject implements Serializable {
 
     @Override
     public String toString() {
-        return "ProjCostTracking.EntityProject[ projectid=" + projectid + " ]";
+        return this.fdrpjname;
     }
     
 }

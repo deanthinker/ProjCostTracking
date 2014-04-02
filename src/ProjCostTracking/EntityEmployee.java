@@ -17,6 +17,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -52,6 +53,11 @@ public class EntityEmployee implements Serializable {
     @Basic(optional = false)
     private String fdrname;
     private String fdlastname;
+    
+    @JoinColumn(name = "fdrdeptid", referencedColumnName = "deptid")
+    @ManyToOne(optional = false)
+    private EntityDepartment fdrdeptid;
+    
     private String fdbadgeid;
     private String fdtitle;
     private String fdgender;
@@ -59,11 +65,18 @@ public class EntityEmployee implements Serializable {
     private Date fdbirthday;
     @Lob
     private String fdnote;
-    @JoinColumn(name = "fdrdeptid", referencedColumnName = "deptid")
-    @ManyToOne(optional = false)
-    private EntityDepartment fdrdeptid;
+    
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "fdempid")
     private List<EntityUser> entityUserList;
+    
+    @ManyToMany(mappedBy = "entityEmployeeList")
+    private List<EntityProject> entityProjectList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "fdrowner")
+    private List<EntityProject> entityProjectList1;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "fdrclient")
+    private List<EntityProject> entityProjectList2;
+    
+
 
     public EntityEmployee() {
     }
@@ -75,6 +88,14 @@ public class EntityEmployee implements Serializable {
     public EntityEmployee(Integer empid, String fdrname) {
         this.empid = empid;
         this.fdrname = fdrname;
+    }
+
+    public List<EntityUser> getEntityUserList() {
+        return entityUserList;
+    }
+
+    public void setEntityUserList(List<EntityUser> entityUserList) {
+        this.entityUserList = entityUserList;
     }
 
     public Integer getEmpid() {
@@ -141,21 +162,39 @@ public class EntityEmployee implements Serializable {
         this.fdnote = fdnote;
     }
 
+    @XmlTransient
+    public List<EntityProject> getEntityProjectList() {
+        return entityProjectList;
+    }
+
+    public void setEntityProjectList(List<EntityProject> entityProjectList) {
+        this.entityProjectList = entityProjectList;
+    }
+
+    @XmlTransient
+    public List<EntityProject> getEntityProjectList1() {
+        return entityProjectList1;
+    }
+
+    public void setEntityProjectList1(List<EntityProject> entityProjectList1) {
+        this.entityProjectList1 = entityProjectList1;
+    }
+
+    @XmlTransient
+    public List<EntityProject> getEntityProjectList2() {
+        return entityProjectList2;
+    }
+
+    public void setEntityProjectList2(List<EntityProject> entityProjectList2) {
+        this.entityProjectList2 = entityProjectList2;
+    }
+
     public EntityDepartment getFdrdeptid() {
         return fdrdeptid;
     }
 
     public void setFdrdeptid(EntityDepartment fdrdeptid) {
         this.fdrdeptid = fdrdeptid;
-    }
-
-    @XmlTransient
-    public List<EntityUser> getEntityUserList() {
-        return entityUserList;
-    }
-
-    public void setEntityUserList(List<EntityUser> entityUserList) {
-        this.entityUserList = entityUserList;
     }
 
     @Override
@@ -180,7 +219,7 @@ public class EntityEmployee implements Serializable {
 
     @Override
     public String toString() {
-        return "ProjCostTracking.EntityEmployee[ empid=" + empid + " ]";
+        return this.fdrname + " " + this.fdlastname;
     }
     
 }

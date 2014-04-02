@@ -16,12 +16,9 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URL;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.ResourceBundle;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -48,7 +45,6 @@ import javafx.scene.layout.Priority;
 import javafx.scene.text.Font;
 import javafx.util.Callback;
 import javafx.util.converter.DefaultStringConverter;
-import javafx.util.converter.FloatStringConverter;
 import javafx.util.converter.IntegerStringConverter;
 import org.controlsfx.control.ButtonBar;
 import org.controlsfx.control.action.AbstractAction;
@@ -58,7 +54,7 @@ import org.controlsfx.dialog.Dialogs;
 
 
 public class DBeditEntityDepartment implements Initializable {
-    
+    final ObservableList<EntityDepartment> deptList = Main.db.getDepartmentList();
     final List<Field> fList = new ArrayList<>();
     final String tbname = "projecttype";
     
@@ -175,7 +171,6 @@ public class DBeditEntityDepartment implements Initializable {
             
             //handle parentid --> EntityDepartment
             else if (f.getType().equals(EntityDepartment.class)) {
-                final ObservableList<EntityDepartment> deptList = Main.db.getDepartmentList();
                 c.setCellFactory(new Callback<TableColumn<EntityDepartment, EntityDepartment>, TableCell<EntityDepartment, EntityDepartment>>() {
                     @Override
                     public TableCell<EntityDepartment, EntityDepartment> call(TableColumn<EntityDepartment, EntityDepartment> arg0) {
@@ -291,8 +286,14 @@ public class DBeditEntityDepartment implements Initializable {
         //insert Controls into a list
         for (Field f : fList){
             lblList.add(new Label( Main.tr.get(f.getName())  ));
-
-            ctrlList.add(new TextField());
+            if (f.getType().equals(EntityDepartment.class)){
+                ComboBox<EntityDepartment> cbx = new ComboBox<>(deptList);
+                //cbx.getSelectionModel().selectFirst();
+                ctrlList.add(cbx);
+            }
+            else{    
+                ctrlList.add(new TextField());
+            }
 
         }
 
@@ -348,9 +349,19 @@ public class DBeditEntityDepartment implements Initializable {
                     Control ctrl = ctrlList.get(idx);
                     //find required fields
                     if (fList.get(idx).getName().substring(0, 3).equals("fdr") ){
-                        if ( ((TextField)ctrl).getText().isEmpty() ){
-                            pass = false;
+
+                        if (f.getType().equals(EntityDepartment.class)) {
+                            if(  ((ComboBox<EntityEmployee>)ctrlList.get(idx)).getValue() == null ){   
+                                pass = false;
+                            }                            
                         }
+                        else if (f.getType().equals(Date.class)){ 
+                        }
+                        else { //String, Integer, Float ... except Date
+                            if ( ((TextField)ctrl).getText().isEmpty() ){
+                                pass = false;
+                            }
+                        }                        
                     }
                     
                     if (!pass){
@@ -396,6 +407,9 @@ public class DBeditEntityDepartment implements Initializable {
         if (fList.get(idx).getType().equals(Date.class)){ //handle DATE
             content.add((DatePicker)ctrlList.get(idx), 1, idx);
             GridPane.setHgrow((DatePicker)ctrlList.get(idx), Priority.ALWAYS);
+        }
+        else if (fList.get(idx).getType().equals(EntityDepartment.class)){ //handle EntityDepartment
+            content.add((ComboBox<EntityDepartment>)ctrlList.get(idx), 1, idx);    
         }
         else{ //treat all other type with TextField
             content.add((TextField)ctrlList.get(idx), 1, idx);

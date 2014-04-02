@@ -50,7 +50,7 @@ public class EntityUser implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private Date entrydate;
     @Basic(optional = false)
-    private boolean fdrlog;
+    private Boolean fdrlog;
     @Lob
     private String fdnote;
     @JoinColumn(name = "fdruserlevelid", referencedColumnName = "userlevelid")
@@ -160,7 +160,7 @@ public class EntityUser implements Serializable {
 
     @Override
     public String toString() {
-        return "ProjCostTracking.EntityUser[ userid=" + userid + " ]";
+        return this.fdrusername + " 職:" + this.getFdempid().getFdrname();
     }
     
 }

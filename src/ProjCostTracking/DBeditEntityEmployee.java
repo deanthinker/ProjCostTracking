@@ -58,7 +58,7 @@ import org.controlsfx.dialog.Dialogs;
 
 
 public class DBeditEntityEmployee implements Initializable {
-
+    final ObservableList<EntityDepartment> deptList = Main.db.getDepartmentList();
     final List<Field> fList = new ArrayList<>();
     final String tbname = "employee";
     @FXML
@@ -165,6 +165,37 @@ public class DBeditEntityEmployee implements Initializable {
                         }
                 );
             } 
+            //Handle Department Class
+            else if (f.getType().equals(EntityDepartment.class)) {
+                c.setCellFactory(new Callback<TableColumn<EntityEmployee, EntityDepartment>, TableCell<EntityEmployee, EntityDepartment>>() {
+                    @Override
+                    public TableCell<EntityEmployee, EntityDepartment> call(TableColumn<EntityEmployee, EntityDepartment> arg0) {
+                        return new ComboBoxTableCell<>(deptList);
+                    }
+                });
+
+                c.setOnEditCommit(
+                        new EventHandler<CellEditEvent<EntityEmployee, EntityDepartment>>() {
+                            @Override
+                            public void handle(CellEditEvent<EntityEmployee, EntityDepartment> t) {
+                                Method m = null;
+                                EntityEmployee entity = (EntityEmployee) t.getTableView().getItems().get(t.getTablePosition().getRow());
+                                System.out.println("old:" + t.getOldValue().toString() + "\t new:" + t.getNewValue().toString());
+                                try {//get the "Method object" by supplying its String name
+                                    String ttt = Main.field2methodName(f.getName());
+                                    System.out.println("debug:"+ttt);
+                                    m = entity.getClass().getMethod(ttt, EntityDepartment.class);
+                                } catch (SecurityException | NoSuchMethodException e) {System.out.println("error:"+e.getMessage());}
+
+                                try { if (m!=null) m.invoke(entity, t.getNewValue());} 
+                                catch (IllegalArgumentException | IllegalAccessException | InvocationTargetException e) {
+                                    System.out.println("No such method found for :" + f.getName());
+                                }                                
+                                saveOn();
+                            }
+                        }
+                );
+            }
             
             //Handle String type
             else if (f.getType().equals(String.class)) {
@@ -299,7 +330,12 @@ public class DBeditEntityEmployee implements Initializable {
         //insert Controls into a list
         for (Field f : fList){
             lblList.add(new Label( Main.tr.get(f.getName())  ));
-            if (f.getType().equals(Date.class)){
+            if (f.getType().equals(EntityDepartment.class)){
+                ComboBox<EntityDepartment> cbx = new ComboBox<>(deptList);
+                //cbx.getSelectionModel().selectFirst();
+                ctrlList.add(cbx);
+            }
+            else if (f.getType().equals(Date.class)){
                 //handle DATE
                 DatePicker dp = new DatePicker( LocalDate.now());
                 dp.setEditable(true);
@@ -364,22 +400,34 @@ public class DBeditEntityEmployee implements Initializable {
             }
             
             private boolean requiredDataOk(){
+                boolean pass = true;
                 for (int idx=0;idx < fList.size(); idx++){
                     Field f = fList.get(idx);
                     Object ctrl = ctrlList.get(idx);
                     //find required fields
                     if (fList.get(idx).getName().substring(0, 3).equals("fdr") ){
-                        if (!f.getType().equals(Date.class)){ //String, Integer, Float ... except Date
-                            if ( ((TextField)ctrl).getText().isEmpty() ){
-                                Action response = Dialogs.create()
-                                       .title("Error")
-                                       .masthead("Data Required")
-                                       .message("Please enter data for the field: '"+  Main.tr.get(f.getName()) +"'")
-                                       .showError();
-                                return false;
-                            }
+                        if (f.getType().equals(Date.class)){ 
+
                         }
-                        else if (f.getType().equals(Date.class)){ }
+                        else if (f.getType().equals(EntityDepartment.class)) {
+                            if(  ((ComboBox<EntityEmployee>)ctrlList.get(idx)).getValue() == null ){   
+                                pass = false;
+                            }                            
+                        }                        
+                        else { //String, Integer, Float ... 
+                            if ( ((TextField)ctrl).getText().isEmpty() ){
+                                pass = false;
+                            }                            
+                        }
+                        
+                        if (!pass){
+                            Action response = Dialogs.create()
+                                   .title("Error")
+                                   .masthead("Data Required")
+                                   .message("Please enter data for the field: '"+  Main.tr.get(f.getName()) +"'")
+                                   .showError();
+                            return false;
+                        }
                     }
                 }
                 return true;
@@ -413,14 +461,20 @@ public class DBeditEntityEmployee implements Initializable {
      for (int idx=0; idx<fList.size(); idx++){
         content.add(lblList.get(idx), 0, idx);
         System.out.println("adding to content: "+ lblList.get(idx).getText());
+        
         if (fList.get(idx).getType().equals(Date.class)){
             //handle DATE
             content.add((DatePicker)ctrlList.get(idx), 1, idx);
             GridPane.setHgrow((DatePicker)ctrlList.get(idx), Priority.ALWAYS);
         }
+        else if (fList.get(idx).getType().equals(EntityDepartment.class)){ //handle EntityDepartment
+            content.add((ComboBox<EntityDepartment>)ctrlList.get(idx), 1, idx);
+            GridPane.setHgrow((ComboBox<EntityDepartment>)ctrlList.get(idx), Priority.ALWAYS);
+        }        
         else if (fList.get(idx).getName().contains("gender")){
             //handle genderr
             content.add(  (ComboBox)ctrlList.get(idx), 1, idx);
+            GridPane.setHgrow((ComboBox)ctrlList.get(idx), Priority.ALWAYS);
         }
         else{
             content.add((TextField)ctrlList.get(idx), 1, idx);
@@ -483,7 +537,7 @@ public class DBeditEntityEmployee implements Initializable {
             Dialogs.create()
                 .title("警告")
                 .masthead("不可刪除")
-                .message("此資料已被引用, 必須先變更以下使用者設定: " + u.toString())
+                .message("此資料已被引用, 必須先變更以下 使用者帳號 設定: " + u.toString())
                 .showError();  
             }
             else{
@@ -530,12 +584,15 @@ public class DBeditEntityEmployee implements Initializable {
         EntityEmployee entity = new EntityEmployee();
         entity.setFdrname( ((TextField)(ctrlList.get(0))).getText()    );
         entity.setFdlastname( ((TextField)(ctrlList.get(1))).getText()    );
-        entity.setFdbadgeid( ((TextField)(ctrlList.get(2))).getText()    );
-        entity.setFdtitle( ((TextField)(ctrlList.get(3))).getText()    );
-        entity.setFdgender( ((ComboBox)(ctrlList.get(4))).getValue().toString()    );
-        entity.setFdbirthday(  Main.getDatePickerDate((DatePicker)ctrlList.get(5))   );
+        EntityDepartment dept = ((ComboBox<EntityDepartment>)ctrlList.get(2)).getValue();
+        entity.setFdrdeptid( dept  );
         
-        entity.setFdnote( ((TextField)(ctrlList.get(6))).getText()    );
+        entity.setFdbadgeid( ((TextField)(ctrlList.get(3))).getText()    );
+        entity.setFdtitle( ((TextField)(ctrlList.get(4))).getText()    );
+        entity.setFdgender( ((ComboBox)(ctrlList.get(5))).getValue().toString()    );
+        entity.setFdbirthday(  Main.getDatePickerDate((DatePicker)ctrlList.get(6))   );
+        
+        entity.setFdnote( ((TextField)(ctrlList.get(7))).getText()    );
         
         if(!Main.db.em.getTransaction().isActive())
             Main.db.em.getTransaction().begin();

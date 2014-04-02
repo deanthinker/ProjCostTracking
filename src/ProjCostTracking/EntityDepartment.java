@@ -42,13 +42,16 @@ public class EntityDepartment implements Serializable {
     @Basic(optional = false)
     private Integer deptid;
     private String fdrdeptname;
+    
+    @JoinColumn(name = "fdrparentid", referencedColumnName = "deptid")
+    @ManyToOne
+    private EntityDepartment fdrparentid;    
+    
     @Lob
     private String fdnote;
     @OneToMany(mappedBy = "fdrparentid")
     private List<EntityDepartment> entityDepartmentList;
-    @JoinColumn(name = "fdrparentid", referencedColumnName = "deptid")
-    @ManyToOne
-    private EntityDepartment fdrparentid;
+
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "fdrdeptid")
     private List<EntityEmployee> entityEmployeeList;
 

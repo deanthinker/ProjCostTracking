@@ -20,6 +20,7 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -33,6 +34,7 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "EntityProjecttype.findByProjtypeid", query = "SELECT e FROM EntityProjecttype e WHERE e.projtypeid = :projtypeid"),
     @NamedQuery(name = "EntityProjecttype.findByFdrtypename", query = "SELECT e FROM EntityProjecttype e WHERE e.fdrtypename = :fdrtypename")})
 public class EntityProjecttype implements Serializable {
+    private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
@@ -41,8 +43,6 @@ public class EntityProjecttype implements Serializable {
     private String fdrtypename;
     @Lob
     private String fdnote;
-    private static final long serialVersionUID = 1L;
-
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "fdrprojtypeid")
     private List<EntityProject> entityProjectList;
 
@@ -56,14 +56,6 @@ public class EntityProjecttype implements Serializable {
     public EntityProjecttype(Integer projtypeid, String fdrtypename) {
         this.projtypeid = projtypeid;
         this.fdrtypename = fdrtypename;
-    }
-
-    public List<EntityProject> getEntityProjectList() {
-        return entityProjectList;
-    }
-
-    public void setEntityProjectList(List<EntityProject> entityProjectList) {
-        this.entityProjectList = entityProjectList;
     }
 
     public Integer getProjtypeid() {
@@ -88,6 +80,15 @@ public class EntityProjecttype implements Serializable {
 
     public void setFdnote(String fdnote) {
         this.fdnote = fdnote;
+    }
+
+    @XmlTransient
+    public List<EntityProject> getEntityProjectList() {
+        return entityProjectList;
+    }
+
+    public void setEntityProjectList(List<EntityProject> entityProjectList) {
+        this.entityProjectList = entityProjectList;
     }
 
     @Override

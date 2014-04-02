@@ -470,6 +470,7 @@ public class DBeditEntityTask implements Initializable {
 
     @FXML
     private void btnDelete_onClick(ActionEvent event) {
+        /*
         EntityTask entity = (EntityTask)tbvMain.getSelectionModel().getSelectedItem();
         //newly added EntityUserlevel.getEntityUserList  is EMPTY; we have to make the relationship manually!!!!
         //otherwise, DELETE error!
@@ -501,7 +502,7 @@ public class DBeditEntityTask implements Initializable {
                     tbvMain.getItems().remove(tbvMain.getSelectionModel().getSelectedIndex());
             }
         }
-    
+    */
     }
 
     @FXML

@@ -51,6 +51,7 @@ public class Main extends Application {
         tr.put("empid", "ID");
         tr.put("fdrname", "姓名");
         tr.put("fdlastname", "姓");
+        tr.put("fdrdeptid", "部門");
         tr.put("fdbadgeid", "工號");
         tr.put("fdtitle", "職稱");
         tr.put("fdgender", "性別");
@@ -83,6 +84,13 @@ public class Main extends Application {
         tr.put("fdrpjname", "專案名稱");
         tr.put("fdpstart", "開始日");
         tr.put("fdpend", "完成日");
+        tr.put("fdrowner", "專案負責人");
+        tr.put("fdpurpose", "專案目的");
+        tr.put("fdrclient", "專案需求人");
+        //entityDepartment
+        tr.put("deptid", "ID");
+        tr.put("fdrdeptname", "單位名稱");
+        tr.put("fdrparentid", "隸屬");
         
     }
     public static Integer getTextFieldInteger(String s){

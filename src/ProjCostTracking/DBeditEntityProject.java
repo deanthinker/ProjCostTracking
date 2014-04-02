@@ -63,7 +63,8 @@ public class DBeditEntityProject implements Initializable {
 
     
     final List<Field> fList = new ArrayList<>();
-    final ObservableList<EntityProjecttype> ctList = Main.db.getProjecttypeList();
+    final ObservableList<EntityProjecttype> ptList = Main.db.getProjecttypeList();
+    final ObservableList<EntityEmployee> empList = Main.db.getEmployeeList();
     
     final String tbname = "project";
     
@@ -256,13 +257,46 @@ public class DBeditEntityProject implements Initializable {
                             }
                         }
                 );
-            }    
-            //Handle Costtype Class
+            } 
+            //Handle fdrowner --> EntityEmployee Class
+            else if (f.getType().equals(EntityEmployee.class)) {
+                c.setCellFactory(new Callback<TableColumn<EntityProject, EntityEmployee>, TableCell<EntityProject, EntityEmployee>>() {
+                    @Override
+                    public TableCell<EntityProject, EntityEmployee> call(TableColumn<EntityProject, EntityEmployee> arg0) {
+                        return new ComboBoxTableCell<>(empList);
+                    }
+                });
+
+                c.setOnEditCommit(
+                        new EventHandler<CellEditEvent<EntityProject, EntityEmployee>>() {
+                            @Override
+                            public void handle(CellEditEvent<EntityProject, EntityEmployee> t) {
+                                Method m = null;
+                                EntityProject ec = (EntityProject) t.getTableView().getItems().get(t.getTablePosition().getRow());
+                                System.out.println("old:" + t.getOldValue().toString() + "\t new:" + t.getNewValue().toString());
+                                try {//get the "Method object" by supplying its String name
+                                    //DEBUG
+                                    String ttt = Main.field2methodName(f.getName());
+                                    System.out.println("debug:"+ttt);
+                                    m = ec.getClass().getMethod(ttt, EntityEmployee.class);
+                                } catch (SecurityException | NoSuchMethodException e) {System.out.println("error:"+e.getMessage());}
+
+                                try { if (m!=null) m.invoke(ec, t.getNewValue());} 
+                                catch (IllegalArgumentException | IllegalAccessException | InvocationTargetException e) {
+                                    System.out.println("No such method found for :" + f.getName());
+                                }                                
+                                saveOn();
+                            }
+                        }
+                );
+            }
+            
+            //Handle Projecttype Class
             else if (f.getType().equals(EntityProjecttype.class)) {
                 c.setCellFactory(new Callback<TableColumn<EntityProject, EntityProjecttype>, TableCell<EntityProject, EntityProjecttype>>() {
                     @Override
                     public TableCell<EntityProject, EntityProjecttype> call(TableColumn<EntityProject, EntityProjecttype> arg0) {
-                        return new ComboBoxTableCell<>(ctList);
+                        return new ComboBoxTableCell<>(ptList);
                     }
                 });
 
@@ -366,9 +400,13 @@ public class DBeditEntityProject implements Initializable {
             lblList.add(new Label( Main.tr.get(f.getName())  ));
 
             if (f.getType().equals(EntityProjecttype.class)){
-                ComboBox<EntityProjecttype> cbx = new ComboBox<>(ctList);
+                ComboBox<EntityProjecttype> cbx = new ComboBox<>(ptList);
                 ctrlList.add(cbx);      
             }
+            else if (f.getType().equals(EntityEmployee.class)){
+                ComboBox<EntityEmployee> cbx = new ComboBox<>(empList);
+                ctrlList.add(cbx);      
+            }            
             else if (f.getType().equals(Date.class)){
                 //handle DATE
                 DatePicker dp = new DatePicker( LocalDate.now());
@@ -439,6 +477,11 @@ public class DBeditEntityProject implements Initializable {
                                 pass = false;
                             }
                         }
+                        else if (f.getType().equals(EntityEmployee.class) ){
+                            if(  ((ComboBox<EntityEmployee>)ctrlList.get(idx)).getValue() == null ){   
+                                pass = false;
+                            }
+                        }
                         else { //String, Integer, Float ... except Date
                             if ( ((TextField)ctrl).getText().isEmpty() ){
                                 pass = false;
@@ -492,8 +535,12 @@ public class DBeditEntityProject implements Initializable {
         }
         else if (fList.get(idx).getType().equals(EntityProjecttype.class)){
             content.add((ComboBox<EntityProjecttype>)ctrlList.get(idx), 1, idx);
+            GridPane.setHgrow((ComboBox<EntityProjecttype>)ctrlList.get(idx), Priority.ALWAYS);
         }
-
+        else if (fList.get(idx).getType().equals(EntityEmployee.class)){
+            content.add((ComboBox<EntityEmployee>)ctrlList.get(idx), 1, idx);
+            GridPane.setHgrow((ComboBox<EntityEmployee>)ctrlList.get(idx), Priority.ALWAYS);
+        }
         else{ //treat all other type with TextField
             content.add((TextField)ctrlList.get(idx), 1, idx);
             GridPane.setHgrow((TextField)ctrlList.get(idx), Priority.ALWAYS);
@@ -573,15 +620,23 @@ public class DBeditEntityProject implements Initializable {
 
     public void save(List<Control> ctrlList){
         EntityProject entity = new EntityProject();
-
-        EntityProjecttype pt = ((ComboBox<EntityProjecttype>)ctrlList.get(0)).getValue();
+        
+        entity.setFdrpjname(((TextField)(ctrlList.get(0))).getText());
+        
+        EntityEmployee owner = ((ComboBox<EntityEmployee>)ctrlList.get(1)).getValue();
+        entity.setFdrowner( owner  );
+        
+        EntityEmployee client = ((ComboBox<EntityEmployee>)ctrlList.get(2)).getValue();
+        entity.setFdrclient( owner  );
+        
+        EntityProjecttype pt = ((ComboBox<EntityProjecttype>)ctrlList.get(3)).getValue();
         entity.setFdrprojtypeid( pt  );
         
-        entity.setFdrpjname(((TextField)(ctrlList.get(1))).getText());
-        entity.setFdpstart(  Main.getDatePickerDate((DatePicker)ctrlList.get(2))   );
-        entity.setFdpend(  Main.getDatePickerDate((DatePicker)ctrlList.get(3))   );
+        entity.setFdpstart(  Main.getDatePickerDate((DatePicker)ctrlList.get(4))   );
+        entity.setFdpend(  Main.getDatePickerDate((DatePicker)ctrlList.get(5))   );
+        entity.setFdpurpose( ((TextField)(ctrlList.get(6))).getText()    );
+        entity.setFdnote( ((TextField)(ctrlList.get(7))).getText()    );
         
-        entity.setFdnote( ((TextField)(ctrlList.get(4))).getText()    );
         if(!Main.db.em.getTransaction().isActive())
             Main.db.em.getTransaction().begin();
 
