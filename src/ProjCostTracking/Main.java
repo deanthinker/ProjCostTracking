@@ -130,11 +130,19 @@ public class Main extends Application {
     }
     
     public static void log(int logtype, String tablename, String note){
-        Log el = new Log(logtype, Main.currentUser.getUserid(), tablename, note);
-        if(!Main.db.em.getTransaction().isActive())
-            Main.db.em.getTransaction().begin();
+        
+        if (Main.currentUser.getLog()){
+            EntityLog el = new EntityLog();
+            el.setLogtype(logtype);
+            el.setTbname(tablename);
+            el.setNote(note);
+            el.setUserid(Main.currentUser.getUserid());
 
-        Main.db.em.persist(el);
-        Main.db.em.getTransaction().commit();
+            if(!Main.db.em.getTransaction().isActive())
+                Main.db.em.getTransaction().begin();
+
+            Main.db.em.persist(el);
+            Main.db.em.getTransaction().commit();
+        }
     }
 }
