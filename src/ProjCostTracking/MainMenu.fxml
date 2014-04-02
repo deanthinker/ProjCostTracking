@@ -12,28 +12,28 @@
   <children>
     <MenuBar fx:id="menu" focusTraversable="true" minWidth="-Infinity" prefWidth="865.0" useSystemMenuBar="false" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
       <menus>
-        <Menu mnemonicParsing="false" text="Main">
+        <Menu mnemonicParsing="false" text="系統">
           <items>
-            <MenuItem mnemonicParsing="false" onAction="#mnuLogout_onClick" text="Logout" fx:id="mnuLogout">
+            <MenuItem mnemonicParsing="false" onAction="#mnuLogout_onClick" text="登出" fx:id="mnuLogout">
               <accelerator>
                 <KeyCodeCombination alt="UP" code="L" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
               </accelerator>
             </MenuItem>
-            <MenuItem mnemonicParsing="false" onAction="#mnuExit_onClick" text="Exit" fx:id="mnuExit">
+            <MenuItem mnemonicParsing="false" onAction="#mnuExit_onClick" text="關閉程式" fx:id="mnuExit">
               <accelerator>
                 <KeyCodeCombination alt="UP" code="E" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
               </accelerator>
             </MenuItem>
           </items>
         </Menu>
-        <Menu mnemonicParsing="false" text="專案管理">
+        <Menu mnemonicParsing="false" text="專案">
           <items>
             <MenuItem mnemonicParsing="false" onAction="#mnuNewProject_onClick" text="新增專案" fx:id="mnuNewProject">
               <accelerator>
                 <KeyCodeCombination alt="UP" code="N" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
               </accelerator>
             </MenuItem>
-            <MenuItem mnemonicParsing="false" onAction="#mnuManagement_onClick" text="Management" fx:id="mnuManagement">
+            <MenuItem mnemonicParsing="false" onAction="#mnuManagement_onClick" text="專案管理" fx:id="mnuManagement">
               <accelerator>
                 <KeyCodeCombination alt="UP" code="M" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
               </accelerator>
@@ -42,13 +42,46 @@
         </Menu>
         <Menu mnemonicParsing="false" text="資料庫維護">
           <items>
-            <MenuItem mnemonicParsing="false" onAction="#mnuCost_onClick" text="費用" fx:id="mnuCost" />
-            <MenuItem mnemonicParsing="false" onAction="#mnuCostType_onClick" text="費用類別" fx:id="mnuCostType" />
-            <MenuItem id="mnuTask" mnemonicParsing="false" onAction="#mnuTask_onClick" text="任務" fx:id="mnuTask" />
-            <MenuItem mnemonicParsing="false" onAction="#mnuProjectType_onClick" text="專案類別" fx:id="mnuProjectType" />
-            <MenuItem mnemonicParsing="false" onAction="#mnuEmployee_onClick" text="職員檔案" fx:id="mnuEmployee" />
-            <MenuItem mnemonicParsing="false" onAction="#mnuUser_onClick" text="使用者帳戶" fx:id="mnuUser" />
-            <MenuItem mnemonicParsing="false" onAction="#mnuUserLevel_onClick" text="使用者層級" fx:id="mnuUserLevel" />
+            <MenuItem mnemonicParsing="false" onAction="#mnuCost_onClick" text="8費用" fx:id="mnuCost">
+              <accelerator>
+                <KeyCodeCombination alt="UP" code="DIGIT8" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+              </accelerator>
+            </MenuItem>
+            <MenuItem id="mnuTask" mnemonicParsing="false" onAction="#mnuTask_onClick" text="7任務" fx:id="mnuTask">
+              <accelerator>
+                <KeyCodeCombination alt="UP" code="DIGIT7" control="UP" meta="DOWN" shift="UP" shortcut="UP" />
+              </accelerator>
+            </MenuItem>
+            <MenuItem mnemonicParsing="false" onAction="#mnuCostType_onClick" text="6費用類別" fx:id="mnuCostType">
+              <accelerator>
+                <KeyCodeCombination alt="UP" code="DIGIT5" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+              </accelerator>
+            </MenuItem>
+            <MenuItem mnemonicParsing="false" onAction="#mnuProjectType_onClick" text="5專案類別" fx:id="mnuProjectType">
+              <accelerator>
+                <KeyCodeCombination alt="UP" code="DIGIT4" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+              </accelerator>
+            </MenuItem>
+            <MenuItem mnemonicParsing="false" onAction="#mnuUser_onClick" text="4使用者帳戶" fx:id="mnuUser">
+              <accelerator>
+                <KeyCodeCombination alt="UP" code="DIGIT3" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+              </accelerator>
+            </MenuItem>
+            <MenuItem mnemonicParsing="false" onAction="#mnuUserLevel_onClick" text="3使用者層級" fx:id="mnuUserLevel">
+              <accelerator>
+                <KeyCodeCombination alt="UP" code="DIGIT2" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+              </accelerator>
+            </MenuItem>
+            <MenuItem mnemonicParsing="false" onAction="#mnuEmployee_onClick" text="2職員檔案" fx:id="mnuEmployee">
+              <accelerator>
+                <KeyCodeCombination alt="UP" code="DIGIT1" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+              </accelerator>
+            </MenuItem>
+            <MenuItem id="mnuDept" mnemonicParsing="false" onAction="#mnuDept_onClick" text="1部門資料" fx:id="mnuDept">
+              <accelerator>
+                <KeyCodeCombination alt="UP" code="DIGIT0" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+              </accelerator>
+            </MenuItem>
           </items>
         </Menu>
         <Menu mnemonicParsing="false" text="設定">
@@ -57,9 +90,9 @@
             <MenuItem mnemonicParsing="false" onAction="#mnuDBconn_onClick" text="DB Connection" fx:id="mnuDBconn" />
           </items>
         </Menu>
-        <Menu mnemonicParsing="false" text="Help">
+        <Menu mnemonicParsing="false" text="其他">
           <items>
-            <MenuItem mnemonicParsing="false" onAction="#mnuAbout_onClick" text="About" fx:id="mnuAbout" />
+            <MenuItem mnemonicParsing="false" onAction="#mnuAbout_onClick" text="關於" fx:id="mnuAbout" />
           </items>
         </Menu>
       </menus>

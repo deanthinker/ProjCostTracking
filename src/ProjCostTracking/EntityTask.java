@@ -7,9 +7,7 @@
 package ProjCostTracking;
 
 import java.io.Serializable;
-import java.util.List;
 import javax.persistence.Basic;
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -17,10 +15,8 @@ import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -43,8 +39,6 @@ public class EntityTask implements Serializable {
     private String fdrtaskname;
     @Lob
     private String fdnote;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "fdrtaskid")
-    private List<EntityProjtaskcost> entityProjtaskcostList;
 
     public EntityTask() {
     }
@@ -82,15 +76,6 @@ public class EntityTask implements Serializable {
         this.fdnote = fdnote;
     }
 
-    @XmlTransient
-    public List<EntityProjtaskcost> getEntityProjtaskcostList() {
-        return entityProjtaskcostList;
-    }
-
-    public void setEntityProjtaskcostList(List<EntityProjtaskcost> entityProjtaskcostList) {
-        this.entityProjtaskcostList = entityProjtaskcostList;
-    }
-
     @Override
     public int hashCode() {
         int hash = 0;
@@ -113,7 +98,7 @@ public class EntityTask implements Serializable {
 
     @Override
     public String toString() {
-        return "ProjCostTracking.EntityTask[ taskid=" + taskid + " ]";
+        return this.fdrtaskname;
     }
     
 }

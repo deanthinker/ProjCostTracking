@@ -8,11 +8,9 @@ package ProjCostTracking;
 
 import java.io.Serializable;
 import java.util.List;
-import javafx.scene.control.TextField;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -23,8 +21,6 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
-import org.controlsfx.control.action.Action;
-import org.controlsfx.dialog.Dialogs;
 
 /**
  *
@@ -37,8 +33,7 @@ import org.controlsfx.dialog.Dialogs;
     @NamedQuery(name = "EntityUserlevel.findAll", query = "SELECT e FROM EntityUserlevel e"),
     @NamedQuery(name = "EntityUserlevel.findByUserlevelid", query = "SELECT e FROM EntityUserlevel e WHERE e.userlevelid = :userlevelid"),
     @NamedQuery(name = "EntityUserlevel.findByFdrlevel", query = "SELECT e FROM EntityUserlevel e WHERE e.fdrlevel = :fdrlevel"),
-    @NamedQuery(name = "EntityUserlevel.findByFdrlevelname", query = "SELECT e FROM EntityUserlevel e WHERE e.fdrlevelname LIKE :fdrlevelname"),
-    @NamedQuery(name = "EntityUserlevel.findByFdnote", query = "SELECT e FROM EntityUserlevel e WHERE e.fdnote LIKE :fdnote")})
+    @NamedQuery(name = "EntityUserlevel.findByFdrlevelname", query = "SELECT e FROM EntityUserlevel e WHERE e.fdrlevelname = :fdrlevelname")})
 public class EntityUserlevel implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
@@ -46,12 +41,12 @@ public class EntityUserlevel implements Serializable {
     @Basic(optional = false)
     private Integer userlevelid;
     @Basic(optional = false)
-    private Integer fdrlevel;
+    private int fdrlevel;
     @Basic(optional = false)
     private String fdrlevelname;
     @Lob
     private String fdnote;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "fdruserlevelid", fetch = FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "fdruserlevelid")
     private List<EntityUser> entityUserList;
 
     public EntityUserlevel() {
@@ -75,11 +70,11 @@ public class EntityUserlevel implements Serializable {
         this.userlevelid = userlevelid;
     }
 
-    public Integer getFdrlevel() {
+    public int getFdrlevel() {
         return fdrlevel;
     }
 
-    public void setFdrlevel(Integer fdrlevel) {
+    public void setFdrlevel(int fdrlevel) {
         this.fdrlevel = fdrlevel;
     }
 
@@ -130,7 +125,7 @@ public class EntityUserlevel implements Serializable {
 
     @Override
     public String toString() {
-        return userlevelid +":"+ fdrlevelname;
+        return "ProjCostTracking.EntityUserlevel[ userlevelid=" + userlevelid + " ]";
     }
     
 }

@@ -77,6 +77,9 @@ public class MainMenuController implements Initializable {
     @FXML
     private MenuItem mnuUserLevel;
 
+    @FXML
+    private MenuItem mnuDept;
+    
     private Stage stage;
     
     StringProperty mainUsername = new SimpleStringProperty();
@@ -194,10 +197,6 @@ public class MainMenuController implements Initializable {
         mainContent.getChildren().clear();
         FXMLLoader loader = new FXMLLoader(getClass().getResource("DBedit.fxml"));
         DBeditEntityUserlevel controller = new DBeditEntityUserlevel();
-        
-        //dynamic class type NOT WORKING yet
-        //Test_DynamicController<EntityUserlevel> controller = new Test_DynamicController<>();
-        //controller.setEntity(EntityUserlevel.class);
 
         loader.setController(controller);
         controller.setParent(mainContent);
@@ -232,6 +231,17 @@ public class MainMenuController implements Initializable {
     
     private void setStage(Stage s){
         this.stage = s;
+    }
+
+    @FXML
+    private void mnuDept_onClick(ActionEvent event) {
+         mainContent.getChildren().clear();
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("DBedit.fxml"));
+        DBeditEntityDepartment controller = new DBeditEntityDepartment();
+
+        loader.setController(controller);
+        controller.setParent(mainContent);
+        fitToParent(loader);    
     }
     
 }

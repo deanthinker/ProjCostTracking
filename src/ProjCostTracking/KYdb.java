@@ -47,6 +47,14 @@ public class KYdb {
         tmpem.clear();
         return obslist;
     }
+
+    public ObservableList<EntityDepartment> getDepartmentList() {
+        List<EntityDepartment> thelist = Main.db.tmpem.createQuery("select e from EntityDepartment e").getResultList();
+        ObservableList<EntityDepartment> obslist = FXCollections.observableList(thelist);
+        tmpem.clear();
+        return obslist;
+    }      
+
     public ObservableList<EntityProjecttype> getProjecttypeList() {
         List<EntityProjecttype> thelist = Main.db.tmpem.createQuery("select e from EntityProjecttype e").getResultList();
         ObservableList<EntityProjecttype> obslist = FXCollections.observableList(thelist);

@@ -12,11 +12,12 @@ import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
@@ -36,10 +37,10 @@ import javax.xml.bind.annotation.XmlTransient;
 @NamedQueries({
     @NamedQuery(name = "EntityEmployee.findAll", query = "SELECT e FROM EntityEmployee e"),
     @NamedQuery(name = "EntityEmployee.findByEmpid", query = "SELECT e FROM EntityEmployee e WHERE e.empid = :empid"),
-    @NamedQuery(name = "EntityEmployee.findByFdrname", query = "SELECT e FROM EntityEmployee e WHERE e.fdrname LIKE :fdrname"),
-    @NamedQuery(name = "EntityEmployee.findByFdlastname", query = "SELECT e FROM EntityEmployee e WHERE e.fdlastname LIKE :fdlastname"),
-    @NamedQuery(name = "EntityEmployee.findByFdbadgeid", query = "SELECT e FROM EntityEmployee e WHERE e.fdbadgeid LIKE :fdbadgeid"),
-    @NamedQuery(name = "EntityEmployee.findByFdtitle", query = "SELECT e FROM EntityEmployee e WHERE e.fdtitle LIKE :fdtitle"),
+    @NamedQuery(name = "EntityEmployee.findByFdrname", query = "SELECT e FROM EntityEmployee e WHERE e.fdrname = :fdrname"),
+    @NamedQuery(name = "EntityEmployee.findByFdlastname", query = "SELECT e FROM EntityEmployee e WHERE e.fdlastname = :fdlastname"),
+    @NamedQuery(name = "EntityEmployee.findByFdbadgeid", query = "SELECT e FROM EntityEmployee e WHERE e.fdbadgeid = :fdbadgeid"),
+    @NamedQuery(name = "EntityEmployee.findByFdtitle", query = "SELECT e FROM EntityEmployee e WHERE e.fdtitle = :fdtitle"),
     @NamedQuery(name = "EntityEmployee.findByFdgender", query = "SELECT e FROM EntityEmployee e WHERE e.fdgender = :fdgender"),
     @NamedQuery(name = "EntityEmployee.findByFdbirthday", query = "SELECT e FROM EntityEmployee e WHERE e.fdbirthday = :fdbirthday")})
 public class EntityEmployee implements Serializable {
@@ -58,9 +59,12 @@ public class EntityEmployee implements Serializable {
     private Date fdbirthday;
     @Lob
     private String fdnote;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "fdempid", fetch = FetchType.EAGER)
+    @JoinColumn(name = "fdrdeptid", referencedColumnName = "deptid")
+    @ManyToOne(optional = false)
+    private EntityDepartment fdrdeptid;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "fdempid")
     private List<EntityUser> entityUserList;
-    
+
     public EntityEmployee() {
     }
 
@@ -137,6 +141,14 @@ public class EntityEmployee implements Serializable {
         this.fdnote = fdnote;
     }
 
+    public EntityDepartment getFdrdeptid() {
+        return fdrdeptid;
+    }
+
+    public void setFdrdeptid(EntityDepartment fdrdeptid) {
+        this.fdrdeptid = fdrdeptid;
+    }
+
     @XmlTransient
     public List<EntityUser> getEntityUserList() {
         return entityUserList;
@@ -168,7 +180,7 @@ public class EntityEmployee implements Serializable {
 
     @Override
     public String toString() {
-        return empid + ":" + fdrname +":" + fdbadgeid;
+        return "ProjCostTracking.EntityEmployee[ empid=" + empid + " ]";
     }
-   
+    
 }

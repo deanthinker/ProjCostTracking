@@ -12,6 +12,8 @@
     <class>ProjCostTracking.EntityProjtaskcost</class>
     <class>ProjCostTracking.EntityProject</class>
     <class>ProjCostTracking.EntityCost</class>
+    <class>ProjCostTracking.EntityDepartment</class>
+    <class>ProjCostTracking.EntityUserlevel_1</class>
     <properties>
       <property name="eclipselink.logging.level" value="FINE"/>
       <property name="eclipselink.logging.level.sql" value="FINE"/>

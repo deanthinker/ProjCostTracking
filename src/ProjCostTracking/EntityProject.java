@@ -51,11 +51,11 @@ public class EntityProject implements Serializable {
     @Temporal(TemporalType.DATE)
     private Date fdpend;
     @Basic(optional = false)
-    private int fdrowner;
+    private EntityEmployee fdrowner;
     @Lob
     private String fdpurpose;
     @Basic(optional = false)
-    private int fdrclient;
+    private EntityEmployee fdrclient;
     @Lob
     private String fdnote;
     @JoinColumn(name = "fdrprojtypeid", referencedColumnName = "projtypeid")
@@ -69,7 +69,7 @@ public class EntityProject implements Serializable {
         this.projectid = projectid;
     }
 
-    public EntityProject(Integer projectid, String fdrpjname, int fdrowner, int fdrclient) {
+    public EntityProject(Integer projectid, String fdrpjname, EntityEmployee fdrowner, EntityEmployee fdrclient) {
         this.projectid = projectid;
         this.fdrpjname = fdrpjname;
         this.fdrowner = fdrowner;
@@ -108,11 +108,11 @@ public class EntityProject implements Serializable {
         this.fdpend = fdpend;
     }
 
-    public int getFdrowner() {
+    public EntityEmployee getFdrowner() {
         return fdrowner;
     }
 
-    public void setFdrowner(int fdrowner) {
+    public void setFdrowner(EntityEmployee fdrowner) {
         this.fdrowner = fdrowner;
     }
 
@@ -124,11 +124,11 @@ public class EntityProject implements Serializable {
         this.fdpurpose = fdpurpose;
     }
 
-    public int getFdrclient() {
+    public EntityEmployee getFdrclient() {
         return fdrclient;
     }
 
-    public void setFdrclient(int fdrclient) {
+    public void setFdrclient(EntityEmployee fdrclient) {
         this.fdrclient = fdrclient;
     }
 
