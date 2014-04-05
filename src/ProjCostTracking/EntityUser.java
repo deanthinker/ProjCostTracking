@@ -160,7 +160,7 @@ public class EntityUser implements Serializable {
 
     @Override
     public String toString() {
-        return this.fdrusername + " 職:" + this.getFdempid().getFdrname();
+        return this.fdrusername + " :" + this.getFdempid().getFdtitle();
     }
     
 }

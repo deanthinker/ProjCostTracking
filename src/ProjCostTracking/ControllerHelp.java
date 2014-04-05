@@ -19,7 +19,7 @@ import javafx.stage.Stage;
  *
  * @author richardc
  */
-public class HelpController implements Initializable {
+public class ControllerHelp implements Initializable {
     @FXML
     private Button btnClose;
     private Stage stage;

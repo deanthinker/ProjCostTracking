@@ -473,6 +473,14 @@ public class DBeditEntityProjecttype implements Initializable {
     @FXML
     private void btnDelete_onClick(ActionEvent event) {
         EntityProjecttype entity = (EntityProjecttype)tbvMain.getSelectionModel().getSelectedItem();
+        if (entity == null){
+            Dialogs.create()
+                .title("警告")
+                .masthead("")
+                .message("請先選擇一筆資料")
+                .showError();
+            return;
+        }        
         //newly added EntityUserlevel.getEntityUserList  is EMPTY; we have to make the relationship manually!!!!
         //otherwise, DELETE error!
         //Integer id = entity.getProjtypeid();
@@ -482,28 +490,20 @@ public class DBeditEntityProjecttype implements Initializable {
         entity.setEntityProjectList(lst);
         
         System.out.println("user list:"+lst.toString());
-        if (entity == null){
-            Dialogs.create()
-                .title("警告")
-                .masthead("")
-                .message("請先選擇一筆資料")
-                .showError(); 
+        
+        if (lst.size()> 0  ){
+        Dialogs.create()
+            .title("警告")
+            .masthead("不可刪除")
+            .message("此資料已被引用, 必須先變更以下設定: \n專案:" + lst.toString())
+            .showError();  
         }
         else{
-            if (lst.size()> 0  ){
-            Dialogs.create()
-                .title("警告")
-                .masthead("不可刪除")
-                .message("此資料已被引用, 必須先變更以下專案設定: " + lst.toString())
-                .showError();  
-            }
-            else{
-                String response = delete(entity);
-                if (response.equals("YES"))
-                    tbvMain.getItems().remove(tbvMain.getSelectionModel().getSelectedIndex());
-            }
+            String response = delete(entity);
+            if (response.equals("YES"))
+                tbvMain.getItems().remove(tbvMain.getSelectionModel().getSelectedIndex());
         }
-    
+
     }
 
     @FXML

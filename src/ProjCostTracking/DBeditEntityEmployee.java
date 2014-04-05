@@ -516,6 +516,14 @@ public class DBeditEntityEmployee implements Initializable {
     @FXML
     private void btnDelete_onClick(ActionEvent event) {
         EntityEmployee entity = (EntityEmployee)tbvMain.getSelectionModel().getSelectedItem();
+        if ( entity == null){
+            Dialogs.create()
+                .title("警告")
+                .masthead("")
+                .message("請先選擇一筆資料")
+                .showError(); 
+            return;
+        }        
         //newly added EntityEmployee.getEntityUserList  is EMPTY; we have to make the relationship manually!!!!
         //otherwise, DELETE error!
         int id = entity.getEmpid();
@@ -523,29 +531,27 @@ public class DBeditEntityEmployee implements Initializable {
                 .setParameter("id", entity)
                 .getResultList();
         entity.setEntityUserList(u);
+
+        List<EntityProject> p = Main.db.em.createQuery("select u from EntityProject u where u.fdrowner = :id or u.fdrclient = :id")
+                .setParameter("id", entity)
+                .getResultList();
+                
+        System.out.println("user list:"+u.toString() + "\nproj list:"+p.toString());
         
-        System.out.println("user list:"+u.toString());
-        if ( entity == null){
-            Dialogs.create()
-                .title("警告")
-                .masthead("")
-                .message("請先選擇一筆資料")
-                .showError(); 
+        if (u.size()> 0 || p.size() >0 ){
+        Dialogs.create()
+            .title("警告")
+            .masthead("不可刪除")
+            .message("此資料已被引用, 必須先變更以下設定\n 使用者帳號 : " + u.toString()
+                    + "\n 專案成員:" + p.toString())
+            .showError();  
         }
         else{
-            if (u.size()> 0  ){
-            Dialogs.create()
-                .title("警告")
-                .masthead("不可刪除")
-                .message("此資料已被引用, 必須先變更以下 使用者帳號 設定: " + u.toString())
-                .showError();  
-            }
-            else{
-                String response = delete(entity);
-                if (response.equals("YES"))
-                    tbvMain.getItems().remove(tbvMain.getSelectionModel().getSelectedIndex());
-            }
+            String response = delete(entity);
+            if (response.equals("YES"))
+                tbvMain.getItems().remove(tbvMain.getSelectionModel().getSelectedIndex());
         }
+        
     
     }    
     private void btnDelete_onClick_old(ActionEvent event) {

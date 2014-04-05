@@ -71,6 +71,7 @@ public class EntityEmployee implements Serializable {
     
     @ManyToMany(mappedBy = "entityEmployeeList")
     private List<EntityProject> entityProjectList;
+    
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "fdrowner")
     private List<EntityProject> entityProjectList1;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "fdrclient")
@@ -219,7 +220,10 @@ public class EntityEmployee implements Serializable {
 
     @Override
     public String toString() {
-        return this.fdrname + " " + this.fdlastname;
+        if (this.fdlastname!=null)
+            return this.fdrname + " " + this.fdlastname;
+        else
+            return this.fdrname;
     }
     
 }

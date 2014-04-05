@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane id="AnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="287.0" prefWidth="446.0" style="-fx-background-color: #5555f1;&#10;&#10;" visible="true" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="ProjCostTracking.LoginController">
+<AnchorPane id="AnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="287.0" prefWidth="446.0" style="-fx-background-color: #5555f1;&#10;&#10;" visible="true" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="ProjCostTracking.ControllerLogin">
   <children>
     <Label id="label" minHeight="16.0" minWidth="69.0" prefHeight="47.0" prefWidth="244.0" text="Project Management Util" AnchorPane.leftAnchor="43.0" AnchorPane.rightAnchor="152.0" AnchorPane.topAnchor="14.0">
       <font>

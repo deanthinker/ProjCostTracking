@@ -1,13 +1,7 @@
 /*
-* The DB field name must comply with the rule
-* All fields name should start with "fd" (meaning open for edit)
-* All required fields should start with "fdr" (MUST NOT be empty data)
-* All int type must be changed to Integer in the Entity class
-* All float type must be changed to Float in the Entity class
-* Parimary Key is not allowed for update
-* Primary Key field name MUST NOTE begine with "fd"
-* Entity Class name must begin with Entityxxxxx
-
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
  */
 
 package ProjCostTracking;
@@ -38,7 +32,6 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableColumn.CellEditEvent;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.ComboBoxTableCell;
@@ -60,50 +53,63 @@ import org.controlsfx.control.action.Action;
 import org.controlsfx.dialog.Dialog;
 import org.controlsfx.dialog.Dialogs;
 
-
-public class DBeditEntityProject implements Initializable {
-
+/**
+ * FXML Controller class
+ *
+ * @author richardc
+ */
+public abstract class ControllerPaneProjectSearch implements Initializable {
+    public abstract void updateSelect(EntityProject proj); //needs to be implemented
     
+    @FXML
+    protected AnchorPane myanchorpane;
+    @FXML
+    protected TableView<EntityProject> tbvMain;
+    @FXML
+    protected Button btnAdd;
+    @FXML
+    protected Font x1;
+    @FXML
+    protected Button btnSave;
+    @FXML
+    protected Button btnDelete;
+    @FXML
+    protected TextField txfSearch;
+    @FXML
+    protected ComboBox<FieldQuery> cbxSearch;
+    @FXML
+    protected Button btnSearch;
     final List<Field> fList = new ArrayList<>();
     final ObservableList<EntityProjecttype> ptList = Main.db.getProjecttypeList();
     final ObservableList<EntityEmployee> empList = Main.db.getEmployeeList();
     
     final String tbname = "project";
-    
-    @FXML
-    private AnchorPane myanchorpane;
-    @FXML
-    private TableView tbvMain;
-    @FXML
-    private Button btnAdd;
-    @FXML
-    private Font x1;
-    @FXML
-    private Button btnSave;
-    @FXML
-    private Button btnDelete;
-    @FXML
-    private Button btnClose;
-    @FXML
-    private TextField txfSearch;
-    @FXML
-    private ComboBox<FieldQuery> cbxSearch;
-    @FXML
-    private Button btnSearch;
-    
-    private AnchorPane parent; //this is to be assigned from MainMenuController 
-    private int commit_count=0;
-    
-    @Override
+    protected AnchorPane parent; //this is to be assigned from MainMenuController 
+    protected int commit_count=0;    
+    /**
+     * Initializes the controller class.
+     */
     public void initialize(URL url, ResourceBundle rb) {
         loadEntityFields();
         loadViewTable(getAllData());
         loadSearchComboBox();
+        
+     // setup ChangeListener
+        tbvMain.getSelectionModel().selectedItemProperty().addListener(new ChangeListener (){
+            public void changed(ObservableValue observableValue, Object oldValue, Object newValue) {
+                //Check whether item is selected and set value of selected item to Label
+                if(tbvMain.getSelectionModel().getSelectedItem() != null){
+                    //System.out.println("Select ProjID: " + ((EntityProject)newValue).getProjectid() );
+                    updateSelect((EntityProject)newValue);
+                }
+            }        
+        });      
+            
     }
     
-    private void loadEntityFields(){
+    protected void loadEntityFields(){
         for (Field f : EntityProject.class.getDeclaredFields()){ //create a list of "f_" fields
-            f.setAccessible(true); //make "private" member visible
+            f.setAccessible(true); //make "protected" member visible
             //we only handle those that name with "fd...."
             if (f.getName().substring(0, 2).equals("fd")){
                 fList.add(f);
@@ -114,7 +120,7 @@ public class DBeditEntityProject implements Initializable {
         if (fList.isEmpty()) {System.out.print("Entity has zero field!"); return;}
     }
     
-    private ObservableList<EntityProject> getAllData() {
+    protected ObservableList<EntityProject> getAllData() {
         List<EntityProject> thelist = Main.db.em.createQuery("select e from EntityProject e").getResultList();
         ObservableList<EntityProject> obslist = FXCollections.observableList(thelist);
         return obslist;
@@ -143,16 +149,7 @@ public class DBeditEntityProject implements Initializable {
         tbvMain.getColumns().clear();
         btnSave.setDisable(true);
         tbvMain.setEditable(true);
-
-        tbvMain.getSelectionModel().selectedItemProperty().addListener(new ChangeListener (){
-            public void changed(ObservableValue observableValue, Object oldValue, Object newValue) {
-                //Check whether item is selected and set value of selected item to Label
-                if(tbvMain.getSelectionModel().getSelectedItem() != null){
-                    System.out.println("Select: " + ((EntityProject)newValue).getProjectid() );
-                }
-            }        
-        });        
-        
+       
         for (Field f : fList){
             TableColumn c = new TableColumn( Main.tr.get(f.getName())  );//set  Column title
             c.setCellValueFactory(new PropertyValueFactory<>( f.getName() )); //set DB filed name
@@ -168,9 +165,9 @@ public class DBeditEntityProject implements Initializable {
                 });
 
                 c.setOnEditCommit(
-                        new EventHandler<CellEditEvent<EntityProject, String>>() {
+                        new EventHandler<TableColumn.CellEditEvent<EntityProject, String>>() {
                             @Override
-                            public void handle(CellEditEvent<EntityProject, String> t) {
+                            public void handle(TableColumn.CellEditEvent<EntityProject, String> t) {
                                 Method m = null;
                                 EntityProject ul = (EntityProject) t.getTableView().getItems().get(t.getTablePosition().getRow());
                                 System.out.println("old:" + t.getOldValue() + "\t new:" + t.getNewValue());
@@ -198,9 +195,9 @@ public class DBeditEntityProject implements Initializable {
                 });
 
                 c.setOnEditCommit(
-                        new EventHandler<CellEditEvent<EntityProject, Float>>() {
+                        new EventHandler<TableColumn.CellEditEvent<EntityProject, Float>>() {
                             @Override
-                            public void handle(CellEditEvent<EntityProject, Float> t) {
+                            public void handle(TableColumn.CellEditEvent<EntityProject, Float> t) {
                                 Method m = null;
                                 EntityProject ul = (EntityProject) t.getTableView().getItems().get(t.getTablePosition().getRow());
                                 System.out.println("old:" + t.getOldValue() + "\t new:" + t.getNewValue());
@@ -229,9 +226,9 @@ public class DBeditEntityProject implements Initializable {
                 });    
                 
                 c.setOnEditCommit(
-                        new EventHandler<CellEditEvent<EntityProject, Date>>() {
+                        new EventHandler<TableColumn.CellEditEvent<EntityProject, Date>>() {
                             @Override
-                            public void handle(CellEditEvent<EntityProject, Date> t) {
+                            public void handle(TableColumn.CellEditEvent<EntityProject, Date> t) {
                                 Method m = null;
                                 EntityProject ul = (EntityProject) t.getTableView().getItems().get(t.getTablePosition().getRow());
                                 System.out.println("old:" + t.getOldValue() + "\t new:" + t.getNewValue());
@@ -260,9 +257,9 @@ public class DBeditEntityProject implements Initializable {
                 });
 
                 c.setOnEditCommit(
-                        new EventHandler<CellEditEvent<EntityProject, Boolean>>() {
+                        new EventHandler<TableColumn.CellEditEvent<EntityProject, Boolean>>() {
                             @Override
-                            public void handle(CellEditEvent<EntityProject, Boolean> t) {
+                            public void handle(TableColumn.CellEditEvent<EntityProject, Boolean> t) {
                                 Method m = null;
                                 EntityProject ul = (EntityProject) t.getTableView().getItems().get(t.getTablePosition().getRow());
                                 System.out.println("old:" + t.getOldValue().toString() + "\t new:" + t.getNewValue().toString());
@@ -289,9 +286,9 @@ public class DBeditEntityProject implements Initializable {
                 });
 
                 c.setOnEditCommit(
-                        new EventHandler<CellEditEvent<EntityProject, EntityEmployee>>() {
+                        new EventHandler<TableColumn.CellEditEvent<EntityProject, EntityEmployee>>() {
                             @Override
-                            public void handle(CellEditEvent<EntityProject, EntityEmployee> t) {
+                            public void handle(TableColumn.CellEditEvent<EntityProject, EntityEmployee> t) {
                                 Method m = null;
                                 EntityProject ec = (EntityProject) t.getTableView().getItems().get(t.getTablePosition().getRow());
                                 System.out.println("old:" + t.getOldValue().toString() + "\t new:" + t.getNewValue().toString());
@@ -322,9 +319,9 @@ public class DBeditEntityProject implements Initializable {
                 });
 
                 c.setOnEditCommit(
-                        new EventHandler<CellEditEvent<EntityProject, EntityProjecttype>>() {
+                        new EventHandler<TableColumn.CellEditEvent<EntityProject, EntityProjecttype>>() {
                             @Override
-                            public void handle(CellEditEvent<EntityProject, EntityProjecttype> t) {
+                            public void handle(TableColumn.CellEditEvent<EntityProject, EntityProjecttype> t) {
                                 Method m = null;
                                 EntityProject ec = (EntityProject) t.getTableView().getItems().get(t.getTablePosition().getRow());
                                 System.out.println("old:" + t.getOldValue().toString() + "\t new:" + t.getNewValue().toString());
@@ -354,9 +351,9 @@ public class DBeditEntityProject implements Initializable {
                 });
 
                 c.setOnEditCommit(
-                        new EventHandler<CellEditEvent<EntityProject, Integer>>() {
+                        new EventHandler<TableColumn.CellEditEvent<EntityProject, Integer>>() {
                             @Override
-                            public void handle(CellEditEvent<EntityProject, Integer> t) {
+                            public void handle(TableColumn.CellEditEvent<EntityProject, Integer> t) {
                                 Method m = null;
                                 EntityProject ul = (EntityProject) t.getTableView().getItems().get(t.getTablePosition().getRow());
                                 System.out.println("old:" + t.getOldValue() + "\t new:" + t.getNewValue());
@@ -411,8 +408,9 @@ public class DBeditEntityProject implements Initializable {
         this.parent = parent;
     }
     
+    
     @FXML
-    private void btnAdd_onClick(ActionEvent event) {
+    public void btnAdd_onClick(ActionEvent event) {
         final List<Control> ctrlList = new ArrayList<>();
         final List<Label> lblList = new ArrayList<>();
         
@@ -447,7 +445,7 @@ public class DBeditEntityProject implements Initializable {
                 ButtonBar.setType(this, ButtonBar.ButtonType.OK_DONE);
             }
                         
-            private boolean dataFormatIsOK(){
+            protected boolean dataFormatIsOK(){
                 for (int idx=0;idx<ctrlList.size();idx++){
                     Field f = fList.get(idx);
                     Control ctrl = ctrlList.get(idx);
@@ -486,7 +484,7 @@ public class DBeditEntityProject implements Initializable {
                 return true;
             }
             
-            private boolean requiredDataOk(){
+            protected boolean requiredDataOk(){
                 boolean pass = true;
                 for (int idx=0;idx < fList.size(); idx++){
                     Field f = fList.get(idx);
@@ -522,7 +520,7 @@ public class DBeditEntityProject implements Initializable {
                 return true;
             }
            
-            private void saveRecord(){
+            protected void saveRecord(){
                 EntityProject entity = new EntityProject();
                 save(ctrlList);
                 loadViewTable(getAllData());
@@ -576,7 +574,7 @@ public class DBeditEntityProject implements Initializable {
      dlg.show();
     }
 
-    private void search(){
+    protected void search(){
         ObservableList<EntityProject> obslist = null;
         FieldQuery fq = (FieldQuery) cbxSearch.getSelectionModel().getSelectedItem();
         if (txfSearch.getText().isEmpty()){
@@ -599,14 +597,14 @@ public class DBeditEntityProject implements Initializable {
     }
     
     @FXML
-    private void btnSave_onClick(ActionEvent event) {
+    public void btnSave_onClick(ActionEvent event) {
         Main.db.em.getTransaction().commit();
         Main.db.em.getTransaction().begin();
         saveOff();
     }
 
     @FXML
-    private void btnDelete_onClick(ActionEvent event) {
+    protected void btnDelete_onClick(ActionEvent event) {
         EntityProject entity = (EntityProject)tbvMain.getSelectionModel().getSelectedItem();
         if (entity == null) return;
         String response = delete(entity);
@@ -614,28 +612,19 @@ public class DBeditEntityProject implements Initializable {
             tbvMain.getItems().remove(tbvMain.getSelectionModel().getSelectedIndex());
     
     }
-
-    @FXML
-    private void btnClose_onClick(ActionEvent event) {
-        if(Main.db.em.getTransaction().isActive()){
-            Main.db.em.clear();
-        }
-        
-        parent.getChildren().clear();
-    }
     
     @FXML
-    private void txfSearch_onEnter(ActionEvent event) {
+    protected void txfSearch_onEnter(ActionEvent event) {
         search();
     }
 
     @FXML
-    private void cbxSearch_onChange(ActionEvent event) {
+    protected void cbxSearch_onChange(ActionEvent event) {
         
     }
 
     @FXML
-    private void btnSearch_onClick(ActionEvent event) {
+    protected void btnSearch_onClick(ActionEvent event) {
         search();
     }
 
@@ -690,7 +679,4 @@ public class DBeditEntityProject implements Initializable {
         
         
         return response.toString();
-    }    
-
-    
-}
+    }    }

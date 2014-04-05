@@ -477,8 +477,8 @@ public class DBeditEntityDepartment implements Initializable {
         Dialogs.create()
             .title("警告")
             .masthead("不可刪除")
-            .message("此資料已被引用, 必須先變更以下 職員 設定: " + emplst.toString()
-                    +"和以下 部門 設定" + deptlst.toString()
+            .message("此資料已被引用, 必須先變更以下設定: \n 職員:" + emplst.toString()
+                    +"部門:" + deptlst.toString()
             )
             .showError();  
         }

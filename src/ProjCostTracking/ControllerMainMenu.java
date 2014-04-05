@@ -24,7 +24,7 @@ import javafx.stage.Stage;
  *
  * @author richardc
  */
-public class MainMenuController implements Initializable {
+public class ControllerMainMenu implements Initializable {
 
     @FXML
     private AnchorPane mainContent;
@@ -57,10 +57,13 @@ public class MainMenuController implements Initializable {
     private MenuItem mnuLogout;
 
     @FXML
-    private MenuItem mnuManagement;
+    private MenuItem mnuProjCenter;
 
     @FXML
     private MenuItem mnuNewProject;
+    
+    @FXML
+    private MenuItem mnuProjMember;
 
     @FXML
     private MenuItem mnuPreferences;
@@ -123,7 +126,15 @@ public class MainMenuController implements Initializable {
     }
 
     @FXML
-    private void mnuManagement_onClick(ActionEvent event) {
+    private void mnuProjCenter_onClick(ActionEvent event) {
+        mainContent.getChildren().clear();
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("ProjectCenter.fxml"));
+        ControllerProjectCenter controller = new ControllerProjectCenter();
+
+        loader.setController(controller);
+        controller.setParent(mainContent);
+        fitToParent(loader);
+        
     }
 
     @FXML
@@ -191,7 +202,18 @@ public class MainMenuController implements Initializable {
         controller.setParent(mainContent);
         fitToParent(loader);        
     }
+    @FXML
+    private void mnuProjMember_onClick(ActionEvent event) {
+        mainContent.getChildren().clear();
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("ProjectMemberPane.fxml"));
+        ControllerPaneMember controller = new ControllerPaneMember();
 
+        loader.setController(controller);
+        controller.setParent(mainContent);
+        fitToParent(loader);             
+        
+    }
+    
     @FXML
     private void mnuUserLevel_onClick(ActionEvent event) {
         mainContent.getChildren().clear();

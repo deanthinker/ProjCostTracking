@@ -414,6 +414,15 @@ public class DBeditEntityUserlevel implements Initializable {
     @FXML
     private void btnDelete_onClick(ActionEvent event) {
         EntityUserlevel ul = (EntityUserlevel)tbvMain.getSelectionModel().getSelectedItem();
+        if (ul == null){
+            Dialogs.create()
+                .title("警告")
+                .masthead("")
+                .message("請先選擇一筆資料")
+                .showError(); 
+            return;
+        }        
+        
         //newly added EntityUserlevel.getEntityUserList  is EMPTY; we have to make the relationship manually!!!!
         //otherwise, DELETE error!
         
@@ -423,27 +432,20 @@ public class DBeditEntityUserlevel implements Initializable {
         ul.setEntityUserList(u);
         
         System.out.println("user list:"+u.toString());
-        if (ul == null){
-            Dialogs.create()
-                .title("警告")
-                .masthead("")
-                .message("請先選擇一筆資料")
-                .showError(); 
+
+        if (u.size()> 0  ){
+        Dialogs.create()
+            .title("警告")
+            .masthead("不可刪除")
+            .message("此資料已被引用, 必須先變更以下設定:\n 使用者:" + u.toString())
+            .showError();  
         }
         else{
-            if (u.size()> 0  ){
-            Dialogs.create()
-                .title("警告")
-                .masthead("不可刪除")
-                .message("此資料已被引用, 必須先變更以下使用者設定: " + u.toString())
-                .showError();  
-            }
-            else{
-                String response = delete(ul);
-                if (response.equals("YES"))
-                    tbvMain.getItems().remove(tbvMain.getSelectionModel().getSelectedIndex());
-            }
+            String response = delete(ul);
+            if (response.equals("YES"))
+                tbvMain.getItems().remove(tbvMain.getSelectionModel().getSelectedIndex());
         }
+        
     }
     private void btnDelete_onClick_old(ActionEvent event) {
         EntityUserlevel ul = (EntityUserlevel)tbvMain.getSelectionModel().getSelectedItem();

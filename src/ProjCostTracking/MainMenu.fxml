@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane id="AnchorPane" prefHeight="586.0000999999975" prefWidth="865.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="ProjCostTracking.MainMenuController">
+<AnchorPane id="AnchorPane" prefHeight="586.0000999999975" prefWidth="865.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="ProjCostTracking.ControllerMainMenu">
   <children>
     <MenuBar fx:id="menu" focusTraversable="true" minWidth="-Infinity" prefWidth="865.0" useSystemMenuBar="false" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
       <menus>
@@ -28,16 +28,17 @@
         </Menu>
         <Menu mnemonicParsing="false" text="專案">
           <items>
-            <MenuItem mnemonicParsing="false" onAction="#mnuNewProject_onClick" text="新增專案" fx:id="mnuNewProject">
+            <MenuItem mnemonicParsing="false" onAction="#mnuNewProject_onClick" text="專案清單" fx:id="mnuNewProject">
               <accelerator>
                 <KeyCodeCombination alt="UP" code="N" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
               </accelerator>
             </MenuItem>
-            <MenuItem mnemonicParsing="false" onAction="#mnuManagement_onClick" text="專案管理" fx:id="mnuManagement">
+            <MenuItem mnemonicParsing="false" onAction="#mnuProjCenter_onClick" text="專案管理中心" fx:id="mnuProjCenter">
               <accelerator>
                 <KeyCodeCombination alt="UP" code="M" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
               </accelerator>
             </MenuItem>
+            <MenuItem mnemonicParsing="false" onAction="#mnuProjMember_onClick" text="專案成員" fx:id="mnuProjMember" />
           </items>
         </Menu>
         <Menu mnemonicParsing="false" text="資料庫維護">

@@ -18,7 +18,7 @@ import javafx.scene.text.Font;
  *
  * @author richardc
  */
-public class LoginController implements Initializable {
+public class ControllerLogin implements Initializable {
     private Util u = new Util();
     static final int MAX_LOGIN_TRY = 3;
     private int login_tries = 0;
@@ -59,7 +59,7 @@ public class LoginController implements Initializable {
                 Main.winCollection.get(Main.SCREEN_LOGIN).close();
                 Main.log(Main.LOGINOK, null, null);
             } catch (Exception ex) {
-                Logger.getLogger(LoginController.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(ControllerLogin.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
         else{
