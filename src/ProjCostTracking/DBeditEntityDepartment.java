@@ -185,7 +185,8 @@ public class DBeditEntityDepartment implements Initializable {
                             public void handle(CellEditEvent<EntityDepartment, EntityDepartment> t) {
                                 Method m = null;
                                 EntityDepartment dp = (EntityDepartment) t.getTableView().getItems().get(t.getTablePosition().getRow());
-                                System.out.println("old:" + t.getOldValue().toString() + "\t new:" + t.getNewValue().toString());
+                                if (t.getOldValue()!=null)
+                                    System.out.println("old:" + t.getOldValue().toString() + "\t new:" + t.getNewValue().toString());
                                 if (t.getNewValue().getDeptid().intValue() == dp.getDeptid().intValue()) {
                                     Dialogs.create()
                                     .title("錯誤")

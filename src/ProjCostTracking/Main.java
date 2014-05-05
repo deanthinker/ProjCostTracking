@@ -73,11 +73,21 @@ public class Main extends Application {
         tr.put("fdrcost", "金額");
         tr.put("fdrunit", "單位");
         //entityProjectType
-        tr.put("projecttypeid", "ID");
+        tr.put("projecttypeid", "PjTypeID");
         tr.put("fdrtypename", "類型名稱");
-        //entityTask
-        tr.put("taskid", "ID");
+        //entityProjTask
+        tr.put("projtaskid", "TaskID");
+        tr.put("projectid", "ProjID");
+        tr.put("fdparent", "ParentTaskID");
         tr.put("fdrtaskname", "任務名稱");
+        tr.put("fdstart", "Start");
+        tr.put("fdend", "End");
+        //entityTaskCost
+        tr.put("projtaskid", "TaskID");
+        tr.put("fdrcostid", "費用");
+        tr.put("fdrqty", "數量");
+        tr.put("fdtotal", "$總金額");
+
         //entityProjecct
         tr.put("projectid", "ID");
         tr.put("fdrprojtypeid", "專案類別");

@@ -446,7 +446,7 @@ public class DBeditEntityCost implements Initializable {
             }
            
             private void saveRecord(){
-                EntityCost entity = new EntityCost();
+                //EntityCost entity = new EntityCost();
                 save(ctrlList);
                 loadViewTable(getAllData());
             }

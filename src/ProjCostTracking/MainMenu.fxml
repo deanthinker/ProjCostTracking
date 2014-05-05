@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane id="AnchorPane" prefHeight="586.0000999999975" prefWidth="865.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="ProjCostTracking.ControllerMainMenu">
+<AnchorPane id="AnchorPane" prefHeight="700.0" prefWidth="1000.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="ProjCostTracking.ControllerMainMenu">
   <children>
     <MenuBar fx:id="menu" focusTraversable="true" minWidth="-Infinity" prefWidth="865.0" useSystemMenuBar="false" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
       <menus>
@@ -38,19 +38,13 @@
                 <KeyCodeCombination alt="UP" code="M" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
               </accelerator>
             </MenuItem>
-            <MenuItem mnemonicParsing="false" onAction="#mnuProjMember_onClick" text="專案成員" fx:id="mnuProjMember" />
           </items>
         </Menu>
         <Menu mnemonicParsing="false" text="資料庫維護">
           <items>
-            <MenuItem mnemonicParsing="false" onAction="#mnuCost_onClick" text="8費用" fx:id="mnuCost">
+            <MenuItem mnemonicParsing="false" onAction="#mnuCost_onClick" text="7費用" fx:id="mnuCost">
               <accelerator>
                 <KeyCodeCombination alt="UP" code="DIGIT8" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
-              </accelerator>
-            </MenuItem>
-            <MenuItem id="mnuTask" mnemonicParsing="false" onAction="#mnuTask_onClick" text="7任務" fx:id="mnuTask">
-              <accelerator>
-                <KeyCodeCombination alt="UP" code="DIGIT7" control="UP" meta="DOWN" shift="UP" shortcut="UP" />
               </accelerator>
             </MenuItem>
             <MenuItem mnemonicParsing="false" onAction="#mnuCostType_onClick" text="6費用類別" fx:id="mnuCostType">

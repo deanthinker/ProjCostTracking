@@ -4,7 +4,6 @@
     <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
     <class>ProjCostTracking.EntityUserlevel</class>
     <class>ProjCostTracking.EntityUser</class>
-    <class>ProjCostTracking.EntityTask</class>
     <class>ProjCostTracking.EntityEmployee</class>
     <class>ProjCostTracking.EntityLog</class>
     <class>ProjCostTracking.EntityCosttype</class>
@@ -14,6 +13,12 @@
     <class>ProjCostTracking.EntityCost</class>
     <class>ProjCostTracking.EntityDepartment</class>
     <class>ProjCostTracking.EntityUserlevel_1</class>
+    <class>ProjCostTracking.EntityTaskCost</class>
+    <class>ProjCostTracking.EntityProjTask</class>
+    <class>ProjCostTracking.Costtype</class>
+    <class>ProjCostTracking.Cost</class>
+    <class>ProjCostTracking.TaskCost</class>
+    <class>ProjCostTracking.ProjTask</class>
     <properties>
       <property name="eclipselink.logging.level" value="FINE"/>
       <property name="eclipselink.logging.level.sql" value="FINE"/>

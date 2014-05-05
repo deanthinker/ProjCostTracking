@@ -60,7 +60,14 @@ public class KYdb {
         ObservableList<EntityProjecttype> obslist = FXCollections.observableList(thelist);
         tmpem.clear();
         return obslist;
-    }    
+    }
+    public ObservableList<EntityCost> getCostList() {
+        List<EntityCost> thelist = Main.db.tmpem.createQuery("select e from EntityCost e").getResultList();
+        ObservableList<EntityCost> obslist = FXCollections.observableList(thelist);
+        tmpem.clear();
+        return obslist;
+    }
+    
     public ObservableList<EntityCosttype> getCosttypeList() {
         List<EntityCosttype> thelist = Main.db.tmpem.createQuery("select e from EntityCosttype e").getResultList();
         ObservableList<EntityCosttype> obslist = FXCollections.observableList(thelist);

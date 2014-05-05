@@ -7,9 +7,10 @@
 package ProjCostTracking;
 
 import java.io.Serializable;
+import java.util.List;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -18,8 +19,10 @@ import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -46,16 +49,14 @@ public class EntityCost implements Serializable {
     private Integer fdrcost;
     @Basic(optional = false)
     private String fdrunit;
-    
-    @JoinColumn(name = "fdrcosttypeid", referencedColumnName = "costtypeid")
-    @ManyToOne(optional = false, fetch = FetchType.EAGER)
-    private EntityCosttype fdrcosttypeid;
-    
     @Lob
     private String fdnote;
+    @JoinColumn(name = "fdrcosttypeid", referencedColumnName = "costtypeid")
+    @ManyToOne(optional = false)
+    private EntityCosttype fdrcosttypeid;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "fdrcostid")
+    private List<EntityTaskCost> entityTaskCostList;
 
-    
-    
     public EntityCost() {
     }
 
@@ -68,14 +69,6 @@ public class EntityCost implements Serializable {
         this.fdrcostname = fdrcostname;
         this.fdrcost = fdrcost;
         this.fdrunit = fdrunit;
-    }
-
-    public EntityCosttype getFdrcosttypeid() {
-        return fdrcosttypeid;
-    }
-
-    public void setFdrcosttypeid(EntityCosttype fdrcosttypeid) {
-        this.fdrcosttypeid = fdrcosttypeid;
     }
 
     public Integer getCostid() {
@@ -94,11 +87,11 @@ public class EntityCost implements Serializable {
         this.fdrcostname = fdrcostname;
     }
 
-    public Integer getFdrcost() {
+    public int getFdrcost() {
         return fdrcost;
     }
 
-    public void setFdrcost(Integer fdrcost) {
+    public void setFdrcost(int fdrcost) {
         this.fdrcost = fdrcost;
     }
 
@@ -116,6 +109,23 @@ public class EntityCost implements Serializable {
 
     public void setFdnote(String fdnote) {
         this.fdnote = fdnote;
+    }
+
+    public EntityCosttype getFdrcosttypeid() {
+        return fdrcosttypeid;
+    }
+
+    public void setFdrcosttypeid(EntityCosttype fdrcosttypeid) {
+        this.fdrcosttypeid = fdrcosttypeid;
+    }
+
+    @XmlTransient
+    public List<EntityTaskCost> getEntityTaskCostList() {
+        return entityTaskCostList;
+    }
+
+    public void setEntityTaskCostList(List<EntityTaskCost> entityTaskCostList) {
+        this.entityTaskCostList = entityTaskCostList;
     }
 
     @Override
@@ -140,7 +150,7 @@ public class EntityCost implements Serializable {
 
     @Override
     public String toString() {
-        return fdrcostname;
+        return fdrcostname + ":\t$"+fdrcost;
     }
     
 }

@@ -125,7 +125,7 @@ public class EntityUserlevel implements Serializable {
 
     @Override
     public String toString() {
-        return "ProjCostTracking.EntityUserlevel[ userlevelid=" + userlevelid + " ]";
+        return fdrlevelname;
     }
     
 }

@@ -10,6 +10,7 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -21,6 +22,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -73,6 +75,8 @@ public class EntityProject implements Serializable {
     @ManyToMany
     private List<EntityEmployee> entityEmployeeList;
 
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "projectid")
+    private List<EntityProjTask> entityProjTaskList;
 
 
     public EntityProject() {
@@ -192,5 +196,14 @@ public class EntityProject implements Serializable {
     public String toString() {
         return this.fdrpjname;
     }
-    
+
+    @XmlTransient
+    public List<EntityProjTask> getEntityProjTaskList() {
+        return entityProjTaskList;
+    }
+
+    public void setEntityProjTaskList(List<EntityProjTask> entityProjTaskList) {
+        this.entityProjTaskList = entityProjTaskList;
+    }
+
 }

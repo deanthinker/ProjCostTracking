@@ -15,14 +15,14 @@
           <children>
             <TabPane prefHeight="346.0" prefWidth="792.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
               <tabs>
-                <Tab fx:id="tabMember" onSelectionChanged="#tabMember_Clicked" text="成員">
-                  <content>
-                    <AnchorPane id="Content" fx:id="paneMember" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
-                  </content>
-                </Tab>
                 <Tab fx:id="tabTaskCost" onSelectionChanged="#tabTaskCost_Clicked" text="任務&amp;費用">
                   <content>
                     <AnchorPane id="Content" fx:id="paneTaskCost" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                  </content>
+                </Tab>
+                <Tab fx:id="tabMember" onSelectionChanged="#tabMember_Clicked" text="成員">
+                  <content>
+                    <AnchorPane id="Content" fx:id="paneMember" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
                   </content>
                 </Tab>
               </tabs>

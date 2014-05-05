@@ -113,7 +113,7 @@ public class EntityCosttype implements Serializable {
 
     @Override
     public String toString() {
-        return this.fdrtypename;
+        return fdrtypename;
     }
     
 }

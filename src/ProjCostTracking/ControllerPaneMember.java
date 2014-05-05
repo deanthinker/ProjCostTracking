@@ -182,9 +182,10 @@ public class ControllerPaneMember implements Initializable {
             
             tbvProjMember.getColumns().add(c); //add column to the TableView
         }
-         
-        tbvProjMember.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY); //auto size field width
+        
         tbvProjMember.setItems(ol);
+        tbvProjMember.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY); //auto size field width
+        
 
         //Entity Managed mode
         if(!Main.db.em.getTransaction().isActive())

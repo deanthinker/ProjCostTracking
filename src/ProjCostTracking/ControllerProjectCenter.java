@@ -18,6 +18,7 @@ import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Tab;
 import javafx.scene.layout.AnchorPane;
+import javax.persistence.TypedQuery;
 
 /**
  * FXML Controller class
@@ -48,16 +49,27 @@ public class ControllerProjectCenter implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        //add bottom pane
+        FXMLLoader fxmlloader;
+        //add Member Tab pane
         paneMember.getChildren().clear();
-        FXMLLoader downloader = new FXMLLoader(getClass().getResource("ProjectMemberPane.fxml"));
+        fxmlloader = new FXMLLoader(getClass().getResource("PaneProjectMember.fxml"));
   
-        ControllerPaneMember ctrltest = new ControllerPaneMember();
+        ControllerPaneMember ctrlMember = new ControllerPaneMember();
                 
-        downloader.setController(ctrltest);
-        ctrltest.setParent(paneMember);
-        fitToParent(downloader, paneMember);
-        
+        fxmlloader.setController(ctrlMember);
+        ctrlMember.setParent(paneMember);
+        fitToParent(fxmlloader, paneMember);
+
+        //add Member Tab pane
+        paneTaskCost.getChildren().clear();
+        fxmlloader = new FXMLLoader(getClass().getResource("PaneProjectTaskCost.fxml"));
+  
+        ControllerPaneProjectTaskCost ctrlTaskCost = new ControllerPaneProjectTaskCost();
+                
+        fxmlloader.setController(ctrlTaskCost);
+        ctrlMember.setParent(paneTaskCost);
+        fitToParent(fxmlloader, paneTaskCost);
+                
 
         //add top pane
         splTop.getChildren().clear();
@@ -66,7 +78,8 @@ public class ControllerProjectCenter implements Initializable {
         ControllerPaneProjectSearch ctrlpsearch = new ControllerPaneProjectSearch(){
             public void updateSelect(EntityProject p){
                 proj = p;
-                ctrltest.reloadProj(proj);
+                ctrlMember.reloadProj(proj);
+                ctrlTaskCost.reloadProj(proj);
                 System.out.println("Select PID:" + p.getProjectid());
             }
         };
