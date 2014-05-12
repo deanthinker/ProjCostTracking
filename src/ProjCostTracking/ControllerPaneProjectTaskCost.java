@@ -108,6 +108,7 @@ public class ControllerPaneProjectTaskCost implements Initializable {
                 if(selectTask != null){
                     System.out.println("Select ProjITask: " + selectTask.getFdrtaskname() );
                     loadCostViewTable(getCostAllData());
+                    lblTaskCost.setText("NT$"+String.valueOf(   getTaskCost(selectTask)   ));
                 }
             }        
         });      
@@ -121,27 +122,44 @@ public class ControllerPaneProjectTaskCost implements Initializable {
         loadEntityFields();
     }    
     
-    private void showProjectCost(EntityProject pjt){
+    
+    
+    private float getProjectCost(EntityProject pjt){
         float pcost = 0;
         float taskcost = 0;
         float cost = 0;
         float qty = 0;
         float total = 0;
+
         List<EntityProjTask> tlist = pjt.getEntityProjTaskList();
-        
+        Main.db.em.refresh(pjt);
         for (EntityProjTask t: tlist){
-            List<EntityTaskCost> clist = t.getEntityTaskCostList();
+            pcost += getTaskCost(t);
+        }
+        System.out.println("ProjectCost:"+pcost);
+        //lblProjCost.setText(String.valueOf(pcost));
+        return pcost;
+    }
+    
+    private float getTaskCost(EntityProjTask pt){
+        float taskcost = 0;
+        float cost = 0;
+        float qty = 0;
+        float total = 0;
+       
+            List<EntityTaskCost> clist = pt.getEntityTaskCostList();
+            System.out.println("task:"+pt.getFdrtaskname());
             for (EntityTaskCost c : clist){
+                System.out.println("\t\tcost:"+c.getFdrcostid().getFdrcostname());
                 cost = c.getFdrcostid().getFdrcost();
                 qty = c.getFdrqty();
                 total = cost * qty;
                 taskcost += total;
+                System.out.println("\t\ttotal:" + cost + " x " + qty + " = " + total +  "\t sum:" + taskcost);
             }
-            pcost += taskcost;
-        }
-        lblProjCost.setText(String.valueOf(pcost));
+
+        return taskcost;
     }
-    
     
     private void loadEntityFields(){
         for (Field f : EntityProjTask.class.getDeclaredFields()){ //create a list of "f_" fields
@@ -172,9 +190,10 @@ public class ControllerPaneProjectTaskCost implements Initializable {
         selectProj = proj;
         selectTask = null; //clean the previous selected task
         selectCost = null; //clean the previous selected cost
+        lblTaskCost.setText("$");
         tbvCost.getColumns().clear(); // clean the cost data
         loadTaskViewTable(getTaskAllData());
-        showProjectCost(proj);
+        lblProjCost.setText("$"+String.valueOf(   getProjectCost(proj)   ));
     }   
     
     public void loadTaskViewTable(ObservableList ol){

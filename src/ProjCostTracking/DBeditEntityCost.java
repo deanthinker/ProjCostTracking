@@ -562,10 +562,10 @@ public class DBeditEntityCost implements Initializable {
         EntityCost entity = new EntityCost();
         
         entity.setFdrcostname(((TextField)(ctrlList.get(0))).getText());
-        entity.setFdrcost( Integer.valueOf(  ((TextField)(ctrlList.get(1))).getText() ) );
-        entity.setFdrunit(((TextField)(ctrlList.get(2))).getText());
-        EntityCosttype ct = ((ComboBox<EntityCosttype>)ctrlList.get(3)).getValue();
+        EntityCosttype ct = ((ComboBox<EntityCosttype>)ctrlList.get(1)).getValue();
         entity.setFdrcosttypeid( ct  );
+        entity.setFdrcost( Float.valueOf(  ((TextField)(ctrlList.get(2))).getText() ) );
+        entity.setFdrunit(((TextField)(ctrlList.get(3))).getText());
         entity.setFdnote( ((TextField)(ctrlList.get(4))).getText()    );
         if(!Main.db.em.getTransaction().isActive())
             Main.db.em.getTransaction().begin();

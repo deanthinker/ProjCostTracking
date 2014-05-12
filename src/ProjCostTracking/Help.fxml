@@ -10,16 +10,12 @@
 
 <AnchorPane id="AnchorPane" prefHeight="240.0" prefWidth="433.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="ProjCostTracking.ControllerHelp">
   <children>
-    <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="14.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
-      <image>
-        <Image url="file:/C:/Users/richardc/Desktop/logo.png" />
-      </image>
-    </ImageView>
-    <Label layoutX="21.0" layoutY="73.0" prefHeight="104.0" prefWidth="398.0" text="This is a Project Cost Tracking System">
+    <Label layoutX="21.0" layoutY="84.0" prefHeight="34.0" prefWidth="398.0" text="Project Cost Tracking System  V0.1">
       <font>
         <Font size="14.0" />
       </font>
     </Label>
     <Button fx:id="btnClose" mnemonicParsing="false" onAction="#btnClose_onClick" text="Close" AnchorPane.bottomAnchor="11.0" AnchorPane.rightAnchor="14.0" />
+    <ImageView fx:id="imgV" fitHeight="69.5" fitWidth="337.0" layoutX="47.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true" />
   </children>
 </AnchorPane>

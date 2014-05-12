@@ -12,6 +12,9 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 
 /**
@@ -22,22 +25,21 @@ import javafx.stage.Stage;
 public class ControllerHelp implements Initializable {
     @FXML
     private Button btnClose;
-    private Stage stage;
+    @FXML
+    private ImageView imgV;
+
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
+	Image banner = new Image(getClass().getResourceAsStream("/images/banner.png"));
+        imgV.setImage(banner);
     }    
 
     @FXML
     private void btnClose_onClick(ActionEvent event) {
         Main.winCollection.get(Main.SCREEN_HELP).close();
-    }
-    
-    public void setStage(Stage s){
-        this.stage = s;
     }
     
 }

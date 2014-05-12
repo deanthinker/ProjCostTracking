@@ -45,15 +45,16 @@ public class EntityCost implements Serializable {
     private Integer costid;
     @Basic(optional = false)
     private String fdrcostname;
+    @JoinColumn(name = "fdrcosttypeid", referencedColumnName = "costtypeid")
+    @ManyToOne(optional = false)
+    private EntityCosttype fdrcosttypeid;
     @Basic(optional = false)
-    private Integer fdrcost;
+    private Float fdrcost;
     @Basic(optional = false)
     private String fdrunit;
     @Lob
     private String fdnote;
-    @JoinColumn(name = "fdrcosttypeid", referencedColumnName = "costtypeid")
-    @ManyToOne(optional = false)
-    private EntityCosttype fdrcosttypeid;
+
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "fdrcostid")
     private List<EntityTaskCost> entityTaskCostList;
 
@@ -64,7 +65,7 @@ public class EntityCost implements Serializable {
         this.costid = costid;
     }
 
-    public EntityCost(Integer costid, String fdrcostname, int fdrcost, String fdrunit) {
+    public EntityCost(Integer costid, String fdrcostname, Float fdrcost, String fdrunit) {
         this.costid = costid;
         this.fdrcostname = fdrcostname;
         this.fdrcost = fdrcost;
@@ -87,11 +88,11 @@ public class EntityCost implements Serializable {
         this.fdrcostname = fdrcostname;
     }
 
-    public int getFdrcost() {
+    public Float getFdrcost() {
         return fdrcost;
     }
 
-    public void setFdrcost(int fdrcost) {
+    public void setFdrcost(Float fdrcost) {
         this.fdrcost = fdrcost;
     }
 
