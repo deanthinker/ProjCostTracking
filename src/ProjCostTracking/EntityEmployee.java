@@ -221,9 +221,9 @@ public class EntityEmployee implements Serializable {
     @Override
     public String toString() {
         if (this.fdlastname!=null)
-            return this.fdrname + " " + this.fdlastname;
+            return this.fdrname + " " + this.fdlastname + " " + this.fdrdeptid.getFdrdeptname();
         else
-            return this.fdrname;
+            return this.fdrname + " " + this.fdrdeptid.getFdrdeptname();
     }
     
 }

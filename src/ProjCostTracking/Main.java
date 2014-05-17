@@ -17,6 +17,7 @@ import javafx.stage.Stage;
 
 public class Main extends Application {
     public static final String PACKAGE_NAME = "ProjCostTracking";
+    public static final String CONFIG_FILENAME = "biotechcost.config";
     public static final String ENTITY_MANAGER_FACTORY_NAME = "ProjCostTrackingPU"; // for DB initiation
     public static Stage mainStage = null;
     public static CurrentUser currentUser = new CurrentUser(); 
@@ -36,8 +37,11 @@ public class Main extends Application {
     public static final int LOGINFAIL = 003;
     public static final int LOGADD = 100;
     public static final int LOGDEL = 101;
+    //need to enable the following to use Config file feature
+    //public static Config conf = new Config(CONFIG_FILENAME);
     
-    public static KYdb db = new KYdb(ENTITY_MANAGER_FACTORY_NAME);
+    public static KYdb db = null;
+    //public static KYdb db = new KYdb(ENTITY_MANAGER_FACTORY_NAME);
 
         //translate 
     static final Map<String, String> tr = new HashMap<>();
@@ -133,10 +137,25 @@ public class Main extends Application {
         winCollection.put(SCREEN_LOGIN, new Window(SCREEN_LOGIN, SCREEN_LOGIN_FXML, MODAL, TRANSPARENT));
         winCollection.put(SCREEN_MAINMENU, new Window(SCREEN_MAINMENU, SCREEN_MAINMENU_FXML)); //this goes last
     }
+    
      
     @Override
     public void start(Stage stage) throws Exception {
-                
+        boolean configOK = true;
+        //need to enable the following to use Config file feature
+        /*
+        configOK = conf.isConfigOK();
+        
+        if (!configOK){
+            System.out.println("System Configuration Error!");
+            System.exit(0);
+        }
+
+        System.out.println("System Configuration Read Okay!");
+        */
+        db = new KYdb(ENTITY_MANAGER_FACTORY_NAME);
+        System.out.println("done");
+        
         loadWindows();
         winCollection.get(SCREEN_LOGIN).show();
         //winCollection.get(SCREEN_MAINMENU).show();

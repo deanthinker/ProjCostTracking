@@ -6,7 +6,9 @@
 
 package ProjCostTracking;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javax.persistence.EntityManager;
@@ -21,13 +23,56 @@ public class KYdb {
     Util u = new Util();
     
     public static EntityManagerFactory emf = null;
-    public static EntityManager em = null;
+    public static EntityManager em = null;  
     public static EntityManager tmpem = null;
     
     public KYdb(String factoryName){
-        emf = Persistence.createEntityManagerFactory(factoryName);
+        //emf = Persistence.createEntityManagerFactory(factoryName);
+        emf = getEntityManagerFactory();
         em = emf.createEntityManager();
         tmpem = emf.createEntityManager();
+    }
+    
+    private EntityManagerFactory getEntityManagerFactory(){
+        EntityManagerFactory f = null;
+        
+        Map properties = new HashMap();
+
+        //!!!!! the following section is removed from persistence.xml  !!!
+        /*
+    <properties>
+      <property name="eclipselink.logging.level" value="FINE"/>
+      <property name="eclipselink.logging.level.sql" value="FINE"/>
+      <property name="eclipselink.logging.parameters" value="true"/>
+      <property name="eclipselink.logging.timestamp" value="true"/>
+      <property name="eclipselink.logging.exceptions" value="true"/>
+      <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/biotechcost?zeroDateTimeBehavior=convertToNull"/>
+      <property name="javax.persistence.jdbc.password" value="1234"/>
+      <property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver"/>
+      <property name="javax.persistence.jdbc.user" value="root"/>
+    </properties>        
+ */   
+
+        properties.put("javax.persistence.jdbc.url", "jdbc:mysql://23.229.154.169:3306/biotechcost?zeroDateTimeBehavior=convertToNull");
+        properties.put("javax.persistence.jdbc.password", "Gg9223701");
+        properties.put("javax.persistence.jdbc.user", "happy2");
+        
+        //need to enable the following to use Config file feature
+        //properties.put("javax.persistence.jdbc.url", "jdbc:mysql://"+Main.conf.getDb_ip()+":"+Main.conf.getDb_port() +"/biotechcost?zeroDateTimeBehavior=convertToNull");
+        //properties.put("javax.persistence.jdbc.password", Main.conf.getDb_admin_password());
+        //properties.put("javax.persistence.jdbc.user", Main.conf.getDb_admin_username());
+
+        properties.put("eclipselink.logging.level", "FINE");
+        properties.put("eclipselink.logging.level.sql", "FINE");
+        properties.put("eclipselink.logging.parameters", "true");
+        properties.put("eclipselink.logging.timestamp", "true");
+        properties.put("eclipselink.logging.exceptions", "true");
+        properties.put("javax.persistence.jdbc.driver", "com.mysql.jdbc.Driver");
+       
+        f = Persistence.createEntityManagerFactory("ProjCostTrackingPU",properties);
+        
+        return f;
+        
     }
         
     public boolean setLoginUser(String username, String password){

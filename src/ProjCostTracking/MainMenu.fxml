@@ -79,6 +79,11 @@
             </MenuItem>
           </items>
         </Menu>
+        <Menu mnemonicParsing="false" text="報表">
+          <items>
+            <MenuItem mnemonicParsing="false" text="專案費用報表" />
+          </items>
+        </Menu>
         <Menu mnemonicParsing="false" text="設定">
           <items>
             <MenuItem mnemonicParsing="false" onAction="#mnuPreferences_onClick" text="Preferences" fx:id="mnuPreferences" />

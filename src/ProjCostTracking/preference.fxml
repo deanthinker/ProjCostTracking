@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2">
+  <children>
+    <TabPane prefHeight="400.0" prefWidth="600.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <tabs>
+        <Tab text="資料庫">
+          <content>
+            <AnchorPane id="Content" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+              <children>
+                <Label layoutX="47.0" layoutY="49.0" text="DB伺服器 IP" />
+                <Label layoutX="47.0" layoutY="82.0" text="DB伺服器 Port" />
+                <TextField id="txfdbip" fx:id="txfDBip" layoutX="139.0" layoutY="46.0" prefWidth="161.0" />
+                <TextField id="txfdbport" fx:id="txfDBport" layoutX="139.0" layoutY="79.0" prefWidth="161.0" />
+                <TextField fx:id="txfDBusername" layoutX="139.0" layoutY="114.0" prefWidth="200.0" />
+                <Label layoutX="78.0" layoutY="117.0" text="帳號" />
+                <Label layoutX="78.0" layoutY="152.0" prefWidth="52.999908447265625" text="密碼" />
+                <PasswordField fx:id="txfDBpassword" layoutX="139.0" layoutY="149.0" prefWidth="200.0" />
+                <HBox id="HBox" alignment="CENTER" layoutX="466.0" layoutY="334.0" spacing="5.0">
+                  <children>
+                    <Button fx:id="btnSave" mnemonicParsing="false" onAction="#btnSave_onClick" text="Save">
+                      <font>
+                        <Font size="14.0" fx:id="x1" />
+                      </font>
+                    </Button>
+                    <Button fx:id="btnClose" font="$x1" mnemonicParsing="false" onAction="#btnClose_onClick" text="Close" />
+                  </children>
+                </HBox>
+                <Button fx:id="btnTestConn" layoutX="139.0" layoutY="192.0" mnemonicParsing="false" onAction="#btnTestConn_onClick" text="測試連線" />
+              </children>
+            </AnchorPane>
+          </content>
+        </Tab>
+        <Tab text="其他">
+          <content>
+            <AnchorPane id="Content" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+          </content>
+        </Tab>
+      </tabs>
+    </TabPane>
+  </children>
+</AnchorPane>

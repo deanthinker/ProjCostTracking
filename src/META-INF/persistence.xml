@@ -15,20 +15,6 @@
     <class>ProjCostTracking.EntityUserlevel_1</class>
     <class>ProjCostTracking.EntityTaskCost</class>
     <class>ProjCostTracking.EntityProjTask</class>
-    <class>ProjCostTracking.Costtype</class>
-    <class>ProjCostTracking.Cost</class>
-    <class>ProjCostTracking.TaskCost</class>
-    <class>ProjCostTracking.ProjTask</class>
-    <properties>
-      <property name="eclipselink.logging.level" value="FINE"/>
-      <property name="eclipselink.logging.level.sql" value="FINE"/>
-      <property name="eclipselink.logging.parameters" value="true"/>
-      <property name="eclipselink.logging.timestamp" value="true"/>
-      <property name="eclipselink.logging.exceptions" value="true"/>
-      <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/biotechcost?zeroDateTimeBehavior=convertToNull"/>
-      <property name="javax.persistence.jdbc.password" value="1234"/>
-      <property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver"/>
-      <property name="javax.persistence.jdbc.user" value="root"/>
-    </properties>
+
   </persistence-unit>
 </persistence>

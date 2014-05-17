@@ -229,6 +229,15 @@ public class ControllerMainMenu implements Initializable {
     }
     @FXML
     private void mnuPreferences_onClick(ActionEvent event) {
+        //need to enable the following to use Config file feature
+        mainContent.getChildren().clear();
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("preference.fxml"));
+        ControllerPreference controller = new ControllerPreference();
+
+        loader.setController(controller);
+        controller.setParent(mainContent);
+        fitToParent(loader);        
+        
     }
 
     @FXML
