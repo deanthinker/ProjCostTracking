@@ -63,6 +63,9 @@ public class ControllerMainMenu implements Initializable {
     private MenuItem mnuNewProject;
     
     @FXML
+    private MenuItem mnuStoredTask;    
+    
+    @FXML
     private MenuItem mnuProjMember;
 
     @FXML
@@ -124,7 +127,17 @@ public class ControllerMainMenu implements Initializable {
         controller.setParent(mainContent);
         fitToParent(loader);        
     }
+    @FXML
+    private void mnuStoredTask_onClick(ActionEvent event) {
+        mainContent.getChildren().clear();
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("StoredTask.fxml"));
+        ControllerStoredTask controller = new ControllerStoredTask();
 
+        loader.setController(controller);
+        controller.setParent(mainContent);
+        fitToParent(loader);    
+    }    
+    
     @FXML
     private void mnuProjCenter_onClick(ActionEvent event) {
         mainContent.getChildren().clear();

@@ -52,10 +52,14 @@ public class KYdb {
       <property name="javax.persistence.jdbc.user" value="root"/>
     </properties>        
  */   
-
+/*
         properties.put("javax.persistence.jdbc.url", "jdbc:mysql://23.229.154.169:3306/biotechcost?zeroDateTimeBehavior=convertToNull");
         properties.put("javax.persistence.jdbc.password", "Gg9223701");
         properties.put("javax.persistence.jdbc.user", "happy2");
+ */       
+        properties.put("javax.persistence.jdbc.url", "jdbc:mysql://localhost:3306/biotechcost?zeroDateTimeBehavior=convertToNull");
+        properties.put("javax.persistence.jdbc.password", "1234");
+        properties.put("javax.persistence.jdbc.user", "root");
         
         //need to enable the following to use Config file feature
         //properties.put("javax.persistence.jdbc.url", "jdbc:mysql://"+Main.conf.getDb_ip()+":"+Main.conf.getDb_port() +"/biotechcost?zeroDateTimeBehavior=convertToNull");
@@ -112,7 +116,18 @@ public class KYdb {
         tmpem.clear();
         return obslist;
     }
-    
+    public ObservableList<EntityStoredProjTask> getStoredTaskList() {
+        List<EntityStoredProjTask> thelist = Main.db.tmpem.createQuery("select e from EntityStoredProjTask e").getResultList();
+        ObservableList<EntityStoredProjTask> obslist = FXCollections.observableList(thelist);
+        tmpem.clear();
+        return obslist;
+    }
+    public EntityProjTask getProjTask(String id) {
+        EntityProjTask task = (EntityProjTask)Main.db.tmpem.createQuery("select e from EntityProjTask e where e.projtaskid = " + id ).getSingleResult();
+        
+        tmpem.clear();
+        return task;
+    }    
     public ObservableList<EntityCosttype> getCosttypeList() {
         List<EntityCosttype> thelist = Main.db.tmpem.createQuery("select e from EntityCosttype e").getResultList();
         ObservableList<EntityCosttype> obslist = FXCollections.observableList(thelist);

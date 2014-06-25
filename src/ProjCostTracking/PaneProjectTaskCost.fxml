@@ -5,7 +5,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane id="AnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="368.0000999999975" prefWidth="749.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2">
+<AnchorPane id="AnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="368.0000999999975" prefWidth="749.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
   <children>
     <SplitPane id="PaneTaskCost" dividerPositions="0.5020080321285141" focusTraversable="true" prefHeight="316.0000999999975" prefWidth="749.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
       <items>
@@ -40,6 +40,16 @@
                 <Label fx:id="lblTaskCost" font="$x2" prefWidth="123.0" text="\$" />
               </children>
             </HBox>
+                  <Button id="btnAdd" fx:id="btnAddTaskStored" layoutX="310.0" layoutY="337.0" mnemonicParsing="false" onAction="#btnAddStoredTask_onClick" text="+常用" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="4.0">
+                     <font>
+                        <Font size="14.0" fx:id="x11" />
+                     </font>
+                  </Button>
+                  <Button id="btnAdd" fx:id="btnInsertStoredTask" layoutX="223.0" layoutY="337.0" mnemonicParsing="false" onAction="#btnInsertStoredTask_onClick" text="插入常用" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="73.0">
+                     <font>
+                        <Font size="14.0" fx:id="x111" />
+                     </font>
+                  </Button>
           </children>
         </AnchorPane>
         <AnchorPane id="costPane" fx:id="paneCost" minHeight="0.0" minWidth="0.0" prefHeight="315.0" prefWidth="485.0">

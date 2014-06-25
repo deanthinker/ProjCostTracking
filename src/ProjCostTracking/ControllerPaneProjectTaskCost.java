@@ -63,6 +63,8 @@ public class ControllerPaneProjectTaskCost implements Initializable {
     final List<Field> tfList = new ArrayList<>(); //task
     final List<Field> cfList = new ArrayList<>(); //cost
     final ObservableList<EntityCost> costList = Main.db.getCostList();
+    ObservableList<EntityStoredProjTask> storedTaskList = Main.db.getStoredTaskList();
+    
     
     @FXML
     private AnchorPane paneTask;
@@ -673,6 +675,58 @@ public class ControllerPaneProjectTaskCost implements Initializable {
      dlg.getActions().addAll(actionSave, Dialog.Actions.CANCEL);
      dlg.show();
     }
+
+    @FXML
+    private void btnAddStoredTask_onClick(ActionEvent event) {
+        if (selectTask==null){
+            Action response = Dialogs.create()
+                    .title("Error")
+                    .masthead("No Task is Selected")
+                    .message("You have to select a Task first.")
+                    .showError();
+            return; 
+        }
+        
+        String costline = "";
+        for (EntityTaskCost costitem : selectTask.getEntityTaskCostList() ) {
+            costline += "\t" +costitem.getFdrcostid().getFdrcostname() + "; " + costitem.getFdrqty() + "; Total$" + costitem.getFdtotal() + "\n";
+        }
+    
+        String response_taskname = Dialogs.create()
+            .owner( null)
+            .title("確認加入常用任務")
+            .masthead("將任務和其費用 '"+ selectTask.getFdrtaskname() + "' 加入常用任務?\n費用共" +selectTask.getEntityTaskCostList().size()+"項\n"+costline)
+            .message("儲存常用任務名稱")    
+            .showTextInput(selectTask.getFdrtaskname());
+        
+        if (response_taskname != null){
+           System.out.println("response: " + response_taskname);        
+           addStoredProjTask(response_taskname);
+        }
+        
+    }
+ 
+    @FXML
+    private void btnInsertStoredTask_onClick(ActionEvent event) {
+        if (selectProj==null){
+            Action response = Dialogs.create()
+                    .title("Error")
+                    .masthead("No Project is Selected")
+                    .message("You have to select a Project first.")
+                    .showError();
+            return; 
+        }
+               
+        EntityStoredProjTask response_selectTask = (EntityStoredProjTask)Dialogs.create()
+                                .title("常用任務清單")
+                                .masthead("選擇欲插入的任務")
+                                .showChoices(storedTaskList.toArray()) ;
+ 
+        System.out.println("response: " + response_selectTask.getFdrtaskname());
+               
+        insertStoredTask(response_selectTask);
+        loadTaskViewTable(getTaskAllData());
+    }
     
     private ObservableList<EntityProjTask> getTaskAllData() {
         TypedQuery<EntityProjTask> query = Main.db.em.createQuery("select e from EntityProjTask e WHERE e.projectid = :projectid", EntityProjTask.class);
@@ -708,7 +762,78 @@ public class ControllerPaneProjectTaskCost implements Initializable {
         Main.db.em.getTransaction().commit();        
         Main.log(Main.LOGADD, "proj_task", entity.getProjtaskid().toString());
     }
+   
+    public void insertStoredTask(EntityStoredProjTask stk){
+        EntityProjTask entity = new EntityProjTask();
+        
+        entity.setProjectid(selectProj);
+        entity.setFdrtaskname(  stk.getFdrtaskname()  );
+        entity.setFdstart( stk.getFdstart() );
+        entity.setFdend( stk.getFdend() );
+        entity.setFdnote( stk.getFdnote() );  
 
+        //store the task first; so that  getProjtaskid() becomes available
+        if(!Main.db.em.getTransaction().isActive())
+            Main.db.em.getTransaction().begin();
+
+        Main.db.em.persist(entity);
+        Main.db.em.getTransaction().commit();        
+        Main.log(Main.LOGADD, "proj_task", entity.getProjtaskid().toString());
+        
+        for (EntityStoredTaskCost stc : stk.getEntityStoredTaskCostList() ) {
+            EntityTaskCost tc = new EntityTaskCost();
+            tc.setProjtaskid(entity);
+            tc.setFdrcostid(stc.getFdrcostid());
+            tc.setFdrqty(stc.getFdrqty());
+            tc.setFdtotal(stc.getFdtotal());
+            tc.setFdnote(stc.getFdnote());
+            System.out.println("cost:"+ stc.getFdrcostid().getFdrcostname());
+     
+            //store the cost
+            if(!Main.db.em.getTransaction().isActive())
+                Main.db.em.getTransaction().begin();
+
+            Main.db.em.persist(tc);
+            Main.db.em.getTransaction().commit();        
+            Main.log(Main.LOGADD, "task_cost", tc.getTaskcostid().toString());            
+        }
+
+        
+        
+    }
+    
+    public void addStoredProjTask(String taskname){
+        EntityStoredProjTask storedtask = new EntityStoredProjTask();
+        storedtask.setProjtaskid(selectTask.getProjtaskid());
+        storedtask.setFdrtaskname(taskname);
+        storedtask.setFdstart(selectTask.getFdstart());
+        storedtask.setFdend(selectTask.getFdend());
+        storedtask.setFdnote(selectTask.getFdnote());
+        
+        List<EntityStoredTaskCost> storedTaskCostList = new ArrayList<>();
+        
+        for (EntityTaskCost tc : selectTask.getEntityTaskCostList()){
+            EntityStoredTaskCost stc = new EntityStoredTaskCost();
+            stc.setFdrcostid(tc.getFdrcostid());
+            stc.setFdrqty(tc.getFdrqty());
+            stc.setFdtotal(tc.getFdtotal());
+            stc.setProjtaskid(storedtask);
+            
+            storedTaskCostList.add(stc);
+        }
+        
+        storedtask.setEntityStoredTaskCostList(storedTaskCostList);
+        if(!Main.db.em.getTransaction().isActive())
+            Main.db.em.getTransaction().begin();
+
+        Main.db.em.persist(storedtask);
+        Main.db.em.getTransaction().commit();        
+        Main.log(Main.LOGADD, "stored_proj_task", storedtask.getProjtaskid().toString());    
+        
+        //reloadProj(selectProj);
+        //storedTaskList = Main.db.getStoredTaskList();//update the storedTaskList
+    }
+    
     public void addCost(List<Control> ctrlList){
         EntityTaskCost entity = new EntityTaskCost();
         
@@ -733,8 +858,8 @@ public class ControllerPaneProjectTaskCost implements Initializable {
         task_saveOff();           
     }
 
-    @FXML
-    private void btnDeleteTask_onClick(ActionEvent event) {
+    /*
+    private void old_btnDeleteTask_onClick(ActionEvent event) {
         if (selectTask==null){
             Action response = Dialogs.create()
                     .title("Error")
@@ -751,7 +876,28 @@ public class ControllerPaneProjectTaskCost implements Initializable {
             tbvTask.getItems().remove(tbvTask.getSelectionModel().getSelectedIndex());
         
     }
+    */
+    @FXML
+    private void btnDeleteTask_onClick(ActionEvent event) {
+        if (selectTask==null){
+            Action response = Dialogs.create()
+                    .title("Error")
+                    .masthead("No Task is Selected")
+                    .message("You have to select a TASK first.")
+                    .showError();
+            return; 
+        }
+        
+        EntityProjTask entity = (EntityProjTask)tbvTask.getSelectionModel().getSelectedItem();
+        
+        if (entity == null) return;
+        String response = deleteTask(entity);
+        if (response.equals("YES"))
+            tbvTask.getItems().remove(tbvTask.getSelectionModel().getSelectedIndex());
+        
+    }
 
+    
     public String deleteTask(EntityProjTask entity){
         String userline = "";
         
@@ -762,12 +908,14 @@ public class ControllerPaneProjectTaskCost implements Initializable {
             .message(userline)
             .showConfirm();
 
-        System.out.println("response: " + response);        
-          
         if (response.toString().equals("YES")){
             if(!Main.db.em.getTransaction().isActive())
                 Main.db.em.getTransaction().begin();
             
+            //!!!! Extremely IMPORTANT!!!     must refresh or newly added item CAN NOT BE delteted properly!!!
+            Main.db.em.refresh(entity);
+            System.out.println("response: " + response );        
+
             Main.db.em.remove(entity);
             Main.db.em.getTransaction().commit();
             Main.log(Main.LOGDEL, "proj_task", entity.getProjtaskid()+":"+ entity.getFdrtaskname());

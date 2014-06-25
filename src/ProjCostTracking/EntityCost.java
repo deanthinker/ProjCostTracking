@@ -38,7 +38,6 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "EntityCost.findByFdrcost", query = "SELECT e FROM EntityCost e WHERE e.fdrcost = :fdrcost"),
     @NamedQuery(name = "EntityCost.findByFdrunit", query = "SELECT e FROM EntityCost e WHERE e.fdrunit = :fdrunit")})
 public class EntityCost implements Serializable {
-    private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
@@ -48,12 +47,18 @@ public class EntityCost implements Serializable {
     @JoinColumn(name = "fdrcosttypeid", referencedColumnName = "costtypeid")
     @ManyToOne(optional = false)
     private EntityCosttype fdrcosttypeid;
+    
     @Basic(optional = false)
     private Float fdrcost;
     @Basic(optional = false)
     private String fdrunit;
     @Lob
     private String fdnote;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "fdrcostid")
+    private List<EntityStoredTaskCost> entityStoredTaskCostList;
+    private static final long serialVersionUID = 1L;
+
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "fdrcostid")
     private List<EntityTaskCost> entityTaskCostList;
@@ -153,5 +158,25 @@ public class EntityCost implements Serializable {
     public String toString() {
         return fdrcostname + ":\t$"+fdrcost;
     }
+
+    public EntityCost(Integer costid, String fdrcostname, float fdrcost, String fdrunit) {
+        this.costid = costid;
+        this.fdrcostname = fdrcostname;
+        this.fdrcost = fdrcost;
+        this.fdrunit = fdrunit;
+    }
+
+    public void setFdrcost(float fdrcost) {
+        this.fdrcost = fdrcost;
+    } 
     
+    @XmlTransient
+    public List<EntityStoredTaskCost> getEntityStoredTaskCostList() {
+        return entityStoredTaskCostList;
+    }
+
+    public void setEntityStoredTaskCostList(List<EntityStoredTaskCost> entityStoredTaskCostList) {
+        this.entityStoredTaskCostList = entityStoredTaskCostList;
+    } 
+      
 }

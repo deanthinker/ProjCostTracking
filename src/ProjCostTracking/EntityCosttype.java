@@ -34,7 +34,6 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "EntityCosttype.findByCosttypeid", query = "SELECT e FROM EntityCosttype e WHERE e.costtypeid = :costtypeid"),
     @NamedQuery(name = "EntityCosttype.findByFdrtypename", query = "SELECT e FROM EntityCosttype e WHERE e.fdrtypename = :fdrtypename")})
 public class EntityCosttype implements Serializable {
-    private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
@@ -43,6 +42,8 @@ public class EntityCosttype implements Serializable {
     private String fdrtypename;
     @Lob
     private String fdnote;
+    private static final long serialVersionUID = 1L;
+
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "fdrcosttypeid")
     private List<EntityCost> entityCostList;
 
@@ -115,5 +116,6 @@ public class EntityCosttype implements Serializable {
     public String toString() {
         return fdrtypename;
     }
-    
+
+        
 }

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="771.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" >
+   <children>
+      <SplitPane dividerPositions="0.5167224080267558" layoutX="175.0" layoutY="84.0" prefHeight="400.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <items>
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
+               <children>
+                  <TableView layoutX="1.0" layoutY="37.0" prefHeight="329.0" prefWidth="394.0" AnchorPane.bottomAnchor="32.0" AnchorPane.leftAnchor="1.0" AnchorPane.rightAnchor="-1.0" AnchorPane.topAnchor="37.0" />
+                  <HBox layoutX="1.0" layoutY="372.0" spacing="5.0" AnchorPane.bottomAnchor="1.0" AnchorPane.leftAnchor="0.0">
+                     <children>
+                        <Button fx:id="btnAddTask" layoutX="1.0" layoutY="372.0" mnemonicParsing="false" onAction="#btnAddTask_onClick" prefHeight="25.0" prefWidth="67.0" text="Add" />
+                        <Button fx:id="btnSaveTask" disable="true" layoutX="78.0" layoutY="372.0" mnemonicParsing="false" onAction="#btnSaveTask_onClick" prefHeight="25.0" prefWidth="67.0" text="Save" />
+                        <Button fx:id="btnDeleteTask" layoutX="152.0" layoutY="372.0" mnemonicParsing="false" onAction="#btnDeleteTask_onClick" prefHeight="25.0" prefWidth="67.0" text="Delete" textFill="RED" />
+                     </children>
+                  </HBox>
+                  <Label layoutX="8.0" layoutY="4.0" text="常用工作清單" AnchorPane.leftAnchor="8.0" AnchorPane.topAnchor="4.0">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+               </children>
+            </AnchorPane>
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
+               <children>
+                  <Label layoutY="4.0" text="費用清單" AnchorPane.leftAnchor="8.0" AnchorPane.topAnchor="4.0">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+                  <TableView layoutY="36.0" prefHeight="329.0" prefWidth="369.0" AnchorPane.bottomAnchor="32.0" AnchorPane.leftAnchor="1.0" AnchorPane.rightAnchor="-1.0" AnchorPane.topAnchor="37.0" />
+                  <HBox layoutY="372.0" spacing="5.0" AnchorPane.bottomAnchor="1.0" AnchorPane.leftAnchor="0.0">
+                     <children>
+                        <Button fx:id="btnAddCost" layoutY="372.0" mnemonicParsing="false" onAction="#btnAddCost_onClick" prefHeight="25.0" prefWidth="67.0" text="Add" />
+                        <Button fx:id="btnSaveCost" disable="true" layoutX="67.0" layoutY="372.0" mnemonicParsing="false" onAction="#btnSaveCost_onClick" prefHeight="25.0" prefWidth="67.0" text="Save" />
+                        <Button fx:id="btnDeleteCost" layoutX="134.0" layoutY="372.0" mnemonicParsing="false" onAction="#btnDeleteCost_onClick" prefHeight="25.0" prefWidth="67.0" text="Delete" textFill="RED" />
+                     </children>
+                  </HBox>
+               </children>
+            </AnchorPane>
+        </items>
+      </SplitPane>
+   </children>
+</AnchorPane>

@@ -15,6 +15,7 @@
     <class>ProjCostTracking.EntityUserlevel_1</class>
     <class>ProjCostTracking.EntityTaskCost</class>
     <class>ProjCostTracking.EntityProjTask</class>
-
+    <class>ProjCostTracking.EntityStoredTaskCost</class>
+    <class>ProjCostTracking.EntityStoredProjTask</class>
   </persistence-unit>
 </persistence>

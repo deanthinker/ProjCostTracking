@@ -8,18 +8,18 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane id="AnchorPane" prefHeight="700.0" prefWidth="1000.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="ProjCostTracking.ControllerMainMenu">
+<AnchorPane id="AnchorPane" prefHeight="700.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ProjCostTracking.ControllerMainMenu">
   <children>
     <MenuBar fx:id="menu" focusTraversable="true" minWidth="-Infinity" prefWidth="865.0" useSystemMenuBar="false" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
       <menus>
         <Menu mnemonicParsing="false" text="系統">
           <items>
-            <MenuItem mnemonicParsing="false" onAction="#mnuLogout_onClick" text="登出" fx:id="mnuLogout">
+            <MenuItem fx:id="mnuLogout" mnemonicParsing="false" onAction="#mnuLogout_onClick" text="登出">
               <accelerator>
                 <KeyCodeCombination alt="UP" code="L" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
               </accelerator>
             </MenuItem>
-            <MenuItem mnemonicParsing="false" onAction="#mnuExit_onClick" text="關閉程式" fx:id="mnuExit">
+            <MenuItem fx:id="mnuExit" mnemonicParsing="false" onAction="#mnuExit_onClick" text="關閉程式">
               <accelerator>
                 <KeyCodeCombination alt="UP" code="E" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
               </accelerator>
@@ -28,12 +28,13 @@
         </Menu>
         <Menu mnemonicParsing="false" text="專案">
           <items>
-            <MenuItem mnemonicParsing="false" onAction="#mnuNewProject_onClick" text="專案清單" fx:id="mnuNewProject">
+            <MenuItem fx:id="mnuNewProject" mnemonicParsing="false" onAction="#mnuNewProject_onClick" text="專案清單">
               <accelerator>
                 <KeyCodeCombination alt="UP" code="N" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
               </accelerator>
             </MenuItem>
-            <MenuItem mnemonicParsing="false" onAction="#mnuProjCenter_onClick" text="專案管理中心" fx:id="mnuProjCenter">
+                  <MenuItem fx:id="mnuStoredTask" mnemonicParsing="false" onAction="#mnuStoredTask_onClick" text="管理常用任務" />
+            <MenuItem fx:id="mnuProjCenter" mnemonicParsing="false" onAction="#mnuProjCenter_onClick" text="專案管理中心">
               <accelerator>
                 <KeyCodeCombination alt="UP" code="M" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
               </accelerator>
@@ -42,37 +43,37 @@
         </Menu>
         <Menu mnemonicParsing="false" text="資料庫維護">
           <items>
-            <MenuItem mnemonicParsing="false" onAction="#mnuCost_onClick" text="7費用" fx:id="mnuCost">
+            <MenuItem fx:id="mnuCost" mnemonicParsing="false" onAction="#mnuCost_onClick" text="7費用">
               <accelerator>
                 <KeyCodeCombination alt="UP" code="DIGIT8" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
               </accelerator>
             </MenuItem>
-            <MenuItem mnemonicParsing="false" onAction="#mnuCostType_onClick" text="6費用類別" fx:id="mnuCostType">
+            <MenuItem fx:id="mnuCostType" mnemonicParsing="false" onAction="#mnuCostType_onClick" text="6費用類別">
               <accelerator>
                 <KeyCodeCombination alt="UP" code="DIGIT5" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
               </accelerator>
             </MenuItem>
-            <MenuItem mnemonicParsing="false" onAction="#mnuProjectType_onClick" text="5專案類別" fx:id="mnuProjectType">
+            <MenuItem fx:id="mnuProjectType" mnemonicParsing="false" onAction="#mnuProjectType_onClick" text="5專案類別">
               <accelerator>
                 <KeyCodeCombination alt="UP" code="DIGIT4" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
               </accelerator>
             </MenuItem>
-            <MenuItem mnemonicParsing="false" onAction="#mnuUser_onClick" text="4使用者帳戶" fx:id="mnuUser">
+            <MenuItem fx:id="mnuUser" mnemonicParsing="false" onAction="#mnuUser_onClick" text="4使用者帳戶">
               <accelerator>
                 <KeyCodeCombination alt="UP" code="DIGIT3" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
               </accelerator>
             </MenuItem>
-            <MenuItem mnemonicParsing="false" onAction="#mnuUserLevel_onClick" text="3使用者層級" fx:id="mnuUserLevel">
+            <MenuItem fx:id="mnuUserLevel" mnemonicParsing="false" onAction="#mnuUserLevel_onClick" text="3使用者層級">
               <accelerator>
                 <KeyCodeCombination alt="UP" code="DIGIT2" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
               </accelerator>
             </MenuItem>
-            <MenuItem mnemonicParsing="false" onAction="#mnuEmployee_onClick" text="2職員檔案" fx:id="mnuEmployee">
+            <MenuItem fx:id="mnuEmployee" mnemonicParsing="false" onAction="#mnuEmployee_onClick" text="2職員檔案">
               <accelerator>
                 <KeyCodeCombination alt="UP" code="DIGIT1" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
               </accelerator>
             </MenuItem>
-            <MenuItem id="mnuDept" mnemonicParsing="false" onAction="#mnuDept_onClick" text="1部門資料" fx:id="mnuDept">
+            <MenuItem id="mnuDept" fx:id="mnuDept" mnemonicParsing="false" onAction="#mnuDept_onClick" text="1部門資料">
               <accelerator>
                 <KeyCodeCombination alt="UP" code="DIGIT0" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
               </accelerator>
@@ -86,13 +87,13 @@
         </Menu>
         <Menu mnemonicParsing="false" text="設定">
           <items>
-            <MenuItem mnemonicParsing="false" onAction="#mnuPreferences_onClick" text="Preferences" fx:id="mnuPreferences" />
-            <MenuItem mnemonicParsing="false" onAction="#mnuDBconn_onClick" text="DB Connection" fx:id="mnuDBconn" />
+            <MenuItem fx:id="mnuPreferences" mnemonicParsing="false" onAction="#mnuPreferences_onClick" text="Preferences" />
+            <MenuItem fx:id="mnuDBconn" mnemonicParsing="false" onAction="#mnuDBconn_onClick" text="DB Connection" />
           </items>
         </Menu>
         <Menu mnemonicParsing="false" text="其他">
           <items>
-            <MenuItem mnemonicParsing="false" onAction="#mnuAbout_onClick" text="關於" fx:id="mnuAbout" />
+            <MenuItem fx:id="mnuAbout" mnemonicParsing="false" onAction="#mnuAbout_onClick" text="關於" />
           </items>
         </Menu>
       </menus>
