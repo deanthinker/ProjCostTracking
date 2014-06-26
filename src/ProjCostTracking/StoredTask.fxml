@@ -6,14 +6,13 @@
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 
-
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="771.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" >
+<AnchorPane fx:id="paneMain" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="771.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <SplitPane dividerPositions="0.5167224080267558" layoutX="175.0" layoutY="84.0" prefHeight="400.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <items>
-          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
+          <AnchorPane fx:id="paneTask" minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
                <children>
-                  <TableView layoutX="1.0" layoutY="37.0" prefHeight="329.0" prefWidth="394.0" AnchorPane.bottomAnchor="32.0" AnchorPane.leftAnchor="1.0" AnchorPane.rightAnchor="-1.0" AnchorPane.topAnchor="37.0" />
+                  <TableView fx:id="tbvTask" layoutX="1.0" layoutY="37.0" prefHeight="298.0" prefWidth="394.0" AnchorPane.bottomAnchor="63.0" AnchorPane.leftAnchor="1.0" AnchorPane.rightAnchor="-1.0" AnchorPane.topAnchor="37.0" />
                   <HBox layoutX="1.0" layoutY="372.0" spacing="5.0" AnchorPane.bottomAnchor="1.0" AnchorPane.leftAnchor="0.0">
                      <children>
                         <Button fx:id="btnAddTask" layoutX="1.0" layoutY="372.0" mnemonicParsing="false" onAction="#btnAddTask_onClick" prefHeight="25.0" prefWidth="67.0" text="Add" />
@@ -26,16 +25,30 @@
                         <Font size="14.0" />
                      </font>
                   </Label>
+                  <HBox layoutX="193.0" layoutY="338.0" spacing="5.0" AnchorPane.bottomAnchor="40.0" AnchorPane.rightAnchor="6.0">
+                     <children>
+                        <Label layoutX="193.0" layoutY="338.0" text="任務費用">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="lblTaskCost" layoutX="256.0" layoutY="338.0" prefHeight="20.0" prefWidth="134.0" text="\$">
+                           <font>
+                              <Font name="System Bold" size="14.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </HBox>
                </children>
             </AnchorPane>
-          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
+          <AnchorPane fx:id="paneCost" minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
                <children>
                   <Label layoutY="4.0" text="費用清單" AnchorPane.leftAnchor="8.0" AnchorPane.topAnchor="4.0">
                      <font>
                         <Font size="14.0" />
                      </font>
                   </Label>
-                  <TableView layoutY="36.0" prefHeight="329.0" prefWidth="369.0" AnchorPane.bottomAnchor="32.0" AnchorPane.leftAnchor="1.0" AnchorPane.rightAnchor="-1.0" AnchorPane.topAnchor="37.0" />
+                  <TableView fx:id="tbvCost" layoutY="36.0" prefHeight="329.0" prefWidth="369.0" AnchorPane.bottomAnchor="32.0" AnchorPane.leftAnchor="1.0" AnchorPane.rightAnchor="-1.0" AnchorPane.topAnchor="37.0" />
                   <HBox layoutY="372.0" spacing="5.0" AnchorPane.bottomAnchor="1.0" AnchorPane.leftAnchor="0.0">
                      <children>
                         <Button fx:id="btnAddCost" layoutY="372.0" mnemonicParsing="false" onAction="#btnAddCost_onClick" prefHeight="25.0" prefWidth="67.0" text="Add" />

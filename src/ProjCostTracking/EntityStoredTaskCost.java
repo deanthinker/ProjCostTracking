@@ -38,18 +38,23 @@ public class EntityStoredTaskCost implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     private Integer taskcostid;
-    @Basic(optional = false)
-    private float fdrqty;
-    // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
-    private Float fdtotal;
-    @Lob
-    private String fdnote;
+    
+    @JoinColumn(name = "projtaskid", referencedColumnName = "projtaskid")
+    @ManyToOne(optional = false)
+    private EntityStoredProjTask projtaskid;    
+    
     @JoinColumn(name = "fdrcostid", referencedColumnName = "costid")
     @ManyToOne(optional = false)
     private EntityCost fdrcostid;
-    @JoinColumn(name = "projtaskid", referencedColumnName = "projtaskid")
-    @ManyToOne(optional = false)
-    private EntityStoredProjTask projtaskid;
+    
+    @Basic(optional = false)
+    private Float fdrqty;
+    
+    @Basic(optional = true)
+    private Float fdtotal;
+    
+    @Lob
+    private String fdnote;
 
     public EntityStoredTaskCost() {
     }
@@ -58,7 +63,7 @@ public class EntityStoredTaskCost implements Serializable {
         this.taskcostid = taskcostid;
     }
 
-    public EntityStoredTaskCost(Integer taskcostid, float fdrqty) {
+    public EntityStoredTaskCost(Integer taskcostid, Float fdrqty) {
         this.taskcostid = taskcostid;
         this.fdrqty = fdrqty;
     }
@@ -71,11 +76,11 @@ public class EntityStoredTaskCost implements Serializable {
         this.taskcostid = taskcostid;
     }
 
-    public float getFdrqty() {
+    public Float getFdrqty() {
         return fdrqty;
     }
 
-    public void setFdrqty(float fdrqty) {
+    public void setFdrqty(Float fdrqty) {
         this.fdrqty = fdrqty;
     }
 

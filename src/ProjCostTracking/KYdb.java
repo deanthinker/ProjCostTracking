@@ -149,6 +149,15 @@ public class KYdb {
         return obslist;
     }
     
+    public void commit(){
+        if(!em.getTransaction().isActive())
+            em.getTransaction().begin();
+        
+        em.getTransaction().commit();
+
+        if(!em.getTransaction().isActive())
+            em.getTransaction().begin();
+    }     
     
     //the following commented out code uses traditional JDBC connection ; it is now replaced by JPA (Java Persistence API)
     /* 

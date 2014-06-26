@@ -67,7 +67,7 @@ public class EntityTaskCost implements Serializable {
         this.taskcostid = taskcostid;
     }
 
-    public EntityTaskCost(Integer taskcostid, float fdrqty) {
+    public EntityTaskCost(Integer taskcostid, Float fdrqty) {
         this.taskcostid = taskcostid;
         this.fdrqty = fdrqty;
     }

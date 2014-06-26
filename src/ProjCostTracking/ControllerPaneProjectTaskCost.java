@@ -630,7 +630,7 @@ public class ControllerPaneProjectTaskCost implements Initializable {
             private void saveRecord(){
                 
                 addTask(ctrlList);
-
+                refreshLabel();
                 loadTaskViewTable(getTaskAllData());
             }
             
@@ -721,11 +721,14 @@ public class ControllerPaneProjectTaskCost implements Initializable {
                                 .title("常用任務清單")
                                 .masthead("選擇欲插入的任務")
                                 .showChoices(storedTaskList.toArray()) ;
- 
-        System.out.println("response: " + response_selectTask.getFdrtaskname());
-               
-        insertStoredTask(response_selectTask);
-        loadTaskViewTable(getTaskAllData());
+        
+        if (response_selectTask != null){
+            System.out.println("response: " + response_selectTask.getFdrtaskname());
+
+            insertStoredTask(response_selectTask);
+            refreshLabel();
+            loadTaskViewTable(getTaskAllData());
+        }
     }
     
     private ObservableList<EntityProjTask> getTaskAllData() {
@@ -847,14 +850,14 @@ public class ControllerPaneProjectTaskCost implements Initializable {
             Main.db.em.getTransaction().begin();
 
         Main.db.em.persist(entity);
-        Main.db.em.getTransaction().commit();        
+        Main.db.em.getTransaction().commit();
         Main.log(Main.LOGADD, "proj_task", entity.getProjtaskid().toString());
     }
         
     @FXML
     private void btnSaveTask_onClick(ActionEvent event) {
-        Main.db.em.getTransaction().commit();
-        Main.db.em.getTransaction().begin();
+        Main.db.commit();
+        refreshLabel();
         task_saveOff();           
     }
 
@@ -894,7 +897,7 @@ public class ControllerPaneProjectTaskCost implements Initializable {
         String response = deleteTask(entity);
         if (response.equals("YES"))
             tbvTask.getItems().remove(tbvTask.getSelectionModel().getSelectedIndex());
-        
+        refreshLabel();
     }
 
     
@@ -1055,7 +1058,7 @@ public class ControllerPaneProjectTaskCost implements Initializable {
             private void saveRecord(){
                 
                 addCost(ctrlList);
-
+                refreshLabel();
                 loadCostViewTable(getCostAllData());
             }
             
@@ -1102,11 +1105,18 @@ public class ControllerPaneProjectTaskCost implements Initializable {
      dlg.getActions().addAll(actionSave, Dialog.Actions.CANCEL);
      dlg.show();        
     }
-
+    
+    protected void refreshLabel(){
+                Main.db.em.refresh(selectTask); //so that the task cost label total can be updated 
+                Main.db.em.refresh(selectProj); //so that the task cost label total can be updated 
+                lblTaskCost.setText("NT$"+String.valueOf(   getTaskCost(selectTask)   ));
+                lblProjCost.setText("$"+String.valueOf(   getProjectCost(selectProj)   ));
+        
+    }
     @FXML
     private void btnSaveCost_onClick(ActionEvent event) {
-        Main.db.em.getTransaction().commit();
-        Main.db.em.getTransaction().begin();
+        Main.db.commit();
+        refreshLabel();
         cost_saveOff();        
         loadCostViewTable(getCostAllData());
 
@@ -1128,7 +1138,7 @@ public class ControllerPaneProjectTaskCost implements Initializable {
         String response = deleteCost(entity);
         if (response.equals("YES"))
             tbvCost.getItems().remove(tbvCost.getSelectionModel().getSelectedIndex());
-
+        refreshLabel();
     }
-    
+
 }
