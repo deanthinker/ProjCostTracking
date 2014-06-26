@@ -444,8 +444,7 @@ public class DBeditEntityDepartment implements Initializable {
     
     @FXML
     private void btnSave_onClick(ActionEvent event) {
-        Main.db.em.getTransaction().commit();
-        Main.db.em.getTransaction().begin();
+        Main.db.commit();
         saveOff();
     }
 

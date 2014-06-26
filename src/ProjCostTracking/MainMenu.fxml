@@ -33,7 +33,10 @@
                 <KeyCodeCombination alt="UP" code="N" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
               </accelerator>
             </MenuItem>
-                  <MenuItem fx:id="mnuStoredTask" mnemonicParsing="false" onAction="#mnuStoredTask_onClick" text="管理常用任務" />
+                  <MenuItem fx:id="mnuStoredTask" mnemonicParsing="false" onAction="#mnuStoredTask_onClick" text="管理常用任務">
+                     <accelerator>
+                        <KeyCodeCombination alt="UP" code="T" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                     </accelerator></MenuItem>
             <MenuItem fx:id="mnuProjCenter" mnemonicParsing="false" onAction="#mnuProjCenter_onClick" text="專案管理中心">
               <accelerator>
                 <KeyCodeCombination alt="UP" code="M" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
